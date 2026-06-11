@@ -21,14 +21,7 @@ export const metadata: Metadata = {
   },
   description:
     'Het meest betrouwbare Nederlandse platform voor crypto nieuws, live koersen en een uitgebreide kennisbank. Dagelijks bijgewerkt.',
-  keywords: [
-    'crypto nieuws',
-    'bitcoin koers',
-    'ethereum koers',
-    'cryptocurrency Nederland',
-    'blockchain nieuws',
-    'crypto kennisbank',
-  ],
+  keywords: ['crypto nieuws', 'bitcoin koers', 'ethereum koers', 'cryptocurrency Nederland'],
   authors: [{ name: 'Acrypto.nl', url: SITE_URL }],
   creator: 'Acrypto.nl',
   publisher: 'Acrypto.nl',
@@ -40,8 +33,7 @@ export const metadata: Metadata = {
     url: SITE_URL,
     siteName: 'Acrypto.nl',
     title: 'Acrypto.nl — Crypto Nieuws & Koersen',
-    description:
-      'Het meest betrouwbare Nederlandse platform voor crypto nieuws, live koersen en een uitgebreide kennisbank.',
+    description: 'Het meest betrouwbare Nederlandse platform voor crypto nieuws, live koersen en kennisbank.',
     images: [{ url: '/og-default.jpg', width: 1200, height: 630, alt: 'Acrypto.nl' }],
   },
   twitter: {
@@ -53,28 +45,19 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
+    googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
   },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="nl" className="dark">
+    <html lang="nl">
       <head>
         <WebsiteStructuredData siteUrl={SITE_URL} />
         <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#080810" />
+        <meta name="theme-color" content="#4f46e5" />
       </head>
-      <body className={`${inter.variable} font-sans bg-bg text-gray-100 min-h-screen`}>
+      <body className={`${inter.variable} font-sans bg-white text-slate-900 min-h-screen`}>
         <PriceTicker />
         <Header />
         <main className="min-h-[60vh]">{children}</main>

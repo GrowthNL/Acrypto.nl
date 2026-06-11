@@ -1,16 +1,17 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
+import { MOCK_ARTICLES } from '@/lib/mock-data'
 import ArticleCard from '@/components/ArticleCard'
 import NewsletterSignup from '@/components/NewsletterSignup'
 import { CATEGORIES } from '@/lib/utils'
-import Link from 'next/link'
 import type { Article } from '@/lib/types'
 
 export const revalidate = 300
 
 export const metadata: Metadata = {
   title: 'Crypto Nieuws',
-  description: 'Het laatste cryptocurrency nieuws uit Nederland en de wereld. Dagelijks bijgewerkte artikelen over Bitcoin, Ethereum, DeFi en meer.',
+  description: 'Het laatste cryptocurrency nieuws in het Nederlands. Dagelijks bijgewerkt over Bitcoin, Ethereum, DeFi en meer.',
   alternates: { canonical: '/nieuws' },
 }
 
@@ -20,49 +21,58 @@ interface Props {
 
 export default async function NieuwsPage({ searchParams }: Props) {
   const category = searchParams.cat?.toLowerCase()
-  const page = parseInt(searchParams.page || '1')
-  const perPage = 18
-  const offset = (page - 1) * perPage
+  const page     = parseInt(searchParams.page || '1')
+  const perPage  = 18
+  const offset   = (page - 1) * perPage
 
-  const supabase = createServerSupabaseClient()
-  let query = supabase
-    .from('articles')
-    .select('*', { count: 'exact' })
-    .eq('status', 'published')
-    .order('published_at', { ascending: false })
-    .range(offset, offset + perPage - 1)
+  let articles: Article[] = MOCK_ARTICLES
+  let totalCount = MOCK_ARTICLES.length
 
-  if (category) {
-    query = query.eq('category', category)
-  }
+  try {
+    const supabase = createServerSupabaseClient()
+    let q = supabase
+      .from('articles')
+      .select('*', { count: 'exact' })
+      .eq('status', 'published')
+      .order('published_at', { ascending: false })
+      .range(offset, offset + perPage - 1)
+    if (category) q = q.eq('category', category)
 
-  const { data, count } = await query
-  const articles = (data as Article[]) || []
-  const totalPages = Math.ceil((count || 0) / perPage)
+    const { data, count } = await q
+    if (data?.length) {
+      articles   = data as Article[]
+      totalCount = count || 0
+    } else if (category) {
+      articles   = MOCK_ARTICLES.filter(a => a.category === category)
+      totalCount = articles.length
+    }
+  } catch {}
+
+  const totalPages = Math.ceil(totalCount / perPage)
+  const catLabel   = CATEGORIES.find(c => c.id === category)?.label || category
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">
-          {category
-            ? `${CATEGORIES.find(c => c.id === category)?.label || category} nieuws`
-            : 'Crypto Nieuws'}
+        <h1 className="text-3xl font-extrabold text-slate-900 mb-1">
+          {category ? `${catLabel} nieuws` : 'Crypto Nieuws'}
         </h1>
-        <p className="text-gray-500">
+        <p className="text-slate-500">
           {category
-            ? `Alle artikelen over ${category}`
+            ? `Alle artikelen over ${catLabel}`
             : 'Het laatste nieuws over cryptocurrencies, blockchain en digitale activa'}
         </p>
       </div>
 
       {/* Category filter */}
-      <div className="flex flex-wrap gap-2 mb-8">
+      <div className="flex flex-wrap gap-2 mb-8 pb-6 border-b border-slate-100">
         <Link
           href="/nieuws"
-          className={`text-sm px-4 py-1.5 rounded-full border transition-colors ${
+          className={`text-sm px-4 py-1.5 rounded-full border font-medium transition-colors ${
             !category
-              ? 'bg-accent text-white border-accent'
-              : 'border-border text-gray-400 hover:border-accent hover:text-accent'
+              ? 'bg-primary-600 text-white border-primary-600 shadow-sm'
+              : 'border-slate-200 text-slate-600 hover:border-primary-300 hover:text-primary-600'
           }`}
         >
           Alles
@@ -71,10 +81,10 @@ export default async function NieuwsPage({ searchParams }: Props) {
           <Link
             key={cat.id}
             href={`/nieuws?cat=${cat.id}`}
-            className={`text-sm px-4 py-1.5 rounded-full border transition-colors ${
+            className={`text-sm px-4 py-1.5 rounded-full border font-medium transition-colors ${
               category === cat.id
-                ? 'bg-accent text-white border-accent'
-                : 'border-border text-gray-400 hover:border-accent hover:text-accent'
+                ? 'bg-primary-600 text-white border-primary-600 shadow-sm'
+                : 'border-slate-200 text-slate-600 hover:border-primary-300 hover:text-primary-600'
             }`}
           >
             {cat.label}
@@ -82,30 +92,20 @@ export default async function NieuwsPage({ searchParams }: Props) {
         ))}
       </div>
 
-      {articles.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
-          {articles.map(article => (
-            <ArticleCard key={article.id} article={article} />
-          ))}
-        </div>
-      ) : (
-        <div className="text-center py-20 text-gray-500">
-          <p className="text-lg mb-2">Nog geen artikelen beschikbaar</p>
-          <p className="text-sm">Er worden automatisch nieuwe artikelen gepubliceerd.</p>
-        </div>
-      )}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
+        {articles.map(a => <ArticleCard key={a.id} article={a} />)}
+      </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-center gap-2 mb-10">
           {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
             <Link
               key={p}
               href={`/nieuws?${category ? `cat=${category}&` : ''}page=${p}`}
-              className={`w-10 h-10 flex items-center justify-center rounded-lg text-sm border transition-colors ${
+              className={`w-10 h-10 flex items-center justify-center rounded-xl text-sm font-semibold border transition-colors ${
                 p === page
-                  ? 'bg-accent text-white border-accent'
-                  : 'border-border text-gray-400 hover:border-accent'
+                  ? 'bg-primary-600 text-white border-primary-600'
+                  : 'border-slate-200 text-slate-600 hover:border-primary-300'
               }`}
             >
               {p}

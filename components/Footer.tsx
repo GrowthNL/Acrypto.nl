@@ -1,65 +1,70 @@
 import Link from 'next/link'
-import { TrendingUp } from 'lucide-react'
+
+function LogoMark() {
+  return (
+    <svg width="28" height="28" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="flg" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#4f46e5" />
+          <stop offset="100%" stopColor="#7c3aed" />
+        </linearGradient>
+      </defs>
+      <rect width="36" height="36" rx="9" fill="url(#flg)" />
+      <path d="M9.5 26L18 10L26.5 26" stroke="white" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M13 21.5H23" stroke="white" strokeWidth="2.8" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+const year = new Date().getFullYear()
 
 export default function Footer() {
-  const year = new Date().getFullYear()
-
   return (
-    <footer className="bg-surface border-t border-border mt-16">
+    <footer className="bg-slate-900 text-slate-400 mt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          <div className="md:col-span-1">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pb-8 border-b border-slate-800">
+
+          <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-3">
-              <div className="w-7 h-7 bg-accent rounded-lg flex items-center justify-center">
-                <TrendingUp className="w-4 h-4 text-white" />
-              </div>
-              <span className="text-lg font-bold">
-                <span className="text-accent">A</span>crypto.nl
-              </span>
+              <LogoMark />
+              <span className="font-bold text-white">acrypto<span className="text-slate-500">.nl</span></span>
             </Link>
-            <p className="text-sm text-gray-500 leading-relaxed">
+            <p className="text-sm leading-relaxed text-slate-500 max-w-xs">
               Het meest betrouwbare Nederlandse platform voor crypto nieuws, koersen en educatie.
             </p>
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-gray-300 mb-3">Nieuws</h3>
-            <ul className="space-y-2 text-sm text-gray-500">
-              <li><Link href="/nieuws" className="hover:text-accent transition-colors">Laatste nieuws</Link></li>
-              <li><Link href="/nieuws?cat=bitcoin" className="hover:text-accent transition-colors">Bitcoin</Link></li>
-              <li><Link href="/nieuws?cat=ethereum" className="hover:text-accent transition-colors">Ethereum</Link></li>
-              <li><Link href="/nieuws?cat=altcoins" className="hover:text-accent transition-colors">Altcoins</Link></li>
-              <li><Link href="/nieuws?cat=defi" className="hover:text-accent transition-colors">DeFi</Link></li>
+            <h3 className="text-sm font-semibold text-white mb-3">Nieuws</h3>
+            <ul className="space-y-2 text-sm">
+              {[['Laatste nieuws','/nieuws'],['Bitcoin','/nieuws?cat=bitcoin'],['Ethereum','/nieuws?cat=ethereum'],['Altcoins','/nieuws?cat=altcoins'],['DeFi','/nieuws?cat=defi']].map(([l,h]) => (
+                <li key={h}><Link href={h} className="hover:text-white transition-colors">{l}</Link></li>
+              ))}
             </ul>
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-gray-300 mb-3">Informatie</h3>
-            <ul className="space-y-2 text-sm text-gray-500">
-              <li><Link href="/koersen" className="hover:text-accent transition-colors">Alle koersen</Link></li>
-              <li><Link href="/kennisbank" className="hover:text-accent transition-colors">Kennisbank</Link></li>
-              <li><Link href="/kennisbank?cat=beginners" className="hover:text-accent transition-colors">Voor beginners</Link></li>
+            <h3 className="text-sm font-semibold text-white mb-3">Informatie</h3>
+            <ul className="space-y-2 text-sm">
+              {[['Alle koersen','/koersen'],['Kennisbank','/kennisbank'],['Voor beginners','/kennisbank?niveau=beginner']].map(([l,h]) => (
+                <li key={h}><Link href={h} className="hover:text-white transition-colors">{l}</Link></li>
+              ))}
             </ul>
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-gray-300 mb-3">Acrypto.nl</h3>
-            <ul className="space-y-2 text-sm text-gray-500">
-              <li><Link href="/over-ons" className="hover:text-accent transition-colors">Over ons</Link></li>
-              <li><Link href="/contact" className="hover:text-accent transition-colors">Contact</Link></li>
-              <li><Link href="/privacy" className="hover:text-accent transition-colors">Privacybeleid</Link></li>
-              <li><Link href="/disclaimer" className="hover:text-accent transition-colors">Disclaimer</Link></li>
+            <h3 className="text-sm font-semibold text-white mb-3">Acrypto.nl</h3>
+            <ul className="space-y-2 text-sm">
+              {[['Over ons','/over-ons'],['Contact','/contact'],['Privacybeleid','/privacy'],['Disclaimer','/disclaimer']].map(([l,h]) => (
+                <li key={h}><Link href={h} className="hover:text-white transition-colors">{l}</Link></li>
+              ))}
             </ul>
           </div>
         </div>
 
-        <div className="pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-xs text-gray-600">
-            © {year} Acrypto.nl — Geen beleggingsadvies. Handel in crypto brengt risico&apos;s met zich mee.
-          </p>
-          <p className="text-xs text-gray-600">
-            Koersen en nieuws zijn indicatief en kunnen afwijken.
-          </p>
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-600">
+          <p>© {year} Acrypto.nl — Geen beleggingsadvies. Handel in crypto brengt risico&apos;s met zich mee.</p>
+          <p>Koersen zijn indicatief en gebaseerd op CoinGecko-data.</p>
         </div>
       </div>
     </footer>
