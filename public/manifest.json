@@ -1,0 +1,21 @@
+{
+  "name": "Acrypto.nl",
+  "short_name": "Acrypto",
+  "description": "Het meest betrouwbare Nederlandse platform voor crypto nieuws en koersen",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080810",
+  "theme_color": "#f7931a",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

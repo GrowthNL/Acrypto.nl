@@ -1,0 +1,35 @@
+name: Crypto News Scraper
+
+on:
+  schedule:
+    # Every 3 hours
+    - cron: '0 */3 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (no database writes)'
+        required: false
+        default: 'false'
+
+jobs:
+  scrape:
+    name: Scrape & Publish Articles
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Trigger scrape endpoint
+        run: |
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X GET \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ secrets.SITE_URL }}/api/scrape")
+
+          echo "Response code: $RESPONSE"
+
+          if [ "$RESPONSE" != "200" ]; then
+            echo "Scrape failed with status $RESPONSE"
+            exit 1
+          fi
+
+          echo "Scrape completed successfully"
