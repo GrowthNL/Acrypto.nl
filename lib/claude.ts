@@ -9,7 +9,7 @@ export async function generateDutchArticle(
   sourceContent: string,
   sourceName: string
 ): Promise<GeneratedArticle | null> {
-  const prompt = `Je bent een professionele Nederlandse crypto journalist voor acrypto.nl — een betrouwbare, moderne crypto nieuwssite.
+  const prompt = `Je bent een professionele Nederlandse crypto journalist voor acrypto.nl, een betrouwbare, moderne crypto nieuwssite.
 
 Schrijf een VOLLEDIG ORIGINEEL Nederlands artikel gebaseerd op het onderstaande bronbericht.
 Kopieer NOOIT letterlijk. Schrijf vanuit een eigen invalshoek, voeg context en analyse toe.
