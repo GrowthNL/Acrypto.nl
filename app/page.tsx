@@ -15,7 +15,14 @@ export const revalidate = 300
 
 const FALLBACK = 'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=1200&q=80'
 
+const SUPABASE_READY = !!(
+  process.env.NEXT_PUBLIC_SUPABASE_URL &&
+  process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co' &&
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+)
+
 async function getArticles(): Promise<Article[]> {
+  if (!SUPABASE_READY) return MOCK_ARTICLES
   try {
     const supabase = createServerSupabaseClient()
     const { data } = await supabase

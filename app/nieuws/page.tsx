@@ -19,34 +19,41 @@ interface Props {
   searchParams: { cat?: string; page?: string }
 }
 
+const SUPABASE_READY = !!(
+  process.env.NEXT_PUBLIC_SUPABASE_URL &&
+  process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co' &&
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+)
+
 export default async function NieuwsPage({ searchParams }: Props) {
   const category = searchParams.cat?.toLowerCase()
   const page     = parseInt(searchParams.page || '1')
   const perPage  = 18
   const offset   = (page - 1) * perPage
 
-  let articles: Article[] = MOCK_ARTICLES
-  let totalCount = MOCK_ARTICLES.length
+  let articles: Article[] = category
+    ? MOCK_ARTICLES.filter(a => a.category === category)
+    : MOCK_ARTICLES
+  let totalCount = articles.length
 
-  try {
-    const supabase = createServerSupabaseClient()
-    let q = supabase
-      .from('articles')
-      .select('*', { count: 'exact' })
-      .eq('status', 'published')
-      .order('published_at', { ascending: false })
-      .range(offset, offset + perPage - 1)
-    if (category) q = q.eq('category', category)
+  if (SUPABASE_READY) {
+    try {
+      const supabase = createServerSupabaseClient()
+      let q = supabase
+        .from('articles')
+        .select('*', { count: 'exact' })
+        .eq('status', 'published')
+        .order('published_at', { ascending: false })
+        .range(offset, offset + perPage - 1)
+      if (category) q = q.eq('category', category)
 
-    const { data, count } = await q
-    if (data?.length) {
-      articles   = data as Article[]
-      totalCount = count || 0
-    } else if (category) {
-      articles   = MOCK_ARTICLES.filter(a => a.category === category)
-      totalCount = articles.length
-    }
-  } catch {}
+      const { data, count } = await q
+      if (data?.length) {
+        articles   = data as Article[]
+        totalCount = count || 0
+      }
+    } catch {}
+  }
 
   const totalPages = Math.ceil(totalCount / perPage)
   const catLabel   = CATEGORIES.find(c => c.id === category)?.label || category

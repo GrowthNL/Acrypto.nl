@@ -19,7 +19,8 @@ export async function fetchTopCoins(limit = 50): Promise<CryptoPrice[]> {
 
   const res = await fetch(`${BASE_URL}/coins/markets?${params}`, {
     headers,
-    next: { revalidate: 60 },
+    next: { revalidate: 600 },
+    signal: AbortSignal.timeout(5000),
   })
 
   if (!res.ok) throw new Error(`CoinGecko error: ${res.status}`)
