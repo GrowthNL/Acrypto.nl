@@ -44,7 +44,7 @@ export async function fetchRssSource(source: RssSource): Promise<FetchedItem[]> 
     const items: FetchedItem[] = []
 
     for (const item of feed.items.slice(0, 10)) {
-      const imageUrl = extractImage(item as RssItem & Record<string, unknown>)
+      const imageUrl = extractImage(item as unknown as RssItem & Record<string, unknown>)
       const content = item.content || item.contentSnippet || item.summary || ''
 
       if (!item.title || !item.link) continue
