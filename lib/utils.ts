@@ -74,17 +74,21 @@ export function readingTime(content: string): string {
 }
 
 export const CATEGORIES = [
-  { id: 'nieuws', label: 'Nieuws', color: 'bg-blue-500/20 text-blue-400' },
-  { id: 'bitcoin', label: 'Bitcoin', color: 'bg-accent/20 text-accent' },
-  { id: 'ethereum', label: 'Ethereum', color: 'bg-purple-500/20 text-purple-400' },
-  { id: 'altcoins', label: 'Altcoins', color: 'bg-green-500/20 text-green-400' },
-  { id: 'defi', label: 'DeFi', color: 'bg-cyan-500/20 text-cyan-400' },
-  { id: 'nft', label: 'NFT', color: 'bg-pink-500/20 text-pink-400' },
-  { id: 'regulering', label: 'Regulering', color: 'bg-red-500/20 text-red-400' },
-  { id: 'marktanalyse', label: 'Marktanalyse', color: 'bg-yellow-500/20 text-yellow-400' },
+  { id: 'nieuws',        label: 'Nieuws',        color: 'bg-blue-600 text-white'    },
+  { id: 'bitcoin',       label: 'Bitcoin',       color: 'bg-amber-500 text-white'   },
+  { id: 'ethereum',      label: 'Ethereum',      color: 'bg-violet-600 text-white'  },
+  { id: 'altcoins',      label: 'Altcoins',      color: 'bg-emerald-600 text-white' },
+  { id: 'defi',          label: 'DeFi',          color: 'bg-cyan-600 text-white'    },
+  { id: 'nft',           label: 'NFT',           color: 'bg-pink-600 text-white'    },
+  { id: 'regulering',    label: 'Regulering',    color: 'bg-red-600 text-white'     },
+  { id: 'marktanalyse',  label: 'Marktanalyse',  color: 'bg-indigo-600 text-white'  },
 ]
 
 export function getCategoryStyle(category: string): string {
   const cat = CATEGORIES.find(c => c.id === category.toLowerCase())
-  return cat?.color ?? 'bg-gray-500/20 text-gray-400'
+  return cat?.color ?? 'bg-slate-600 text-white'
+}
+
+export function getArticleCount(articles: { category: string }[], categoryId: string): number {
+  return articles.filter(a => a.category === categoryId).length
 }

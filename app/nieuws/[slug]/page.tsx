@@ -76,7 +76,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: article.excerpt || undefined,
       images: article.image_url
         ? [{ url: article.image_url, width: 1200, height: 630, alt: article.title }]
-        : [{ url: `${SITE_URL}/og-default.jpg`, width: 1200, height: 630 }],
+        : [{ url: `${SITE_URL}/api/og?title=${encodeURIComponent(article.title)}&category=${encodeURIComponent(article.category)}`, width: 1200, height: 630 }],
       publishedTime: article.published_at,
       modifiedTime: article.updated_at,
       authors: [`${SITE_URL}`],
@@ -86,7 +86,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: 'summary_large_image',
       title: article.title,
       description: article.excerpt || undefined,
-      images: [article.image_url || `${SITE_URL}/og-default.jpg`],
+      images: [article.image_url || `${SITE_URL}/api/og`],
     },
   }
 }
