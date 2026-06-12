@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { fetchTopCoins } from '@/lib/coingecko'
 import PriceTable from '@/components/PriceTable'
+import type { CryptoPrice } from '@/lib/types'
 import { formatDateTime } from '@/lib/utils'
 import { RefreshCw } from 'lucide-react'
 
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
 }
 
 export default async function KoersenPage() {
-  let prices = [], error = false
+  let prices: CryptoPrice[] = [], error = false
   try { prices = await fetchTopCoins(50) } catch { error = true }
 
   return (
