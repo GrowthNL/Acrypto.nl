@@ -796,7 +796,7 @@ export const MOCK_ARTICLES: Article[] = [
     slug: 'is-crypto-bull-market-2026-voorbij-drie-scenarios',
     excerpt: 'Bitcoin bereikte op 6 oktober 2025 zijn absolute all-time high van €109.082. Nu, bijna 50% lager, vragen analisten zich af: tijdelijke correctie of echt begin van een bear market? Drie scenario\'s.',
     content: art6Content,
-    image_url: 'https://images.unsplash.com/photo-1611079829529-fc15b25f72f4?w=1200&q=80',
+    image_url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&q=80',
     image_alt: 'Koersgrafieken op handelsmonitor',
     source_url: null, source_name: null,
     author_name: 'Acrypto Redactie',
