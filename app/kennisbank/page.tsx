@@ -6,7 +6,7 @@ export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Crypto Kennisbank',
-  description: 'Leer alles over cryptocurrencies in begrijpelijk Nederlands. Van Bitcoin basics tot DeFi — de meest complete Nederlandse crypto kennisbank.',
+  description: 'Leer alles over cryptocurrencies in begrijpelijk Nederlands. Van Bitcoin basics tot DeFi: de meest complete Nederlandse crypto kennisbank.',
   alternates: { canonical: '/kennisbank' },
 }
 
@@ -46,7 +46,7 @@ export default function KennisbankPage() {
         <div>
           <h1 className="text-3xl font-extrabold text-slate-900">Crypto Kennisbank</h1>
           <p className="text-slate-500 mt-1 max-w-2xl">
-            Alles wat je moet weten over cryptocurrencies — van Bitcoin basics tot geavanceerde DeFi concepten, geschreven voor een Nederlands publiek.
+            Alles wat je moet weten over cryptocurrencies: van Bitcoin basics tot geavanceerde DeFi concepten, geschreven voor een Nederlands publiek.
           </p>
         </div>
       </div>

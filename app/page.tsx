@@ -15,7 +15,14 @@ export const revalidate = 300
 
 const FALLBACK = 'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=1200&q=80'
 
+const SUPABASE_READY = !!(
+  process.env.NEXT_PUBLIC_SUPABASE_URL &&
+  process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co' &&
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+)
+
 async function getArticles(): Promise<Article[]> {
+  if (!SUPABASE_READY) return MOCK_ARTICLES
   try {
     const supabase = createServerSupabaseClient()
     const { data } = await supabase
@@ -67,7 +74,7 @@ export default async function HomePage() {
       <section className="pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
 
-          {/* Featured — large left card, spans 2 columns + 2 rows */}
+          {/* Featured - large left card, spans 2 columns + 2 rows */}
           {featured && (
             <Link
               href={`/nieuws/${featured.slug}`}
@@ -107,7 +114,7 @@ export default async function HomePage() {
             </Link>
           )}
 
-          {/* Secondary cards — right column, equal height as featured */}
+          {/* Secondary cards - right column, equal height as featured */}
           {secondary.map(article => (
             <Link
               key={article.id}
@@ -135,7 +142,7 @@ export default async function HomePage() {
           ))}
         </div>
 
-        {/* ── News grid — seamlessly below the hero ── */}
+        {/* ── News grid - seamlessly below the hero ── */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
             {grid.map(a => <ArticleCard key={a.id} article={a} />)}
@@ -213,7 +220,7 @@ export default async function HomePage() {
             </div>
             <div>
               <h2 className="text-xl font-bold text-slate-900">Crypto Kennisbank</h2>
-              <p className="text-sm text-slate-500 mt-0.5">Alles wat je moet weten over crypto — in begrijpelijk Nederlands</p>
+              <p className="text-sm text-slate-500 mt-0.5">Alles wat je moet weten over crypto, in begrijpelijk Nederlands</p>
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">

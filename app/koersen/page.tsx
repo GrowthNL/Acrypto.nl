@@ -67,7 +67,7 @@ export default async function KoersenPage() {
       </div>
 
       <p className="mt-4 text-xs text-slate-400 text-center">
-        Koersen zijn indicatief. Geen beleggingsadvies — handel in crypto brengt risico&apos;s met zich mee.
+        Koersen zijn indicatief. Geen beleggingsadvies. Handel in crypto brengt risico&apos;s met zich mee.
       </p>
     </div>
   )

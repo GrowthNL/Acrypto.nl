@@ -63,7 +63,7 @@ export default function Footer() {
         </div>
 
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-600">
-          <p>© {year} Acrypto.nl — Geen beleggingsadvies. Handel in crypto brengt risico&apos;s met zich mee.</p>
+          <p>© {year} Acrypto.nl. Geen beleggingsadvies. Handel in crypto brengt risico&apos;s met zich mee.</p>
           <p>Koersen zijn indicatief en gebaseerd op CoinGecko-data.</p>
         </div>
       </div>

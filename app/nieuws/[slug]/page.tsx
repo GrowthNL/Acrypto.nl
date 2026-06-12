@@ -20,7 +20,14 @@ interface Props {
   params: { slug: string }
 }
 
+const SUPABASE_READY = !!(
+  process.env.NEXT_PUBLIC_SUPABASE_URL &&
+  process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co' &&
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+)
+
 async function getArticle(slug: string): Promise<Article | null> {
+  if (!SUPABASE_READY) return MOCK_ARTICLES.find(a => a.slug === slug) ?? null
   try {
     const supabase = createServerSupabaseClient()
     const { data } = await supabase
@@ -35,6 +42,9 @@ async function getArticle(slug: string): Promise<Article | null> {
 }
 
 async function getRelated(article: Article): Promise<Article[]> {
+  if (!SUPABASE_READY) {
+    return MOCK_ARTICLES.filter(a => a.category === article.category && a.id !== article.id).slice(0, 3)
+  }
   try {
     const supabase = createServerSupabaseClient()
     const { data } = await supabase

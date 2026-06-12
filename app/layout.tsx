@@ -16,7 +16,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://acrypto.nl'
 
 export const metadata: Metadata = {
   title: {
-    default: 'Acrypto.nl — Crypto Nieuws & Koersen',
+    default: 'Acrypto.nl | Crypto Nieuws & Koersen',
     template: '%s | Acrypto.nl',
   },
   description:
@@ -32,13 +32,13 @@ export const metadata: Metadata = {
     locale: 'nl_NL',
     url: SITE_URL,
     siteName: 'Acrypto.nl',
-    title: 'Acrypto.nl — Crypto Nieuws & Koersen',
+    title: 'Acrypto.nl | Crypto Nieuws & Koersen',
     description: 'Het meest betrouwbare Nederlandse platform voor crypto nieuws, live koersen en kennisbank.',
     images: [{ url: '/og-default.jpg', width: 1200, height: 630, alt: 'Acrypto.nl' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Acrypto.nl — Crypto Nieuws & Koersen',
+    title: 'Acrypto.nl | Crypto Nieuws & Koersen',
     description: 'Het meest betrouwbare Nederlandse platform voor crypto nieuws en koersen.',
     images: ['/og-default.jpg'],
   },
@@ -54,7 +54,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="nl">
       <head>
         <WebsiteStructuredData siteUrl={SITE_URL} />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
         <meta name="theme-color" content="#4f46e5" />
       </head>
       <body className={`${inter.variable} font-sans bg-white text-slate-900 min-h-screen`}>
