@@ -2,11 +2,7 @@
   "crons": [
     {
       "path": "/api/scrape",
-      "schedule": "0 */3 * * *"
-    },
-    {
-      "path": "/api/prices",
-      "schedule": "*/10 * * * *"
+      "schedule": "0 7 * * *"
     }
   ]
 }
