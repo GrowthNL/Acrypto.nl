@@ -1,15 +1,19 @@
 import Link from 'next/link'
-import { ArrowRight, BookOpen, TrendingUp, Zap, Globe } from 'lucide-react'
+import Image from 'next/image'
+import { ArrowRight, BookOpen, TrendingUp, Zap, Globe, Clock } from 'lucide-react'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { fetchTopCoins } from '@/lib/coingecko'
 import { MOCK_ARTICLES } from '@/lib/mock-data'
-import FeaturedArticle from '@/components/FeaturedArticle'
 import ArticleCard from '@/components/ArticleCard'
 import PriceTable from '@/components/PriceTable'
 import NewsletterSignup from '@/components/NewsletterSignup'
+import { timeAgo, getCategoryStyle, readingTime, truncate } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 import type { Article, CryptoPrice } from '@/lib/types'
 
 export const revalidate = 300
+
+const FALLBACK = 'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=1200&q=80'
 
 async function getArticles(): Promise<Article[]> {
   try {
@@ -27,80 +31,128 @@ async function getArticles(): Promise<Article[]> {
 }
 
 async function getPrices(): Promise<CryptoPrice[]> {
-  try {
-    return await fetchTopCoins(10)
-  } catch {
-    return []
-  }
+  try { return await fetchTopCoins(10) } catch { return [] }
 }
-
-const stats = [
-  { label: 'Artikelen per dag', value: '20+', icon: Zap },
-  { label: 'Nieuwsbronnen', value: '8', icon: Globe },
-  { label: 'Crypto gevolgd', value: '50+', icon: TrendingUp },
-]
 
 export default async function HomePage() {
   const [articles, prices] = await Promise.all([getArticles(), getPrices()])
 
-  const featured = articles.find(a => a.featured) || articles[0]
-  const grid     = articles.filter(a => a.id !== featured?.id).slice(0, 6)
-  const sidebar  = articles.filter(a => a.id !== featured?.id).slice(6, 10)
+  const featured  = articles.find(a => a.featured) || articles[0]
+  const secondary = articles.filter(a => a.id !== featured?.id).slice(0, 2)
+  const grid      = articles.filter(a => a.id !== featured?.id).slice(2, 8)
+  const sidebar   = articles.filter(a => a.id !== featured?.id).slice(8, 12)
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
-      {/* ── Hero strip ── */}
-      <section className="py-10 md:py-14">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-primary-600 mb-2">
-              Dagelijks bijgewerkt
-            </p>
-            <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 leading-tight">
-              Crypto nieuws dat telt
-            </h1>
-            <p className="text-slate-500 mt-2 text-base max-w-xl">
-              Betrouwbaar, helder en elke dag vers. Alles wat je moet weten over Bitcoin, Ethereum en de cryptomarkt.
-            </p>
-          </div>
-          {/* Quick stats */}
-          <div className="flex gap-4">
-            {stats.map(({ label, value, icon: Icon }) => (
-              <div key={label} className="text-center hidden sm:block">
-                <p className="text-2xl font-extrabold text-slate-900">{value}</p>
-                <p className="text-xs text-slate-400 mt-0.5 leading-tight">{label}</p>
+      {/* ── Page header ── */}
+      <div className="pt-8 pb-6 flex items-end justify-between">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-widest text-primary-600 mb-1">Dagelijks bijgewerkt</p>
+          <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 leading-tight">
+            Crypto nieuws dat telt
+          </h1>
+        </div>
+        <div className="hidden sm:flex gap-6 text-center">
+          {[['20+','Artikelen/dag'],['8','Bronnen'],['50+','Coins']].map(([v,l]) => (
+            <div key={l}>
+              <p className="text-2xl font-extrabold text-slate-900">{v}</p>
+              <p className="text-xs text-slate-400 mt-0.5">{l}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Magazine hero grid ── */}
+      <section className="pb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+
+          {/* Featured — large left card, spans 2 columns + 2 rows */}
+          {featured && (
+            <Link
+              href={`/nieuws/${featured.slug}`}
+              className="group lg:col-span-2 lg:row-span-2 relative rounded-2xl overflow-hidden bg-slate-100 min-h-[340px] lg:min-h-[480px] flex flex-col shadow-card hover:shadow-card-hover transition-all duration-300"
+            >
+              <Image
+                src={featured.image_url || FALLBACK}
+                alt={featured.image_alt || featured.title}
+                fill priority
+                className="object-cover group-hover:scale-105 transition-transform duration-700"
+                sizes="(max-width: 1024px) 100vw, 66vw"
+              />
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+
+              {/* Content pinned to bottom */}
+              <div className="absolute bottom-0 left-0 right-0 p-6">
+                <span className={cn('text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full mb-3 inline-block', getCategoryStyle(featured.category))}>
+                  {featured.category}
+                </span>
+                <h2 className="text-xl md:text-2xl font-bold text-white leading-snug mb-2 group-hover:text-primary-200 transition-colors">
+                  {featured.title}
+                </h2>
+                <p className="text-sm text-white/70 line-clamp-2 mb-3 hidden sm:block">
+                  {featured.excerpt}
+                </p>
+                <div className="flex items-center gap-2 text-xs text-white/60">
+                  <Clock className="w-3 h-3" />
+                  <span>{timeAgo(featured.published_at)}</span>
+                  <span>·</span>
+                  <span>{readingTime(featured.content)}</span>
+                  <span className="ml-auto flex items-center gap-1 text-white font-medium">
+                    Lees meer <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </div>
               </div>
-            ))}
-          </div>
+            </Link>
+          )}
+
+          {/* Secondary cards — right column, equal height as featured */}
+          {secondary.map(article => (
+            <Link
+              key={article.id}
+              href={`/nieuws/${article.slug}`}
+              className="group relative rounded-2xl overflow-hidden bg-slate-100 min-h-[160px] lg:min-h-0 flex flex-col shadow-card hover:shadow-card-hover transition-all duration-300"
+            >
+              <Image
+                src={article.image_url || FALLBACK}
+                alt={article.image_alt || article.title}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
+                sizes="(max-width: 1024px) 100vw, 33vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-4">
+                <span className={cn('text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full mb-2 inline-block', getCategoryStyle(article.category))}>
+                  {article.category}
+                </span>
+                <h3 className="text-sm font-bold text-white leading-snug group-hover:text-primary-200 transition-colors line-clamp-2">
+                  {article.title}
+                </h3>
+                <p className="text-xs text-white/60 mt-1">{timeAgo(article.published_at)}</p>
+              </div>
+            </Link>
+          ))}
         </div>
 
-        {featured && <FeaturedArticle article={featured} />}
-      </section>
-
-      {/* ── Latest + sidebar ── */}
-      <section className="pb-14">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-slate-900">Laatste nieuws</h2>
-          <Link href="/nieuws" className="flex items-center gap-1 text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors">
-            Alles zien <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* 6-article grid */}
-          <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-5">
+        {/* ── News grid — seamlessly below the hero ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
             {grid.map(a => <ArticleCard key={a.id} article={a} />)}
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-5">
+          <div className="space-y-4">
             <div className="bg-white border border-slate-100 rounded-2xl p-4 shadow-card">
-              <h3 className="text-sm font-bold text-slate-700 mb-1">Meer nieuws</h3>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-bold text-slate-700">Meer nieuws</h3>
+                <Link href="/nieuws" className="text-xs text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1">
+                  Alles <ArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
               {sidebar.map(a => <ArticleCard key={a.id} article={a} variant="compact" />)}
             </div>
 
-            {/* Category chips */}
             <div className="bg-white border border-slate-100 rounded-2xl p-4 shadow-card">
               <h3 className="text-sm font-bold text-slate-700 mb-3">Categorieën</h3>
               <div className="flex flex-wrap gap-2">
@@ -116,10 +168,9 @@ export default async function HomePage() {
               </div>
             </div>
 
-            {/* Mini disclaimer / trust signal */}
             <div className="bg-primary-50 border border-primary-100 rounded-2xl p-4">
               <p className="text-xs text-primary-700 leading-relaxed">
-                <span className="font-bold">Betrouwbaar nieuws.</span> Acrypto.nl gebruikt AI om internationale bronnen te vertalen en te herschrijven tot originele Nederlandstalige artikelen.
+                <span className="font-bold">Betrouwbaar nieuws.</span> Acrypto.nl brengt dagelijks het beste crypto nieuws in helder Nederlands.
               </p>
             </div>
           </div>
@@ -137,12 +188,11 @@ export default async function HomePage() {
             Alle 50 coins <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
-
         <div className="bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-card">
           {prices.length > 0 ? (
             <PriceTable prices={prices} compact />
           ) : (
-            <div className="p-8 text-center">
+            <div className="p-8">
               <div className="animate-pulse space-y-3">
                 {Array.from({ length: 6 }).map((_,i) => <div key={i} className="h-11 bg-slate-50 rounded-lg" />)}
               </div>
@@ -166,25 +216,20 @@ export default async function HomePage() {
               <p className="text-sm text-slate-500 mt-0.5">Alles wat je moet weten over crypto — in begrijpelijk Nederlands</p>
             </div>
           </div>
-
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
             {[
-              { title: 'Wat is Bitcoin?',          slug: 'wat-is-bitcoin',             tag: 'Beginners', desc: 'De complete gids over de eerste en grootste cryptocurrency.' },
-              { title: 'Hoe koop je crypto?',       slug: 'hoe-koop-je-crypto',         tag: 'Beginners', desc: 'Stap voor stap je eerste crypto kopen via een Nederlandse exchange.' },
-              { title: 'Crypto veilig bewaren',     slug: 'crypto-veilig-bewaren',      tag: 'Beveiliging', desc: 'Hot wallets, cold wallets en hardware wallets uitgelegd.' },
+              { title: 'Wat is Bitcoin?', slug: 'wat-is-bitcoin', tag: 'Beginners', desc: 'De complete gids over de eerste en grootste cryptocurrency.' },
+              { title: 'Hoe koop je crypto?', slug: 'hoe-koop-je-crypto', tag: 'Beginners', desc: 'Stap voor stap je eerste crypto kopen via een Nederlandse exchange.' },
+              { title: 'Crypto veilig bewaren', slug: 'crypto-veilig-bewaren', tag: 'Beveiliging', desc: 'Hot wallets, cold wallets en hardware wallets uitgelegd.' },
             ].map(item => (
-              <Link
-                key={item.slug}
-                href={`/kennisbank/${item.slug}`}
-                className="group bg-white border border-slate-100 rounded-xl p-4 hover:border-primary-200 hover:shadow-md transition-all"
-              >
+              <Link key={item.slug} href={`/kennisbank/${item.slug}`}
+                className="group bg-white border border-slate-100 rounded-xl p-4 hover:border-primary-200 hover:shadow-md transition-all">
                 <span className="text-[10px] font-bold uppercase tracking-wide text-primary-600 bg-primary-50 px-2 py-0.5 rounded-full">{item.tag}</span>
                 <h3 className="text-sm font-bold text-slate-800 group-hover:text-primary-700 transition-colors mt-2 mb-1">{item.title}</h3>
                 <p className="text-xs text-slate-500 leading-relaxed">{item.desc}</p>
               </Link>
             ))}
           </div>
-
           <Link href="/kennisbank" className="inline-flex items-center gap-2 text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors">
             Bekijk alle artikelen <ArrowRight className="w-4 h-4" />
           </Link>
