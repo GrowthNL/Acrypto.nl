@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation'
 import { Clock, Calendar, ArrowLeft, ExternalLink, Tag } from 'lucide-react'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { MOCK_ARTICLES } from '@/lib/mock-data'
-import { ArticleStructuredData } from '@/components/StructuredData'
+import { ArticleStructuredData, BreadcrumbStructuredData, FAQStructuredData } from '@/components/StructuredData'
 import ArticleCard from '@/components/ArticleCard'
 import { formatDate, readingTime, getCategoryStyle, timeAgo } from '@/lib/utils'
 import { cn } from '@/lib/utils'
@@ -92,6 +92,12 @@ export default async function ArticlePage({ params }: Props) {
   return (
     <>
       <ArticleStructuredData article={article} siteUrl={SITE_URL} />
+      <BreadcrumbStructuredData siteUrl={SITE_URL} items={[
+        { name: 'Home', path: '/' },
+        { name: 'Nieuws', path: '/nieuws' },
+        { name: article.title, path: `/nieuws/${article.slug}` },
+      ]} />
+      {article.faqs?.length ? <FAQStructuredData faqs={article.faqs} /> : null}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8">

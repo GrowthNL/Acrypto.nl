@@ -3,10 +3,6 @@ import type { Article } from './types'
 const now = Date.now()
 const ago = (min: number) => new Date(now - min * 60_000).toISOString()
 
-/* ─────────────────────────────────────────────────────────
-   Helper: builds the Quick Take + TOC header used in every
-   article. TOC items: array of [id, label] tuples.
-───────────────────────────────────────────────────────── */
 function quickTake(points: string[]): string {
   return `
 <div class="quick-take">
@@ -30,453 +26,385 @@ function toc(items: [string, string][]): string {
 </div>`
 }
 
-/* ────────── ARTIKEL 1 — Bitcoin €95.000 ATH ────────── */
 const art1Content = `
 ${quickTake([
-  'Bitcoin bereikte woensdag een nieuw all-time high van €95.847 — een stijging van 18% in twee weken.',
-  'Institutionele instroom via spot-ETFs was in mei de hoogste ooit gemeten: $4,2 miljard netto.',
-  'Analisten van JPMorgan en Standard Chartered verhogen koersdoelen richting $120.000–$150.000.',
-  'On-chain data toont dat 72% van alle Bitcoin al langer dan een jaar niet bewogen heeft.',
+  'Bitcoin staat op 12 juni 2026 rond €55.000, een daling van circa 34% ten opzichte van het 2026-jaarhoogtepunt van circa €83.000.',
+  'Ten opzichte van het absolute all-time high van €109.082 (6 oktober 2025) is Bitcoin momenteel bijna 50% lager.',
+  'Bear market-verliezen naderen $211 miljard, meldt Blockchain Stories op 7 juni 2026.',
+  'CryptoQuant: de realized price van Bitcoin (gemiddelde inkoopprijs van alle houders) ligt op circa $53.600, historisch een bodemniveau.',
+  'Analisten zien een mogelijke bodem in Q3 2026 als macro-omstandigheden niet verslechteren.',
 ])}
 
 ${toc([
-  ['achtergrond', 'Hoe we hier kwamen: de aanloop naar het ATH'],
-  ['drivers', 'Vier drijvende krachten achter de stijging'],
-  ['koersen', 'Wat analisten nu verwachten'],
-  ['risicos', 'Risico\'s en waarschuwingssignalen'],
+  ['hoe-ver-gedaald', 'Hoe ver is Bitcoin gedaald?'],
+  ['realized-price', 'De realized price als bodemindicator'],
+  ['etf-uitstroom', 'ETF-uitstroom: institutionelen verlaten de markt'],
+  ['analisten', 'Wat analisten verwachten'],
+  ['risicos', 'Risico\'s en scenario\'s'],
   ['faq', 'Veelgestelde vragen'],
 ])}
 
-<h2 id="achtergrond">Hoe we hier kwamen: de aanloop naar het ATH</h2>
+<h2 id="hoe-ver-gedaald">Hoe ver is Bitcoin gedaald?</h2>
 
-<p>Het was woensdag 11 juni 2026, 14:37 CET, toen Bitcoin voor het eerst in zijn zeventienjarige geschiedenis boven de <strong>€95.000</strong> uitkwam. Op het hoogtepunt noteerde de koers €95.847 op Bitvavo. In dollars bedroeg de piek $103.200 — de eerste keer dat Bitcoin de psychologisch belangrijke grens van zes cijfers doorbreekt op maandbasis.</p>
+<p>Bitcoin bereikte zijn absolute all-time high op <strong>6 oktober 2025</strong>, toen de koers piekte op <strong>€109.082</strong> (ruim $125.000). Na die piek volgde een geleidelijke correctie die in de loop van 2026 versnelde. Op 12 juni 2026 noteert Bitcoin rond de <strong>€55.000</strong>, wat neerkomt op een daling van bijna 50% ten opzichte van het absolute record.</p>
 
-<p>De voorgeschiedenis begint bij de <strong>vierde halving</strong> van april 2024, waarbij de blokkendbeloning werd gehalveerd van 6,25 naar 3,125 BTC. Historisch gezien volgde op iedere halving een bull-run van twaalf tot achttien maanden. Die cyclus lijkt zich opnieuw te voltrekken, zij het met een vertraging van ruim een jaar door een reeks macro-economische tegenvallers in de tweede helft van 2024.</p>
-
-<p>Het momentum versnelde begin 2026 toen de Amerikaanse Federal Reserve de rente voor de derde maal in zes maanden verlaagde. Risicovolle activa profiteerden breed, maar Bitcoin onderscheidde zich door zijn aanbodschaarste: slechts 21 miljoen munten kunnen ooit bestaan, waarvan op dit moment meer dan <strong>19,8 miljoen al gedolven zijn</strong>.</p>
+<p>Binnen 2026 alleen gemeten bedraagt de daling circa 34% ten opzichte van het 2026-jaarhoogtepunt van circa €83.000 (begin 2026). De totale cryptomarktkapitalisatie is teruggelopen naar circa <strong>$2,1 biljoen</strong>.</p>
 
 <div class="stat-grid">
-  <div class="stat-box stat-up">
-    <div class="stat-value">€95.847</div>
-    <div class="stat-label">ATH koers (11 jun '26)</div>
+  <div class="stat-box">
+    <div class="stat-value">€55.000</div>
+    <div class="stat-label">Bitcoin koers (12 jun '26)</div>
   </div>
-  <div class="stat-box stat-up">
-    <div class="stat-value">+18%</div>
-    <div class="stat-label">Stijging afgelopen 2 weken</div>
+  <div class="stat-box stat-down">
+    <div class="stat-value">-50%</div>
+    <div class="stat-label">t.o.v. ATH (€109.082)</div>
+  </div>
+  <div class="stat-box stat-down">
+    <div class="stat-value">-34%</div>
+    <div class="stat-label">t.o.v. 2026-hoogtepunt</div>
   </div>
   <div class="stat-box">
-    <div class="stat-value">$4,2 mrd</div>
-    <div class="stat-label">ETF-instroom mei 2026</div>
-  </div>
-  <div class="stat-box">
-    <div class="stat-value">72%</div>
-    <div class="stat-label">BTC > 1 jaar niet bewogen</div>
+    <div class="stat-value">$2,1T</div>
+    <div class="stat-label">Totale marktcap</div>
   </div>
 </div>
 
-<h2 id="drivers">Vier drijvende krachten achter de stijging</h2>
+<h2 id="realized-price">De realized price als bodemindicator</h2>
 
-<h3>1. Spot-ETFs: het vliegwiel draait op volle toeren</h3>
-<p>Sinds de goedkeuring van de eerste Amerikaanse spot-Bitcoin ETFs in januari 2024 is er cumulatief meer dan <strong>$68 miljard</strong> ingestroomd. BlackRock's IBIT is inmiddels het op vier na grootste ETF ter wereld, gemeten naar beheerd vermogen. In mei 2026 bereikten de dagelijkse instroom records met piekdagen boven de $800 miljoen — méér dan goud-ETFs op vergelijkbare topdagen noteerden.</p>
+<p>On-chain analytics platform CryptoQuant rapporteerde dat de realized price van Bitcoin, het gewogen gemiddelde van de inkoopprijs van alle Bitcoin-houders, momenteel rond de <strong>$53.600</strong> ligt. Dit is het niveau waarop gemiddeld gezien alle Bitcoin-houders break-even draaien.</p>
 
-<h3>2. Macro: lagere rente, zwakkere dollar</h3>
-<p>De Fed-renteverlaging van mei 2026 (naar 3,75%) duwde de DXY-dollarindex naar het laagste punt in vier jaar. Historisch correleert een zwakke dollar positief met Bitcoin: beleggers zoeken een alternatief voor valuta-inflatie. De Europese obligatierentes daalden mee, wat geld richting risicovolle activa stuurde.</p>
-
-<h3>3. Sovereign adoption: El Salvador is niet meer alleen</h3>
-<p>Na El Salvador kondigden in mei ook <strong>Paraguay en de Centraal-Afrikaanse Republiek</strong> aan Bitcoin als wettelijk betaalmiddel te erkennen naast de eigen valuta. Hoewel de economische impact beperkt is, geeft het een symbolisch signaal van legitimiteit. Geruchtmakender is dat de Noorse staatsinvesteringsfonds (het grootste ter wereld) toestemming heeft gekregen om tot 0,5% van zijn portefeuille in Bitcoin-gerelateerde producten te beleggen.</p>
-
-<h3>4. Miners HODLen: verkoopdruk historisch laag</h3>
-<p>On-chain analytics platform Glassnode rapporteerde deze week dat miners hun verkopen terugtrokken tot het laagste niveau sinds 2020. Met een huidige bloksubsidie van 3,125 BTC en een koers boven €90.000 zijn miners winstgevend, maar kiezen zij ervoor minder te verkopen — mogelijk anticipeert de sector op verdere koersstijging.</p>
+<p>Historisch gezien heeft Bitcoin bij elke grote bear market de realized price bereikt of kort onderschreden, alvorens te herstellen. In 2022 dook de koers enkele maanden onder de realized price; in 2018 was eenzelfde patroon te zien. Analist Julio Moreno van CryptoQuant stelt dat het huidige niveau nog steeds boven de realized price ligt, maar dat de markt "dicht bij de bodem" is, mits er geen verdere macro-schokken komen.</p>
 
 <div class="highlight-box">
-  <strong>Glassnode Insight:</strong> Het percentage Bitcoin dat langer dan één jaar niet van portemonnee is veranderd staat op 72,4% — een absolute recordwaarde. Dit suggereert een sterke "hodl-cultuur" en beperkt aanbod op de spotmarkt.
+  <strong>Let op:</strong> Hoewel de realized price historisch een goede bodemindicator was, is dit geen zekerheid. In een extreem bearish macro-scenario (stijgende rente, recessie) kan Bitcoin de realized price langdurig onderschrijden.
 </div>
 
-<h2 id="koersen">Wat analisten nu verwachten</h2>
+<h2 id="etf-uitstroom">ETF-uitstroom: institutionelen verlaten de markt</h2>
+
+<p>De eerste twee weken van juni 2026 tonen zorgwekkende ETF-data. Bitcoin spot-ETFs in de VS noteerden een gecumuleerde netto-uitstroom van <strong>$4,4 miljard in slechts 13 handelsdagen</strong>, een van de langste uitstroomperiodes in de korte geschiedenis van de instrumenten.</p>
+
+<p>Over heel Q1 2026 daalden institutionele Bitcoin ETF-holdings met 17%, van 313.000 BTC naar 261.000 BTC. Hedge funds waren de grootste verkopers: zij verminderden hun posities met 39%. Opvallend is dat banken en sovereign wealth funds juist kochten, een teken dat langetermijnbeleggers de dip als aankoopkans zien.</p>
+
+<h2 id="analisten">Wat analisten verwachten</h2>
 
 <table class="comparison-table">
   <thead>
-    <tr>
-      <th>Analist / Instelling</th>
-      <th>Koersdoel 2026</th>
-      <th>Scenario</th>
-    </tr>
+    <tr><th>Bron</th><th>Verwacht bodem</th><th>Tijdlijn</th></tr>
   </thead>
   <tbody>
-    <tr><td>JPMorgan (Nikolaos Panigirtzoglou)</td><td class="td-up">$120.000</td><td>Base case</td></tr>
-    <tr><td>Standard Chartered (Geoffrey Kendrick)</td><td class="td-up">$150.000</td><td>Bull case</td></tr>
-    <tr><td>Bernstein</td><td class="td-up">$130.000</td><td>Base case</td></tr>
-    <tr><td>Plan B (S2F model)</td><td class="td-up">$100.000–160.000</td><td>Model range</td></tr>
-    <tr><td>Deutsche Bank Crypto Research</td><td>$85.000</td><td>Bear/base</td></tr>
+    <tr><td>CryptoQuant (Julio Moreno)</td><td>$56.000 tot $70.000</td><td>Q3 2026</td></tr>
+    <tr><td>Compass Point</td><td class="td-up">$60.000 tot $68.000</td><td>Nabij</td></tr>
+    <tr><td>Bearish scenario</td><td class="td-down">Onder $50.000</td><td>Bij macro-verslechtering</td></tr>
+    <tr><td>KuCoin Research</td><td>Bear market halverwege</td><td>Herstel eind 2026</td></tr>
   </tbody>
 </table>
 
-<p>De meeste mainstream-analisten hanteren een base case tussen de $100.000 en $130.000 voor eind 2026. Bear cases liggen rond de $70.000–$85.000, voornamelijk ingegeven door mogelijke Fed-verhogingen als inflatie terugkeert of een plotse regulatoire schok.</p>
-
-<h2 id="risicos">Risico's en waarschuwingssignalen</h2>
+<h2 id="risicos">Risico's en scenario's</h2>
 
 <div class="warning-box">
-  <div class="warning-title">⚠️ Let op: Bitcoin kan ook sterk dalen</div>
-  Alle voorgaande bull-markten eindigden met correcties van 70–85%. Een ATH is geen garantie voor verdere stijging. Beleg nooit meer dan je bereid bent volledig te verliezen.
+  <div class="warning-title">Verdere daling is mogelijk</div>
+  Verschillende analisten waarschuwen dat Bitcoin nog onder $50.000 kan zakken als macro-omstandigheden verslechteren, bijvoorbeeld bij hernieuwde inflatie of rentestijgingen door de Fed. Handel nooit met geld dat je niet kunt missen.
 </div>
 
-<p>De Fear &amp; Greed Index staat momenteel op <strong>88 (Extreme Greed)</strong> — een niveau dat historisch gezien vaak samenvalt met kortetermijncorrecties. Technisch analyse-tools tonen potentiële weerstandsniveaus bij €98.000 en €105.000.</p>
-
-<p>Andere risicofactoren om in de gaten te houden:</p>
 <ul>
-  <li><strong>Regelgeving:</strong> De EU-MiCA-handhavingsfase begint in Q3 2026 — mogelijke tijdelijke volatiliteit.</li>
-  <li><strong>Macro-omslag:</strong> Als inflatie terugkeert en de Fed de rente verhoogt, zal risicovol sentiment omslaan.</li>
-  <li><strong>Grote wallets:</strong> Satoshi Nakamoto-wallets bevatten nog steeds ~1 miljoen BTC — een hypothetische verkoopgolf zou de markt schokken.</li>
+  <li><strong>Bull scenario:</strong> Bitcoin houdt boven de realized price ($53.600), ETF-uitstroom stabiliseert, herstel richting €70.000 tot €80.000 in Q4 2026.</li>
+  <li><strong>Base scenario:</strong> Bodem tussen €50.000 en €60.000 in Q3 2026, gevolgd door langzaam herstel.</li>
+  <li><strong>Bear scenario:</strong> Macro-verslechtering duwt Bitcoin onder €45.000 als historische steunniveaus breken.</li>
 </ul>
 
 <div class="faq-section">
   <div class="faq-title">Veelgestelde vragen</div>
-
   <div class="faq-item">
-    <div class="faq-q">Is het nu nog een goed moment om Bitcoin te kopen?</div>
-    <div class="faq-a">Dat is een persoonlijke beslissing afhankelijk van je financiële situatie en risicotolerantie. Veel beleggers gebruiken een DCA-strategie (periodiek een vast bedrag) om het timingrisico te spreiden. Dit artikel is geen beleggingsadvies.</div>
+    <div class="faq-q">Wat was Bitcoin's all-time high?</div>
+    <div class="faq-a">Bitcoin bereikte zijn absolute all-time high op 6 oktober 2025 met een koers van €109.082 (circa $125.835). In december 2024 werd voor het eerst de grens van €100.000 doorbroken. De huidige koers van €55.000 ligt bijna 50% onder dat record.</div>
   </div>
-
   <div class="faq-item">
-    <div class="faq-q">Kan Bitcoin nog veel hoger gaan na een ATH?</div>
-    <div class="faq-a">Historisch gezien bereikte Bitcoin na een ATH-doorbraak vaak een "price discovery"-fase waarbij het meerdere nieuwe ATHs testte voor de correctie volgde. Voorgaande cycli toonden stijgingen van 20–80% ná het doorbreken van een vorig ATH, maar niets is gegarandeerd.</div>
+    <div class="faq-q">Zitten we nu in een bear market of een correctie?</div>
+    <div class="faq-a">Een daling van 20% of meer ten opzichte van een recente piek wordt technisch als een bear market beschouwd. Met een daling van circa 50% van het ATH en 34% van het 2026-hoogtepunt kwalificeren analisten de huidige fase als een bear market. Of het een tijdelijke correctie is of een langdurige neerwaartse trend hangt sterk af van macro-economische ontwikkelingen.</div>
   </div>
-
   <div class="faq-item">
-    <div class="faq-q">Welke Nederlandse exchanges zijn betrouwbaar voor Bitcoin-aankoop?</div>
-    <div class="faq-a">Populaire, door de DNB geregistreerde exchanges zijn Bitvavo, Coinmerce en Litebit. Controleer altijd of een platform bij de DNB geregistreerd staat voor je geld overmaakt.</div>
-  </div>
-
-  <div class="faq-item">
-    <div class="faq-q">Wat is een spot-Bitcoin ETF precies?</div>
-    <div class="faq-a">Een spot-Bitcoin ETF is een beursgenoteerd fonds dat de feitelijke Bitcoin aanhoudt. Beleggers kopen aandelen van het fonds via een reguliere brokerage, zonder zelf crypto te hoeven beheren. Dit verlaagt de drempel voor institutionele en particuliere beleggers.</div>
+    <div class="faq-q">Is het slim om nu bij te kopen?</div>
+    <div class="faq-a">Dit is een persoonlijke beslissing. DCA (periodiek een vast bedrag investeren) kan het timingrisico spreiden. Investeer nooit meer dan je bereid bent volledig te verliezen. Dit is geen beleggingsadvies.</div>
   </div>
 </div>
 `
 
-/* ────────── ARTIKEL 2 — Ethereum Pectra live ────────── */
 const art2Content = `
 ${quickTake([
-  'Ethereum Pectra-upgrade is live op mainnet — de grootste update sinds The Merge in 2022.',
-  'EIP-7702 maakt "account abstraction" mogelijk: wallets worden programmeerbaar.',
-  'Transactiekosten op L2 dalen gemiddeld 60% dankzij verhoogde blob-capaciteit.',
-  'ETH-koers steeg 12% in de week voorafgaand aan de upgrade.',
+  '$4,4 miljard netto-uitstroom uit Bitcoin spot-ETFs in de eerste 13 handelsdagen van juni 2026.',
+  'Professionele Bitcoin ETF-holdings daalden 17% in Q1 2026: hedge funds verkochten 39% van hun posities.',
+  'Jane Street verlaagde haar Bitcoin ETF-blootstelling en vergrootte juist haar Ethereum-positie.',
+  'Banken en sovereign wealth funds kochten juist bij, een klassiek divergentiepatroon bij marktbodems.',
 ])}
 
 ${toc([
-  ['wat-is-pectra', 'Wat is de Pectra-upgrade?'],
-  ['eip7702', 'Account abstraction: wallets worden slim'],
-  ['blobs', 'Goedkopere L2-transacties via meer blobs'],
-  ['staking', 'Staking-verbeteringen voor validators'],
-  ['impact', 'Koersimpact en marktreactie'],
+  ['etf-uitstroom', 'De grote uitstroom: $4,4 miljard in 13 dagen'],
+  ['q1-data', 'Q1 2026: wie verkocht, wie kocht?'],
+  ['jane-street', 'Jane Street: Bitcoin verlaten, Ethereum omarmd'],
+  ['divergentie', 'Divergentie als bodensignaal?'],
   ['faq', 'Veelgestelde vragen'],
 ])}
 
-<h2 id="wat-is-pectra">Wat is de Pectra-upgrade?</h2>
+<h2 id="etf-uitstroom">De grote uitstroom: $4,4 miljard in 13 dagen</h2>
 
-<p>Pectra is de naam voor de gecombineerde Prague/Electra hardfork van Ethereum, die woensdag 4 juni 2026 succesvol werd geactiveerd op het Ethereum-mainnet. Het is de grootste protocolupdate van het netwerk sinds <strong>The Merge</strong> in september 2022, waarbij Ethereum overstapte van proof-of-work naar proof-of-stake.</p>
+<p>De eerste twee handelsweken van juni 2026 zijn historisch slecht voor Bitcoin spot-ETFs. Volgens data van Bitcoin Foundation News noteerden de grote Amerikaanse Bitcoin-ETFs een gecumuleerde netto-uitstroom van <strong>$4,4 miljard in 13 opeenvolgende handelsdagen</strong>, een van de langste ononderbroken uitstroomreeksen.</p>
 
-<p>De naam Pectra combineert de execution layer-upgrade (Prague, voor de city Prague) met de consensus layer-upgrade (Electra). In totaal bundelt Pectra <strong>negen Ethereum Improvement Proposals (EIPs)</strong>, waarvan twee bijzonder impactvol zijn voor eindgebruikers: EIP-7702 (account abstraction) en EIP-7691 (meer blobspace voor L2's).</p>
+<p>Ter vergelijking: in de eerste week na lancering in januari 2024 stroomde er dagelijks meer dan $1 miljard in. De kentering begon in Q1 2026, toen Bitcoin van zijn jaarrecord van circa €83.000 begon te dalen richting de huidige €55.000. Het absolute all-time high van €109.082 (oktober 2025) ligt inmiddels bijna 50% hoger dan de huidige koers.</p>
 
 <div class="stat-grid">
-  <div class="stat-box stat-up">
-    <div class="stat-value">9</div>
-    <div class="stat-label">EIPs in Pectra</div>
+  <div class="stat-box stat-down">
+    <div class="stat-value">$4,4B</div>
+    <div class="stat-label">ETF-uitstroom (13 dagen)</div>
+  </div>
+  <div class="stat-box stat-down">
+    <div class="stat-value">-17%</div>
+    <div class="stat-label">Institutionele holdings Q1</div>
+  </div>
+  <div class="stat-box stat-down">
+    <div class="stat-value">-39%</div>
+    <div class="stat-label">Vermindering hedge funds</div>
   </div>
   <div class="stat-box stat-up">
-    <div class="stat-value">−60%</div>
-    <div class="stat-label">Gem. L2-kosten</div>
-  </div>
-  <div class="stat-box">
-    <div class="stat-value">2048</div>
-    <div class="stat-label">Max ETH per validator</div>
-  </div>
-  <div class="stat-box stat-up">
-    <div class="stat-value">+12%</div>
-    <div class="stat-label">ETH koers (week vóór)</div>
+    <div class="stat-value">+7.800</div>
+    <div class="stat-label">BTC gekocht door banken</div>
   </div>
 </div>
 
-<h2 id="eip7702">Account abstraction: wallets worden slim</h2>
+<h2 id="q1-data">Q1 2026: wie verkocht, wie kocht?</h2>
 
-<p>EIP-7702 introduceert <strong>account abstraction</strong> voor externe accounts (EOA's) — de gewone wallet-adressen die gebruikers beheren met een private key. Kort gezegd: je wallet wordt programmeerbaar en kan tijdelijk smart-contract-functionaliteit aannemen.</p>
-
-<p>Wat dit betekent voor eindgebruikers:</p>
-<ul>
-  <li><strong>Gasloze transacties:</strong> Apps kunnen gas voor je betalen (sponsored transactions).</li>
-  <li><strong>Batching:</strong> Meerdere acties (bijv. approve + swap) in één transactie — lagere kosten, minder klikken.</li>
-  <li><strong>Social recovery:</strong> Verlies je sleutel, dan kunnen vertrouwde personen of contracten helpen herstellen.</li>
-  <li><strong>Sessiesleutels:</strong> Geef een app tijdelijke beperkte toegang zonder je hoofdwallet te risqueren.</li>
-</ul>
-
-<div class="highlight-box">
-  <strong>Praktisch voorbeeld:</strong> Met EIP-7702 kan een DeFi-app alle stappen van een liquiditeitspositie (approve, deposit, stake) bundelen in één muisklik, terwijl de kosten voor jou worden gedragen door het protocol. Dit was voorheen alleen mogelijk via dedicated "smart account"-oplossingen.
-</div>
-
-<h2 id="blobs">Goedkopere L2-transacties via meer blobs</h2>
-
-<p>EIP-7691 verhoogt het aantal blobs dat per Ethereum-block verwerkt kan worden van 3 (target) / 6 (max) naar 6 (target) / 9 (max). Blobs zijn de speciale, goedkope dataopslaglaag die Ethereum in de vorige Dencun-upgrade introduceerde specifiek voor L2-netwerken.</p>
-
-<p>De praktische impact is direct: netwerken als Arbitrum, Optimism en Base kunnen meer transactiedata op Ethereum verankeren voor dezelfde kosten. Early measurements op de Sepolia-testnet tonen een gemiddelde kostendaling van <strong>58–65%</strong> voor eindgebruikers op L2's vergeleken met post-Dencun koersen.</p>
-
-<h2 id="staking">Staking-verbeteringen voor validators</h2>
-
-<p>EIP-7251 verhoogt de maximum stake per validator van 32 ETH naar <strong>2048 ETH</strong>. Dit maakt het voor grote staking-aanbieders mogelijk meer ETH per validator te staken, wat de operationele overhead verlaagt. Tevens introduceert EIP-7002 de mogelijkheid voor validators om exits te triggeren via de execution layer — handig voor smart-contract-gebaseerde staking pools.</p>
-
-<h2 id="impact">Koersimpact en marktreactie</h2>
-
-<p>ETH handelde in de week voorafgaand aan Pectra rond de €3.600 en piekte op de dag van activatie op €3.890. Na een korte "sell the news"-correctie stabiliseerde de koers rond €3.750 — een netto-winst van ruim 10% ten opzichte van het niveau vóór de upgrade-aankondiging.</p>
+<p>CoinShares publiceerde in juni een gedetailleerd rapport over institutionele Bitcoin ETF-holdings in Q1 2026. De bevindingen zijn opvallend:</p>
 
 <table class="comparison-table">
-  <thead>
-    <tr><th>Datum</th><th>ETH koers (€)</th><th>Event</th></tr>
-  </thead>
+  <thead><tr><th>Type belegger</th><th>Verandering in BTC</th><th>Percentage</th></tr></thead>
   <tbody>
-    <tr><td>1 mei 2026</td><td>€3.210</td><td>Pectra-datum bevestigd</td></tr>
-    <tr><td>28 mei 2026</td><td>€3.590</td><td>Succesvolle Sepolia-test</td></tr>
-    <tr><td>4 jun 2026</td><td class="td-up">€3.890</td><td>Pectra mainnet live</td></tr>
-    <tr><td>11 jun 2026</td><td>€3.740</td><td>Post-upgrade stabilisatie</td></tr>
+    <tr><td>Hedge funds</td><td class="td-down">-31.400 BTC</td><td class="td-down">-39%</td></tr>
+    <tr><td>Brokerage firms</td><td class="td-down">-18.800 BTC</td><td class="td-down">-53%</td></tr>
+    <tr><td>Professionele adviseurs</td><td class="td-down">-9.400 BTC</td><td class="td-down">-6%</td></tr>
+    <tr><td>Banken</td><td class="td-up">+5.200 BTC</td><td class="td-up">+8%</td></tr>
+    <tr><td>Sovereign wealth funds</td><td class="td-up">+2.600 BTC</td><td class="td-up">+14%</td></tr>
   </tbody>
 </table>
+
+<p>De conclusie is duidelijk: kortetermijntraders (hedge funds, brokers) nemen winst en verminderen risico; langetermijninstitutionelen (banken, staatsfondsen) zien het als aankoopkans.</p>
+
+<h2 id="jane-street">Jane Street: Bitcoin verlaten, Ethereum omarmd</h2>
+
+<p>Een van de meest opmerkelijke institutionele moves is die van <strong>Jane Street</strong>, een van de grootste market makers ter wereld. Uit verplichte 13F-rapportages bij de SEC blijkt dat Jane Street haar Bitcoin ETF-posities drastisch verlaagde, terwijl ze tegelijkertijd haar Ethereum-blootstelling verdubbelde.</p>
+
+<p>Marktanalisten speculeren dat Jane Street anticipeert op relatieve outperformance van Ethereum na de Pectra-upgrade, of gebruik maakt van arbitragemogelijkheden in de ETH/BTC-ratio die historisch laag staat.</p>
+
+<h2 id="divergentie">Divergentie als bodensignaal?</h2>
+
+<div class="highlight-box">
+  <strong>Historisch patroon:</strong> In 2022 bereikte de Bitcoin ETF-uitstroom (via futures-producten) een piek vlak voor de marktbodem. De "smart money" (banken, sovereign funds) begon toen stil bij te kopen terwijl retail en hedge funds nog uitstapten. Een vergelijkbaar divergentiepatroon tekent zich nu af.
+</div>
+
+<p>Dit betekent niet dat een herstel onmiddellijk bevorstaat. Maar het is een signaal dat ervaren, langetermijnbeleggers de huidige prijzen als aantrekkelijk beschouwen voor langdurige positionering, wat de neerwaartse beweging op termijn kan dempen.</p>
 
 <div class="faq-section">
   <div class="faq-title">Veelgestelde vragen</div>
   <div class="faq-item">
-    <div class="faq-q">Moet ik als ETH-houder iets doen voor Pectra?</div>
-    <div class="faq-a">Nee. Als je ETH aanhoudt op een exchange of in een eigen wallet, hoef je niets te doen. Exchanges en node-operators zetten de upgrade automatisch door. Alleen node-operators of validators moeten hun software updaten.</div>
+    <div class="faq-q">Wat is een 13F-rapportage?</div>
+    <div class="faq-a">Institutionele beleggers met meer dan $100 miljoen aan beheerd vermogen moeten elk kwartaal een 13F-formulier indienen bij de SEC, met daarin een overzicht van hun beleggingen inclusief ETFs. Dit geeft inzicht in wat "smart money" doet.</div>
   </div>
   <div class="faq-item">
-    <div class="faq-q">Worden mijn DeFi-posities beïnvloed?</div>
-    <div class="faq-a">Je bestaande posities veranderen niet automatisch. Smart contracts blijven werken zoals ze zijn. Nieuwe contracten kunnen wel gebruik maken van de Pectra-mogelijkheden, wat jou als gebruiker goedkopere interacties biedt.</div>
-  </div>
-  <div class="faq-item">
-    <div class="faq-q">Is Ethereum nu goedkoper om te gebruiken?</div>
-    <div class="faq-a">Op Layer 2-netwerken (Arbitrum, Optimism, Base) zijn de kosten merkbaar gedaald. Op Ethereum mainnet zelf zijn de kosten afhankelijk van drukte op het netwerk en veranderen niet direct door Pectra.</div>
+    <div class="faq-q">Heeft ETF-uitstroom direct invloed op de Bitcoin-koers?</div>
+    <div class="faq-a">Indirect ja. Wanneer ETF-aandelen worden teruggegeven, verkopen de ETF-aanbieders de onderliggende Bitcoin om het geld terug te geven. Dit verhoogt de verkoopdruk op de spotmarkt en kan de koers neerwaarts drukken.</div>
   </div>
 </div>
 `
 
-/* ────────── ARTIKEL 3 — MiCA EU volledig actief ────────── */
 const art3Content = `
 ${quickTake([
-  'EU\'s MiCA-verordening is per 1 juni 2026 volledig in werking voor alle crypto-activaklassen.',
-  'Crypto-aanbieders zonder MiCA-licentie mogen niet meer actief zijn in de EU.',
-  'Nederlandse DNB en AFM zijn aangewezen als primaire toezichthouders.',
-  'Stablecoins krijgen de strengste eisen: volledige reservedekking, dagelijkse rapportage.',
+  'Ethereum noteert op 12 juni 2026 circa €1.480 ($1.617), het laagste punt in maanden.',
+  'Sentiment indicator: Ethereum zit in de extreme angst-zone; sociale media staan vol bearish berichten.',
+  'US Ethereum ETFs noteerden in mei 2026 een netto-uitstroom van $401 miljoen, de derde grootste maandelijks uitstroom ooit.',
+  'Kritiek steunniveau: als ETH onder €1.420 ($1.545) zakt, is €920 ($1.000) het volgende doelwit van analisten.',
 ])}
 
 ${toc([
-  ['wat-is-mica', 'Wat is MiCA en waarom is het belangrijk?'],
-  ['tijdlijn', 'Van voorstel tot volledige handhaving'],
-  ['regels', 'Wat verandert er voor consumenten?'],
-  ['stablecoins', 'Strickte regels voor stablecoins'],
-  ['gevolgen', 'Winnaars en verliezers'],
+  ['koers', 'Ethereum koers: van hoogtepunt naar dieptepunt'],
+  ['sentiment', 'Sentiment in extreme angst-zone'],
+  ['etf', 'ETH ETF-uitstroom: institutionelen trekken zich terug'],
+  ['technisch', 'Technische analyse: cruciale niveaus'],
+  ['pectra', 'Pectra in perspectief: waarom de upgrade niet helpt'],
   ['faq', 'Veelgestelde vragen'],
 ])}
 
-<h2 id="wat-is-mica">Wat is MiCA en waarom is het belangrijk?</h2>
+<h2 id="koers">Ethereum koers: van hoogtepunt naar dieptepunt</h2>
 
-<p>De <strong>Markets in Crypto-Assets Regulation (MiCA)</strong> is de eerste uitgebreide Europese wetgeving die specifiek gericht is op cryptovaluta en crypto-activadiensten. Het doel: een geharmoniseerde regelgeving voor de gehele EU, zodat zowel consumenten beter beschermd zijn als bedrijven rechtszekerheid krijgen om te innoveren.</p>
+<p>Ethereum noteert op 12 juni 2026 circa <strong>€1.480</strong> (ongeveer $1.617), een daling van meer dan <strong>17% in de afgelopen twee weken</strong>. Daarmee presteert Ethereum slechter dan Bitcoin, dat in dezelfde periode circa 14% verloor. De ETH/BTC-ratio, die aangeeft hoeveel BTC een Ether waard is, staat op het laagste punt in ruim twee jaar.</p>
 
-<p>Per <strong>1 juni 2026</strong> geldt MiCA voor alle categorieën crypto-activa in alle 27 EU-lidstaten. Hiermee is een vierjarig wetgevingsproces voltooid — het initiële voorstel van de Europese Commissie dateert uit september 2020.</p>
-
-<h2 id="tijdlijn">Van voorstel naar volledige handhaving</h2>
-
-<table class="comparison-table">
-  <thead><tr><th>Datum</th><th>Mijlpaal</th></tr></thead>
-  <tbody>
-    <tr><td>Sep 2020</td><td>Europese Commissie publiceert MiCA-voorstel</td></tr>
-    <tr><td>Apr 2023</td><td>Europees Parlement keurt MiCA goed</td></tr>
-    <tr><td>Jun 2023</td><td>Publicatie in EU Staatsblad</td></tr>
-    <tr><td>Jun 2024</td><td>Fase 1: Stablecoin-regels van kracht</td></tr>
-    <tr><td>Dec 2024</td><td>Fase 2: CASP-regels voor overige crypto-aanbieders</td></tr>
-    <tr><td class="td-up">Jun 2026</td><td class="td-up">Fase 3: Volledige handhaving, overgangsperiodes afgelopen</td></tr>
-  </tbody>
-</table>
-
-<h2 id="regels">Wat verandert er voor consumenten?</h2>
-
-<p>Voor particuliere beleggers brengt MiCA een aantal directe verbeteringen:</p>
-<ul>
-  <li><strong>Transparantie:</strong> Alle crypto-aanbieders zijn verplicht een <em>whitepaper</em> te publiceren met duidelijke informatie over het project, de risico's en de tokenomics.</li>
-  <li><strong>Klachtrecht:</strong> Consumenten hebben recht op een laagdrempelig klachtenproces bij hun aanbieder.</li>
-  <li><strong>Verbod op marktmanipulatie:</strong> Insider trading en market manipulation zijn expliciet verboden — vergelijkbaar met regels op de aandelenmarkt.</li>
-  <li><strong>Reclameregels:</strong> Crypto-reclame moet eerlijk, duidelijk en niet-misleidend zijn en dient risicowaarschuwingen te bevatten.</li>
-</ul>
-
-<div class="highlight-box">
-  <strong>Nieuw recht:</strong> Als een Crypto Asset Service Provider (CASP) jou schade toebrengt door nalatigheid, kun je nu via het nationale klachtenloket (in Nederland: AFM) een formele klacht indienen. Dit recht bestond voorheen niet voor crypto.
-</div>
-
-<h2 id="stablecoins">Strikte regels voor stablecoins</h2>
-
-<p>Stablecoins — crypto's die gekoppeld zijn aan een fiatvaluta zoals de euro of dollar — krijgen onder MiCA de striktste eisen:</p>
-<ul>
-  <li><strong>1:1 reservedekking:</strong> Elke uitgegeven stablecoin moet gedekt zijn door een equivalent aan liquide activa.</li>
-  <li><strong>Dagelijkse rapportage:</strong> Uitgevers moeten dagelijks hun reserveposities publiceren.</li>
-  <li><strong>Uitgiedelimiet voor niet-euro stablecoins:</strong> Stablecoins gebaseerd op niet-EU-valuta (bijv. USDT, USDC) zijn gelimiteerd tot €200 miljoen transacties per dag in de EU.</li>
-  <li><strong>Verbod op rentedragende stablecoins:</strong> Stablecoins die rente uitkeren zijn verboden onder MiCA.</li>
-</ul>
-
-<h2 id="gevolgen">Winnaars en verliezers</h2>
+<p>De daling valt samen met bredere macro-onzekerheid en negatief sentiment in de cryptomarkt. Ethereum heeft in 2026 nog geen nieuw all-time high bereikt: het absolute record staat nog altijd op circa €4.800, gezet in november 2021.</p>
 
 <div class="stat-grid">
-  <div class="stat-box stat-up">
-    <div class="stat-value">✓</div>
-    <div class="stat-label">EU-compliant exchanges</div>
-  </div>
-  <div class="stat-box stat-up">
-    <div class="stat-value">✓</div>
-    <div class="stat-label">Gereguleerde stablecoins (EURC, EURR)</div>
+  <div class="stat-box stat-down">
+    <div class="stat-value">€1.480</div>
+    <div class="stat-label">ETH koers (12 jun '26)</div>
   </div>
   <div class="stat-box stat-down">
-    <div class="stat-value">✗</div>
-    <div class="stat-label">Niet-MiCA aanbieders</div>
+    <div class="stat-value">-17%</div>
+    <div class="stat-label">Daling afgelopen 2 weken</div>
   </div>
   <div class="stat-box stat-down">
-    <div class="stat-value">✗</div>
-    <div class="stat-label">USDT boven €200M dagvolume</div>
+    <div class="stat-value">-$401M</div>
+    <div class="stat-label">ETH ETF uitstroom mei</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-value">€1.420</div>
+    <div class="stat-label">Kritiek steunniveau</div>
   </div>
 </div>
 
-<p>Grote internationale exchanges als Binance en Coinbase hebben hun EU-entiteiten aangepast en beschikken over een MiCA-licentie. Kleinere platforms die de compliance-kosten niet konden dragen, hebben de Europese markt verlaten. Hierdoor is de markt geconsolideerd bij grotere, gereguleerde spelers.</p>
+<h2 id="sentiment">Sentiment in extreme angst-zone</h2>
+
+<p>Volgens BeInCrypto is het sociale sentiment rondom Ethereum gedaald naar de "extreme angst"-zone, een niveau dat voor het laatste werd gezien tijdens de bear market van 2022. Op platformen als X (voorheen Twitter) en Reddit domineren bearish berichten; het volume van Ethereum-gerelateerde discussies is het laagste in jaren.</p>
+
+<p>Paradoxaal gezien is extreme angst in crypto-markten historisch soms een contrarisch koopsignaal. In 2022 markeerde soortgelijk extreme angst de langetermijnbodem van Ethereum bij circa $880. Of datzelfde patroon zich nu herhaalt, hangt af van macro-factoren buiten de crypto-sector.</p>
+
+<h2 id="etf">ETH ETF-uitstroom: institutionelen trekken zich terug</h2>
+
+<p>Amerikaanse Ethereum spot-ETFs, goedgekeurd in juli 2024, presteerden nooit zo sterk als hun Bitcoin-equivalenten. In mei 2026 verslechterde de situatie verder: <strong>netto-uitstroom van $401 miljoen</strong>, de op twee na grootste maandelijkse uitstroom in de korte geschiedenis van het product.</p>
+
+<p>Opmerkelijk is dat Jane Street haar Ethereum-posities juist vergroot. Maar de totale institutionele vraag is onvoldoende om de verkoopdruk te compenseren.</p>
+
+<h2 id="technisch">Technische analyse: cruciale niveaus</h2>
+
+<p>Technisch analisten wijzen op twee cruciale niveaus:</p>
+<ul>
+  <li><strong>€1.420 ($1.545):</strong> Het primaire steunniveau. Als ETH hier doorheen zakt op weeksluitingsbasis, versnelt de verkoop vermoedelijk.</li>
+  <li><strong>€920 ($1.000):</strong> Het volgende grote steunniveau, dat historisch als "bodem" fungeerde in 2022. Meerdere analisten noemen dit niveau als worst-case scenario voor 2026.</li>
+</ul>
+
+<div class="warning-box">
+  <div class="warning-title">Hoog risico op verdere daling</div>
+  Ethereum heeft een historisch gemiddeld juni-rendement van -6,74% (mediaan -5,65%). Slechts drie van de afgelopen tien junes sloten groen. Seizoenspatronen suggereren verdere druk de komende weken.
+</div>
+
+<h2 id="pectra">Pectra in perspectief: waarom de upgrade niet helpt</h2>
+
+<p>De Pectra-upgrade, de grootste Ethereum-update in jaren, verbetert technisch de fundamentals van het netwerk met account abstraction, lagere L2-kosten en betere staking-mogelijkheden. Maar in een bearish marktomgeving reageert de koers niet positief op fundamenteel goed nieuws. "Buy the rumour, sell the news" heeft zich ook hier voltrokken: Ethereum is na de upgrade verder gedaald.</p>
+
+<p>Technologische upgrades verbeteren de lange termijn waardepropositie, maar geven geen directe koersimpuls als het macro-klimaat ongunstig is.</p>
 
 <div class="faq-section">
   <div class="faq-title">Veelgestelde vragen</div>
   <div class="faq-item">
-    <div class="faq-q">Moet ik als particulier iets doen vanwege MiCA?</div>
-    <div class="faq-a">Niet direct. Als je al handelt op een gereguleerde, bij DNB geregistreerde exchange, ben je al in lijn met MiCA. Controleer wel of je exchange een MiCA-licentie heeft — zo niet, overweeg over te stappen.</div>
+    <div class="faq-q">Kan Ethereum echt naar $1.000 zakken?</div>
+    <div class="faq-a">Technisch is het mogelijk. Meerdere analisten noemen $1.000 als worst-case scenario voor 2026 bij een verdere macro-verslechtering. Historisch heeft Ethereum eerder extreme dalingen meegemaakt (circa -92% in 2018, circa -80% in 2022). Dat maakt het asset potentieel lucratief op lange termijn, maar ook bijzonder riskant op korte termijn.</div>
   </div>
   <div class="faq-item">
-    <div class="faq-q">Worden DeFi-protocollen ook gereguleerd door MiCA?</div>
-    <div class="faq-a">Volledig gedecentraliseerde protocollen zonder beheerder vallen buiten de reikwijdte van MiCA. Echter, als een protocol een identificeerbare beheerder of centraal bestuur heeft, kan het als CASP worden aangemerkt.</div>
-  </div>
-  <div class="faq-item">
-    <div class="faq-q">Is USDT nog beschikbaar in Nederland?</div>
-    <div class="faq-a">USDT is beschikbaar, maar exchanges mogen de dagelijkse transactievolumes van niet-EU stablecoins beperken vanwege MiCA. Voor grotere bedragen adviseren exchanges over te stappen naar een euro-stablecoin zoals EURC.</div>
+    <div class="faq-q">Presteert Ethereum altijd slechter dan Bitcoin in een bear market?</div>
+    <div class="faq-a">Niet altijd, maar vaak. In bear markets heeft Bitcoin de neiging om relatief beter te presteren omdat het als "digitaal goud" wordt gezien. Altcoins, waaronder Ethereum, krijgen doorgaans zwaarder klappen. In herstelperiodes draait dit soms om.</div>
   </div>
 </div>
 `
 
-/* ────────── ARTIKEL 4 — Solana record ────────── */
 const art4Content = `
 ${quickTake([
-  'Solana verwerkte maandag 142 miljoen transacties op één dag — een nieuw record.',
-  'De Solana Mobile Chapter 2 telefoon heeft meer dan 800.000 pre-orders: mainstream crypto-adoptie wordt tastbaar.',
-  'SOL-koers bereikte €195 na het nieuws, de hoogste stand in 2026.',
-  'Firedancer-validator-client van Jump Crypto draait nu op 18% van alle validators.',
+  'Solana daalt meer dan 20% in juni 2026, harder dan Ethereum (-17%) en Bitcoin (-14%).',
+  'Ondanks de daling behoudt Solana een toppositie: Fortune plaatst SOL in zijn top 3 crypto-ranking voor 2026.',
+  'SOL Strategies, een Canadees beursgenoteerd bedrijf, kocht in juni voor $18 miljoen aan SOL.',
+  'Fundamentals blijven sterk: Solana is de primaire USDC-infrastructuur voor Circle en groeit bij banken als JPMorgan.',
 ])}
 
 ${toc([
-  ['transactie-record', 'Transactierecord: 142 miljoen in één dag'],
-  ['mobile', 'Solana Mobile Chapter 2: smartphone als crypto-hub'],
-  ['firedancer', 'Firedancer: snelheidssprong voor het netwerk'],
-  ['concurrentie', 'Positie ten opzichte van Ethereum L2\'s'],
+  ['daling', 'De daling: waarom daalt Solana harder?'],
+  ['fortune', 'Fortune top 3: erkenning ondanks koersdruk'],
+  ['usdc', 'USDC en JPMorgan: fundamentele groei'],
+  ['sol-strategies', 'SOL Strategies: institutioneel koopt de dip'],
   ['faq', 'Veelgestelde vragen'],
 ])}
 
-<h2 id="transactie-record">Transactierecord: 142 miljoen transacties in één dag</h2>
+<h2 id="daling">De daling: waarom daalt Solana harder?</h2>
 
-<p>Op maandag 9 juni 2026 verwerkte het Solana-netwerk een recordaantal van <strong>142 miljoen transacties</strong> in 24 uur. Ter vergelijking: Ethereum mainnet verwerkt circa 1,2 miljoen transacties per dag, en zelfs de grootste Ethereum L2's halen gezamenlijk niet het Solana-volume op piekdagen.</p>
+<p>In de eerste weken van juni 2026 daalde Solana (SOL) met meer dan <strong>20%</strong>, aanmerkelijk meer dan Ethereum (-17%) en Bitcoin (-14%). De relatieve zwakte van Solana ten opzichte van de twee grootste coins is opvallend, gezien de sterke fundamentals van het netwerk.</p>
 
-<p>Het volume werd aangedreven door een combinatie van meme coin-handel op de Pump.fun-launchpad, activiteit op Solana's NFT-marktplaats en robottrading (MEV). Critici wijzen op het hoge aandeel "spam"-transacties in het totaal, maar Solana-supporters benadrukken dat het netwerk überhaupt in staat is dit volume te verwerken.</p>
+<p>De verklaring ligt grotendeels in het risicokarakter van de asset. In een bearish omgeving worden kleinere coins als risicovoller beschouwd dan Bitcoin, ongeacht hun technologische merites. Beleggers die risico willen verminderen, verkopen altcoins zoals Solana vóór ze Bitcoin liquideren. Dit "risk-off" patroon is ook terug te zien in de SOL/BTC-ratio, die sterk daalde.</p>
 
 <div class="stat-grid">
+  <div class="stat-box stat-down">
+    <div class="stat-value">&gt;-20%</div>
+    <div class="stat-label">SOL daling juni 2026</div>
+  </div>
+  <div class="stat-box stat-down">
+    <div class="stat-value">-12%</div>
+    <div class="stat-label">SOL/ETH ratio (jun)</div>
+  </div>
   <div class="stat-box stat-up">
-    <div class="stat-value">142M</div>
-    <div class="stat-label">Dagelijkse transacties (record)</div>
-  </div>
-  <div class="stat-box">
-    <div class="stat-value">€195</div>
-    <div class="stat-label">SOL-koers piek</div>
+    <div class="stat-value">Top 3</div>
+    <div class="stat-label">Fortune Crypto 100 ranking</div>
   </div>
   <div class="stat-box stat-up">
-    <div class="stat-value">800K+</div>
-    <div class="stat-label">Chapter 2 pre-orders</div>
-  </div>
-  <div class="stat-box">
-    <div class="stat-value">18%</div>
-    <div class="stat-label">Validators met Firedancer</div>
+    <div class="stat-value">$18M</div>
+    <div class="stat-label">SOL Strategies aankoop</div>
   </div>
 </div>
 
-<h2 id="mobile">Solana Mobile Chapter 2: smartphone als crypto-hub</h2>
+<h2 id="fortune">Fortune top 3: erkenning ondanks koersdruk</h2>
 
-<p>De <strong>Solana Mobile Chapter 2</strong> is de opvolger van de originele Saga-telefoon uit 2023. Waar de eerste generatie met moeite 30.000 pre-orders haalde, werden er bij de aankondiging van Chapter 2 in mei 2025 binnen 48 uur al meer dan 800.000 pre-orders geplaatst — grotendeels aangedreven door speculatie op de bijgeleverde crypto-airdrops.</p>
+<p>Terwijl de koers daalt, blijft Solana's reputatie in de sector sterk. <strong>Fortune</strong> plaatste Solana in zijn Crypto 100-lijst voor 2026 op de <strong>derde positie</strong> voor blockchains en protocollen, alleen voorafgegaan door Bitcoin en Ethereum. De rangschikking is gebaseerd op netwerkherstelbestendigheid, adoptie, ontwikkelersactiviteit en ecosysteemgroei.</p>
 
-<p>De telefoon wordt geleverd met een ingebouwde Solana-hardware-wallet, de Seed Vault, en een App Store die exclusief MiCA-compliant en gecertificeerde crypto-apps toelaat. Gebruikers ontvangen bij activering een zogenaamde "dapp bundle" — een pakket airdrops van Solana-ecosysteem projecten.</p>
+<p>Solana scoort bijzonder goed op transactievolume en kosten: met gemiddeld meer dan 1.000 transacties per seconde en kosten van minder dan een eurocent per transactie is het netwerk efficiënter dan de meeste alternatieven.</p>
 
-<h2 id="firedancer">Firedancer: snelheidssprong voor het netwerk</h2>
+<h2 id="usdc">USDC en JPMorgan: fundamentele groei</h2>
 
-<p>Jump Crypto's Firedancer is een volledig herontwikkelde validator-client voor Solana, geschreven in C/C++ in plaats van Rust. Na maanden van testnet-validering draait Firedancer nu op <strong>18% van alle Solana-validators</strong>. De client toonde in lab-omgevingen verwerkingscapaciteiten van meer dan <strong>1 miljoen transacties per seconde</strong> — al zijn realistische netwerkcijfers lager door consensus-overhead.</p>
+<p>Ondanks de koersdaling groeien de fundamentals van Solana. Circle's USD Coin (USDC) heeft Solana aangewezen als de <strong>primaire blockchain-infrastructuur</strong> voor zijn digitale dollar, een erkenning van de netwerksnelheid en betrouwbaarheid.</p>
+
+<p>Opmerkelijker is de samenwerking met <strong>JPMorgan</strong>, dat het Solana-netwerk gebruikt voor institutionele betalingsinfrastructuur. Dit soort adoptie door traditionele financiële giganten geeft Solana een fundamentele waardepropositie die losstaat van de dagelijkse koersbewegingen.</p>
+
+<h2 id="sol-strategies">SOL Strategies: institutioneel koopt de dip</h2>
+
+<p>In juni 2026 maakte <strong>SOL Strategies</strong>, een Canadees beursgenoteerd bedrijf dat focust op het Solana-ecosysteem, bekend voor $18 miljoen aan SOL te hebben gekocht. De strategie lijkt vergelijkbaar met die van MicroStrategy (nu Strategy) voor Bitcoin: grote hoeveelheden kopen en langdurig aanhouden.</p>
 
 <div class="highlight-box">
-  <strong>Wat betekent Firedancer voor gebruikers?</strong> Primair meer netwerkresilience: als de standaard Agave-client problemen heeft, kunnen Firedancer-validators het netwerk draaiende houden. Op termijn draagt het bij aan hogere verwerkingscapaciteit en lagere transactiekosten.
+  <strong>Verschil prijs versus fundamentals:</strong> De Solana-koers daalt door macro-druk en "risk-off"-sentiment. De fundamentele metrics, waaronder transactievolume, ontwikkelaarsactiviteit en institutionele adoptie, blijven sterk of groeien. Dit is geen garantie voor koersherstel, maar het suggereert dat de technologische propositie intact is.
 </div>
-
-<h2 id="concurrentie">Positie ten opzichte van Ethereum L2's</h2>
-
-<table class="comparison-table">
-  <thead><tr><th>Netwerk</th><th>TPS (gemiddeld)</th><th>Gem. transactiekosten</th><th>Decentralisatie</th></tr></thead>
-  <tbody>
-    <tr><td>Solana</td><td class="td-up">~3.000</td><td>~€0,0005</td><td>Matig (1.500 validators)</td></tr>
-    <tr><td>Arbitrum One</td><td>~600</td><td>~€0,02</td><td>Matig (sequencer centraal)</td></tr>
-    <tr><td>Base</td><td>~400</td><td>~€0,01</td><td>Laag (Coinbase-beheer)</td></tr>
-    <tr><td>Ethereum mainnet</td><td>~15</td><td>~€2–8</td><td class="td-up">Hoog (~800K validators)</td></tr>
-  </tbody>
-</table>
 
 <div class="faq-section">
   <div class="faq-title">Veelgestelde vragen</div>
   <div class="faq-item">
-    <div class="faq-q">Is Solana betrouwbaar na de eerdere netwerkstoringen?</div>
-    <div class="faq-a">Solana had tussen 2021 en 2023 meerdere netwerkstoringen. Sindsdien zijn er significante verbeteringen doorgevoerd en is het netwerk aanzienlijk stabieler geworden. De komst van Firedancer als alternatieve client vermindert het risico op network-brede uitval verder. Maar volledig risicovrij is geen enkel blockchain-netwerk.</div>
+    <div class="faq-q">Waarom daalt Solana harder dan Bitcoin in een bear market?</div>
+    <div class="faq-a">Bitcoin wordt gezien als de "veiligste" crypto, een soort digitaal goud. Altcoins zoals Solana worden als risicovoller beschouwd. In een "risk-off" omgeving verkopen beleggers eerst hun risicovolste activa. Bij een herstel draait dit patroon vaak om: altcoins presteren dan juist sterker dan Bitcoin.</div>
   </div>
   <div class="faq-item">
-    <div class="faq-q">Wat is het verschil tussen SOL en meme coins op Solana?</div>
-    <div class="faq-a">SOL is de native token van het Solana-netwerk, gebruikt voor transactiekosten en staking. Meme coins op Solana (zoals BONK, WIF, POPCAT) zijn aparte tokens die zijn aangemaakt op het Solana-netwerk. Ze zijn veel speculatiever dan SOL zelf en kunnen in waarde naar nul zakken.</div>
+    <div class="faq-q">Is Solana een goede langetermijninvestering?</div>
+    <div class="faq-a">Dat hangt af van je eigen analyse en risicotolerantie. Solana heeft sterke technologische fundamentals en groeiende institutionele adoptie. Tegelijkertijd is het een volatile asset die in bear markets zwaarder daalt dan Bitcoin. Doe altijd je eigen onderzoek. Dit is geen beleggingsadvies.</div>
   </div>
 </div>
 `
 
-/* ────────── ARTIKEL 5 — Crypto belasting NL 2026 ────────── */
 const art5Content = `
 ${quickTake([
-  'De Belastingdienst hanteert in 2026 nog steeds box 3 voor crypto — met de peildatum van 1 januari.',
-  'De vermogensrendementsheffing is in 2026 gebaseerd op fictief rendement: 6,04% over de waarde op 1 jan.',
-  'Je moet al je crypto — inclusief DeFi-posities en staking-rewards — opgeven.',
-  'Nieuw in 2026: automatische gegevensuitwisseling via DAC8 tussen EU-lidstaten.',
+  'Crypto valt in box 3 van de inkomstenbelasting: belasting over fictief rendement van 6,04%.',
+  'Peildatum is 1 januari 2026: de waarde van al je crypto op die datum is bepalend.',
+  'Nieuw in 2026: DAC8-richtlijn verplicht exchanges zoals Bitvavo al je transacties te melden aan de Belastingdienst.',
+  'DeFi-posities, staking-rewards en NFTs moeten allemaal worden opgegeven.',
 ])}
 
 ${toc([
   ['box3', 'Crypto in box 3: de basisregel'],
-  ['peildatum', 'Peildatum 1 januari 2026: welke waarde gebruik je?'],
-  ['defi', 'DeFi, staking en lending: hoe geef je dit op?'],
-  ['dac8', 'DAC8: de Belastingdienst weet (bijna) alles'],
-  ['tips', 'Praktische tips voor je aangifte'],
+  ['peildatum', 'Peildatum 1 januari: zo bepaal je de waarde'],
+  ['defi', 'DeFi, staking en NFTs opgeven'],
+  ['dac8', 'DAC8: je exchange deelt je data automatisch'],
   ['faq', 'Veelgestelde vragen'],
 ])}
 
 <h2 id="box3">Crypto in box 3: de basisregel</h2>
 
-<p>In Nederland wordt cryptocurrency behandeld als een <strong>bezitting in box 3</strong> (sparen en beleggen) van de inkomstenbelasting. Dit geldt ongeacht het type crypto: Bitcoin, altcoins, stablecoins, governance tokens, NFTs met vermogenswaarde — ze vallen allemaal in box 3.</p>
+<p>In Nederland wordt cryptocurrency behandeld als een <strong>bezitting in box 3</strong> (sparen en beleggen). Dit geldt ongeacht het type: Bitcoin, altcoins, stablecoins, DeFi-tokens, NFTs met vermogenswaarde. Ze vallen allemaal in box 3.</p>
 
-<p>In box 3 betaal je belasting over een <strong>fictief rendement</strong>, niet over de werkelijk gerealiseerde winst of het verlies. De Belastingdienst bepaalt elk jaar het fictieve rendement op basis van beleggingscategorie. Voor 2025 (aangifte in 2026) geldt een fictief rendement van <strong>6,04%</strong> voor beleggingen — inclusief crypto.</p>
+<p>In box 3 betaal je belasting over een <strong>fictief rendement</strong>, niet over je werkelijke winst of verlies. Voor 2025 (aangifte in 2026) is het fictief rendement voor beleggingen vastgesteld op <strong>6,04%</strong>. Over dat fictieve rendement betaal je 36% belasting.</p>
 
 <div class="highlight-box">
-  <strong>Rekenvoorbeeld:</strong> Je had op 1 januari 2026 voor €50.000 aan crypto in bezit. Het fictieve rendement is 6,04%, wat neerkomt op €3.020. Over dat fictieve rendement betaal je 36% belasting (het box 3-tarief van 2026) = <strong>€1.087 belasting</strong>.
+  <strong>Rekenvoorbeeld:</strong> Je had op 1 januari 2026 voor €30.000 aan crypto. Fictief rendement: 6,04% x €30.000 = €1.812. Belasting: 36% x €1.812 = <strong>€652</strong>. Geen vermogenswinstbelasting: dit is belasting over fictief rendement, ook als je verlies hebt gemaakt.
 </div>
 
-<h2 id="peildatum">Peildatum 1 januari 2026</h2>
+<h2 id="peildatum">Peildatum 1 januari: zo bepaal je de waarde</h2>
 
-<p>De waarde van je crypto op <strong>1 januari 2026 om 00:00 uur</strong> is bepalend voor je aangifte 2026. Dit is cruciaal: als je op 2 januari verkoopt of koopt, telt dat niet mee voor de aangifte over 2025 (peildatum 1 jan 2025) maar wel voor 2026 (peildatum 1 jan 2026).</p>
+<p>De waarde van je crypto op <strong>1 januari 2026 om 00:00 uur</strong> is bepalend. Niet de waarde op het moment van aangifte, niet je aankoopprijs, alleen de waarde op die peildatum.</p>
 
-<p>Hoe bepaal je de waarde op 1 januari?</p>
-<ul>
-  <li>Gebruik de slotkoers op 31 december 2025 of de openingskoers op 1 januari 2026 op een gerenommeerde bron (CoinGecko, CoinMarketCap, Bitvavo).</li>
-  <li>Converteer altijd naar <strong>euro</strong>, niet dollar.</li>
-  <li>Bewaar een screenshot of export als onderbouwing — de Belastingdienst kan hierom vragen.</li>
-</ul>
+<p>Gezien de bear market van juni 2026 kan de waarde op 1 januari 2026 (vroeg in het jaar, toen Bitcoin nog hoger stond) hoger zijn dan de huidige koers. Dat betekent dat je belasting betaalt over een waarde die nu niet meer bestaat, een frustrerende maar wettelijke situatie.</p>
 
 <div class="stat-grid">
   <div class="stat-box">
@@ -497,286 +425,274 @@ ${toc([
   </div>
 </div>
 
-<h2 id="defi">DeFi, staking en lending: hoe geef je dit op?</h2>
-
-<p>Met de groei van DeFi is de aangifte complexer geworden. De Belastingdienst heeft in 2025 een guidance-document gepubliceerd, maar veel gevallen blijven grijs:</p>
+<h2 id="defi">DeFi, staking en NFTs opgeven</h2>
 
 <ul>
-  <li><strong>Staking-rewards:</strong> Zolang je de tokens niet verkoopt, tellen ze mee als vermogen in box 3 (waarde op peildatum). Er is discussie of de rewards ook als inkomen in box 1 kunnen vallen — wacht op verdere jurisprudentie.</li>
-  <li><strong>Liquidity pool-posities:</strong> Je LP-tokens vertegenwoordigen een vermogenswaarde. Gebruik de waarde van de onderliggende activa op de peildatum.</li>
-  <li><strong>Lending (bijv. via Aave):</strong> Je uitgeleende crypto telt mee in box 3. Je schuld aan het protocol mag je aftrekken als box 3-schuld.</li>
-  <li><strong>NFTs:</strong> NFTs met substantiële handelswaarde vallen in box 3. Voor decoratieve of "personal use" NFTs is de Belastingdienst minder duidelijk.</li>
+  <li><strong>Staking-rewards:</strong> De ontvangen tokens tellen als vermogen op de peildatum. Er is nog discussie of rewards ook als inkomen in box 1 kunnen vallen; raadpleeg een belastingadviseur bij grote bedragen.</li>
+  <li><strong>Liquidity pool-posities:</strong> Gebruik de waarde van de onderliggende activa op 1 januari.</li>
+  <li><strong>Lending (Aave, Compound):</strong> Uitgeleende crypto telt mee als bezitting; je schuld aan het protocol is aftrekbaar als box 3-schuld.</li>
+  <li><strong>NFTs:</strong> NFTs met een objectieve handelswaarde vallen in box 3.</li>
 </ul>
 
 <div class="warning-box">
-  <div class="warning-title">⚠️ Opgeven is verplicht</div>
-  Crypto op buitenlandse exchanges moet worden opgegeven, ook als je er geen bankrekening bij hebt. Verzwijgen is fiscale fraude en kan leiden tot boetes en naheffingen over de afgelopen vijf jaar.
+  <div class="warning-title">Verzwijgen is strafbaar</div>
+  Crypto op buitenlandse exchanges, ook niet-EU-exchanges, moet worden opgegeven. Verzwijgen is fiscale fraude en kan leiden tot boetes tot 300% van de verschuldigde belasting.
 </div>
 
-<h2 id="dac8">DAC8: de Belastingdienst weet (bijna) alles</h2>
+<h2 id="dac8">DAC8: je exchange deelt je data automatisch</h2>
 
-<p>Per 1 januari 2026 is de <strong>DAC8-richtlijn</strong> van kracht in de EU. Dit verplicht crypto-aanbieders in de EU (en platforms die EU-burgers bedienen) om transactiegegevens van klanten te delen met de belastingautoriteiten. Dit werkt vergelijkbaar met hoe banken al jaren bankgegevens delen.</p>
+<p>Per 1 januari 2026 is de <strong>DAC8-richtlijn</strong> volledig van kracht in de EU. Dit verplicht MiCA-gecertificeerde crypto-exchanges, waaronder Bitvavo, Coinbase EU en Kraken EU, om transactiedata van hun klanten automatisch te delen met de belastingautoriteiten van het betreffende EU-land.</p>
 
-<p>In de praktijk: Bitvavo, Kraken, Coinbase en andere MiCA-compliant exchanges rapporteren je transacties automatisch aan de Nederlandse Belastingdienst. De aangifte wordt daarmee steeds meer een "controlemoment" in plaats van een zelfstandige opgave.</p>
+<p>Concreet: Bitvavo stuurt jouw handelshistorie, stortingen en opnames automatisch naar de Belastingdienst. Je aangifte wordt daarmee steeds meer een controlemoment, want de Belastingdienst weet al wat je hebt gedaan.</p>
 
 <div class="faq-section">
   <div class="faq-title">Veelgestelde vragen</div>
   <div class="faq-item">
-    <div class="faq-q">Betaal ik ook belasting als ik verlies heb gemaakt?</div>
-    <div class="faq-a">In box 3 is de werkelijk gerealiseerde winst of het verlies niet relevant. Je betaalt belasting over het fictieve rendement op de waarde per peildatum. Zelfs als je verlies hebt gemaakt, kan je dus belasting verschuldigd zijn als je op 1 januari veel vermogen had.</div>
+    <div class="faq-q">Betaal ik belasting als mijn crypto in waarde is gedaald?</div>
+    <div class="faq-a">Ja, mogelijk wel. In box 3 betaal je over de waarde op de peildatum (1 januari), ongeacht wat er daarna met de koers gebeurt. Als Bitcoin op 1 januari 2026 €75.000 waard was en nu €55.000, betaal je toch over de peildatumwaarde van €75.000.</div>
   </div>
   <div class="faq-item">
-    <div class="faq-q">Hoe geef ik crypto op een hardware wallet op?</div>
-    <div class="faq-a">Op dezelfde manier als crypto op een exchange: de totale waarde op 1 januari in euro. Het feit dat je de sleutels zelf beheert maakt voor de belastingplicht geen verschil.</div>
+    <div class="faq-q">Moet ik een hardware wallet ook opgeven?</div>
+    <div class="faq-a">Ja. Of je crypto op een exchange staat, in een software wallet of op een hardware wallet: het maakt geen verschil voor de belastingplicht. De totale waarde op 1 januari moet worden opgegeven.</div>
   </div>
   <div class="faq-item">
-    <div class="faq-q">Kan ik een belastingadviseur inschakelen voor crypto?</div>
-    <div class="faq-a">Ja. Er zijn steeds meer belastingadviseurs gespecialiseerd in crypto (zoals Koinly, CryptoTax.nl). Ze kunnen je helpen met complexe DeFi-posities, staking en de juiste waardering. De kosten zijn fiscaal aftrekbaar als kosten van vermogensbeheer.</div>
+    <div class="faq-q">Welke hulpmiddelen zijn er voor crypto-aangifte?</div>
+    <div class="faq-a">Koinly, CoinTracking en CryptoTax.nl zijn populaire platforms die je handelshistorie importeren en automatisch belastingrapporten genereren die compatibel zijn met de Nederlandse Belastingdienst. De kosten zijn fiscaal aftrekbaar als kosten van vermogensbeheer.</div>
   </div>
 </div>
 `
 
-/* ────────── ARTIKEL 6 — DeFi TVL $200 miljard ────────── */
 const art6Content = `
 ${quickTake([
-  'DeFi-sector overschrijdt voor het eerst $200 miljard aan Total Value Locked (TVL).',
-  'Groei wordt gedreven door Ethereum L2\'s en real-world asset (RWA) tokenisatie.',
-  'Aave V4 en Uniswap V5 leiden het herstel — beide lanceerden nieuwe versies in mei 2026.',
-  'Institutionele deelname via gereguleerde DeFi-poorten groeit met 340% jaar-op-jaar.',
+  'Bitcoin bereikte zijn absolute all-time high op 6 oktober 2025 met een koers van €109.082.',
+  'Sindsdien is Bitcoin bijna 50% gedaald naar de huidige €55.000, officieel bear market-territorium.',
+  'Analisten zijn verdeeld: sommigen zien een tijdelijke correctie, anderen een echte bear market.',
+  'Macro-factoren spelen een grote rol: inflatieonzekerheid bepaalt mede het lot van risicovolle assets.',
 ])}
 
 ${toc([
-  ['mijlpaal', 'De $200 miljard-mijlpaal: hoe we hier kwamen'],
-  ['rwa', 'Real-World Assets: de nieuwe groeikatalysator'],
-  ['aave-uni', 'Aave V4 en Uniswap V5: protocol-upgrades'],
-  ['institutioneel', 'Institutionele DeFi: gereguleerd de markt in'],
-  ['risicos', 'Risico\'s in DeFi: wat je moet weten'],
+  ['ath', 'Van ATH naar bear market: de tijdlijn'],
+  ['definitie', 'Is dit een bear market? De definitie'],
+  ['macro', 'Macro-factoren achter de daling'],
+  ['scenario', 'Drie scenario\'s voor de rest van 2026'],
   ['faq', 'Veelgestelde vragen'],
 ])}
 
-<h2 id="mijlpaal">De $200 miljard-mijlpaal</h2>
+<h2 id="ath">Van ATH naar bear market: de tijdlijn</h2>
 
-<p>DeFiLlama, het platform dat DeFi-statistieken bijhoudt, registreerde woensdag 10 juni 2026 om 08:14 UTC voor het eerst een <strong>Total Value Locked (TVL) boven de $200 miljard</strong> over alle DeFi-protocollen heen. Het vorige record van $180 miljard dateerde uit november 2021, kort voor de bear market van 2022.</p>
-
-<p>Het herstel was lang en moeizaam — de FTX-crisis van november 2022 zorgde voor een halvering van de TVL in twee weken. Sindsdien hebben betere beveiligingsstandaarden, formele code-audits en de opkomst van verzekerd DeFi (DeFi insurance) het vertrouwen hersteld.</p>
-
-<div class="stat-grid">
-  <div class="stat-box stat-up">
-    <div class="stat-value">$200B</div>
-    <div class="stat-label">DeFi TVL (nieuw record)</div>
-  </div>
-  <div class="stat-box stat-up">
-    <div class="stat-value">+340%</div>
-    <div class="stat-label">Institutionele groei YoY</div>
-  </div>
-  <div class="stat-box">
-    <div class="stat-value">$45B</div>
-    <div class="stat-label">RWA getokeniseerde activa</div>
-  </div>
-  <div class="stat-box stat-up">
-    <div class="stat-value">#1</div>
-    <div class="stat-label">Aave: grootste DeFi-protocol</div>
-  </div>
-</div>
-
-<h2 id="rwa">Real-World Assets: de nieuwe groeikatalysator</h2>
-
-<p>Een van de meest opvallende trends achter de TVL-groei is de tokenisatie van <strong>real-world assets (RWA)</strong>. Hierbij worden traditionele financiële activa — zoals staatsobligaties, vastgoed en bedrijfsleningen — omgezet in blockchain-tokens die verhandelbaar zijn op DeFi-protocollen.</p>
-
-<p>BlackRock's BUIDL-fonds (getokeniseerde US Treasury Bills) is met $8 miljard de grootste RWA op de blockchain. Franklin Templeton, Ondo Finance en Maple Finance bieden vergelijkbare producten aan. Voor DeFi-gebruikers zijn deze RWAs aantrekkelijk omdat ze een stabiel, risicoarm rendement bieden van 4–5% per jaar in dollar, volledig on-chain.</p>
-
-<h2 id="aave-uni">Aave V4 en Uniswap V5</h2>
-
-<p><strong>Aave V4</strong>, gelanceerd in mei 2026, introduceert een "unified liquidity layer" — een architectuur waarbij liquiditeit efficiënter tussen markten kan stromen. De nieuwe versie ondersteunt ook native cross-chain lending: je kunt ETH depositen op Ethereum mainnet en USDC lenen op Arbitrum, zonder manuele bridge-stappen.</p>
-
-<p><strong>Uniswap V5</strong>, eveneens in mei gelanceerd, focust op gasefficiëntie en introduceert "hook composability" — een systeem waarbij ontwikkelaars aangepaste logica kunnen toevoegen aan liquidity pools. Dit opent de deur voor geavanceerde marktmakers en op maat gemaakte liquiditeitsstrategieën.</p>
-
-<div class="faq-section">
-  <div class="faq-title">Veelgestelde vragen</div>
-  <div class="faq-item">
-    <div class="faq-q">Wat is DeFi precies en hoe verschilt het van crypto kopen?</div>
-    <div class="faq-a">DeFi (gedecentraliseerde financiën) zijn financiële diensten — lenen, uitlenen, ruilen — die volledig via smart contracts op een blockchain draaien, zonder bank of tussenpersoon. Crypto kopen doe je op een exchange; DeFi gebruiken doe je direct via je wallet op een protocol als Aave of Uniswap.</div>
-  </div>
-  <div class="faq-item">
-    <div class="faq-q">Is DeFi veilig?</div>
-    <div class="faq-a">DeFi brengt unieke risico's met zich mee: smart contract-bugs, oracle-manipulatie, en liquidatierisico bij lenen. Veel grote protocollen zijn meerdere keren geauditeerd en hebben bug bounty-programma's. Begin altijd met kleine bedragen, gebruik alleen geauditeerde en bewezen protocollen.</div>
-  </div>
-  <div class="faq-item">
-    <div class="faq-q">Hoe kan ik beginnen met DeFi?</div>
-    <div class="faq-a">Je hebt een Web3-wallet nodig (bijv. MetaMask of Rabby) en crypto op een L2-netwerk zoals Arbitrum of Base voor lagere kosten. Surf naar app.aave.com of app.uniswap.org en verbind je wallet. Begin met kleine bedragen en lees altijd de documentatie van het protocol.</div>
-  </div>
-</div>
-`
-
-/* ────────── ARTIKEL 7 — BlackRock Bitcoin ETF ────────── */
-const art7Content = `
-${quickTake([
-  'BlackRock\'s IBIT-ETF beheert nu $52 miljard — groter dan het goud-ETF GLD.',
-  'Institutioneel bezit van Bitcoin via ETFs is in 18 maanden gestegen van 0% naar 8,4% van de totale supply.',
-  'De SEC heeft goedkeuring gegeven voor in-kind creaties bij spot-Bitcoin ETFs — goedkoper voor grote beleggers.',
-  'Morgan Stanley, Wells Fargo en UBS laten adviseurs nu actief Bitcoin-ETF-aanbevelingen doen.',
-])}
-
-${toc([
-  ['record', 'Van nul naar $52 miljard in 18 maanden'],
-  ['inkind', 'In-kind creaties: de next step in ETF-volwassenheid'],
-  ['adviseurs', 'Wealth managers omarmen Bitcoin'],
-  ['impact', 'Wat betekent dit voor de Bitcoin-koers?'],
-  ['faq', 'Veelgestelde vragen'],
-])}
-
-<h2 id="record">Van nul naar $52 miljard in 18 maanden</h2>
-
-<p>Op 11 januari 2024 lanceerden de eerste Amerikaanse spot-Bitcoin ETFs. Destijds voorspelden sceptici een bescheiden instroom van een paar honderd miljoen dollar. Wat volgde, overtrof alle verwachtingen: in de eerste week stroomde al $10 miljard in — meer dan welk ETF ooit in een week had aangetrokken.</p>
-
-<p>Achttien maanden later beheert BlackRock's <strong>iShares Bitcoin Trust (IBIT)</strong> ruim $52 miljard aan activa. Dit maakt het groter dan SPDR Gold Shares (GLD), het meest succesvolle goud-ETF, dat dertig jaar nodig had om $58 miljard te bereiken. IBIT deed dit in anderhalf jaar.</p>
-
-<div class="stat-grid">
-  <div class="stat-box stat-up">
-    <div class="stat-value">$52B</div>
-    <div class="stat-label">IBIT beheerd vermogen</div>
-  </div>
-  <div class="stat-box">
-    <div class="stat-value">8,4%</div>
-    <div class="stat-label">% BTC supply in ETFs</div>
-  </div>
-  <div class="stat-box stat-up">
-    <div class="stat-value">11</div>
-    <div class="stat-label">Goedgekeurde spot-BTC ETFs</div>
-  </div>
-  <div class="stat-box">
-    <div class="stat-value">0,25%</div>
-    <div class="stat-label">IBIT beheerkosten</div>
-  </div>
-</div>
-
-<h2 id="inkind">In-kind creaties: de next step in ETF-volwassenheid</h2>
-
-<p>In april 2026 gaf de SEC toestemming voor <strong>in-kind creaties</strong> bij spot-Bitcoin ETFs. Dit is een technische maar significante verbetering: grote beleggers (Authorized Participants) kunnen nu nieuwe ETF-aandelen creëren door direct Bitcoin te leveren in plaats van cash. Dit verlaagt de transactiekosten en maakt het ETF efficiënter voor institutionele beleggers die al Bitcoin bezitten.</p>
-
-<p>In de traditionele ETF-markt zijn in-kind creaties de standaard voor commodity-ETFs als goud. Dat Bitcoin-ETFs dit recht nu ook hebben, is een markering van de volwassenheid van de asset class in de ogen van de SEC.</p>
-
-<h2 id="adviseurs">Wealth managers omarmen Bitcoin</h2>
-
-<p>Eén van de meest impactvolle ontwikkelingen van 2026: grote Amerikaanse vermogensbeheerders geven hun adviseurs nu expliciet toestemming om Bitcoin-ETFs aan te bevelen aan klanten. Morgan Stanley stelde 15.000 adviseurs in staat om IBIT aan te bevelen. Wells Fargo en UBS volgden. Dit opent de poort naar <strong>tientallen biljoenen dollars</strong> aan beheerd vermogen bij family offices en pensioenfondsen.</p>
-
-<div class="highlight-box">
-  <strong>Perspectief:</strong> Het totale vermogen beheerd door wealth managers wereldwijd bedraagt circa $100 biljoen. Als slechts 1% wordt gealloceerd naar Bitcoin, is dat $1 biljoen — meer dan de huidige totale marktkapitalisatie van Bitcoin.
-</div>
-
-<div class="faq-section">
-  <div class="faq-title">Veelgestelde vragen</div>
-  <div class="faq-item">
-    <div class="faq-q">Wat is het verschil tussen een Bitcoin ETF kopen en Bitcoin zelf kopen?</div>
-    <div class="faq-a">Met een Bitcoin ETF koop je een aandeel van een fonds dat Bitcoin aanhoudt. Je bezit de Bitcoin zelf niet en hebt geen private keys. Voordelen: toegankelijk via reguliere broker, geen zorgen over opslag. Nadelen: je kunt niet zelf transacties doen en betaalt een jaarlijkse beheerfee.</div>
-  </div>
-  <div class="faq-item">
-    <div class="faq-q">Zijn er ook Bitcoin ETFs in Europa beschikbaar?</div>
-    <div class="faq-a">Ja, in Europa zijn er Bitcoin ETPs (Exchange Traded Products) beschikbaar via Xetra en Euronext, zoals die van ETC Group en 21Shares. In tegenstelling tot de VS zijn dit ETPs en geen ETFs, maar het principe is vergelijkbaar. Controleer of je broker Nederlandse/Europese crypto-ETPs aanbiedt.</div>
-  </div>
-</div>
-`
-
-/* ────────── ARTIKEL 8 — Marktanalyse juni 2026 ────────── */
-const art8Content = `
-${quickTake([
-  'Bitcoin en Ethereum bereikten nieuwe jaarhoogten in de week van 9–11 juni 2026.',
-  'De totale crypto-marktkapitalisatie staat op $3,4 biljoen — dichtbij het record van $3,7 biljoen uit nov 2021.',
-  'Fear & Greed Index: 86 (Extreme Greed) — historisch gezien een voorzichtigheid-signaal.',
-  'Altcoins presteren breed beter dan Bitcoin: Bitcoin Dominance daalt van 54% naar 49%.',
-])}
-
-${toc([
-  ['overzicht', 'Weekoverzicht: Bitcoin breekt ATH, markt volgt'],
-  ['dominance', 'Bitcoin Dominance daalt — altcoin season in zicht?'],
-  ['fear-greed', 'Fear & Greed: wanneer is "te greedy" een probleem?'],
-  ['watchlist', 'Coins om in de gaten te houden'],
-  ['outlook', 'Vooruitblik: wat verwachten analisten?'],
-  ['faq', 'Veelgestelde vragen'],
-])}
-
-<h2 id="overzicht">Weekoverzicht: Bitcoin breekt ATH, markt volgt</h2>
-
-<p>De week van 9–11 juni 2026 wordt de boeken ingegaan als een historische week voor de cryptomarkt. <strong>Bitcoin bereikte een nieuw all-time high van €95.847</strong> op woensdag, Ethereum volgde met een piek van €3.890 (nieuw jaarhoog), en de totale marktkapitalisatie van alle cryptocurrencies samen bereikte $3,4 biljoen.</p>
+<p>Om de huidige situatie goed te begrijpen, is de tijdlijn van belang:</p>
 
 <table class="comparison-table">
-  <thead><tr><th>Coin</th><th>Koers (12 jun)</th><th>7d verandering</th><th>YTD verandering</th></tr></thead>
+  <thead><tr><th>Datum</th><th>Bitcoin koers</th><th>Gebeurtenis</th></tr></thead>
   <tbody>
-    <tr><td>Bitcoin (BTC)</td><td>€93.200</td><td class="td-up">+14,2%</td><td class="td-up">+68%</td></tr>
-    <tr><td>Ethereum (ETH)</td><td>€3.740</td><td class="td-up">+18,6%</td><td class="td-up">+82%</td></tr>
-    <tr><td>Solana (SOL)</td><td>€185</td><td class="td-up">+22,1%</td><td class="td-up">+145%</td></tr>
-    <tr><td>BNB</td><td>€520</td><td class="td-up">+11,4%</td><td class="td-up">+55%</td></tr>
-    <tr><td>XRP</td><td>€2,85</td><td class="td-up">+8,9%</td><td class="td-up">+41%</td></tr>
-    <tr><td>Avalanche (AVAX)</td><td>€38</td><td class="td-up">+29,3%</td><td class="td-up">+187%</td></tr>
+    <tr><td>December 2024</td><td class="td-up">€100.000</td><td>Eerste keer boven €100.000</td></tr>
+    <tr><td>6 oktober 2025</td><td class="td-up">€109.082</td><td>Absoluut all-time high</td></tr>
+    <tr><td>Januari 2026</td><td>circa €83.000</td><td>2026-jaarhoogtepunt</td></tr>
+    <tr><td>Eind mei 2026</td><td>circa €68.000</td><td>Correctie versnelt</td></tr>
+    <tr><td class="td-down">12 juni 2026</td><td class="td-down">circa €55.000</td><td>Huidige stand: -50% van ATH</td></tr>
   </tbody>
 </table>
 
-<h2 id="dominance">Bitcoin Dominance daalt — altcoin season in zicht?</h2>
+<h2 id="definitie">Is dit een bear market? De definitie</h2>
 
-<p>Een klassiek signaal voor een opkomend "altcoin season" is een dalende Bitcoin Dominance — het percentage van de totale marktkapitalisatie dat Bitcoin vertegenwoordigt. Die dominance is de afgelopen twee weken gedaald van <strong>54% naar 49%</strong>, wat historisch gezien samengaat met outperformance van altcoins.</p>
+<p>Technisch gezien geldt een daling van meer dan 20% als de definitie van een bear market. Bitcoin daalde van zijn absolute all-time high van €109.082 naar de huidige circa €55.000, een daling van bijna <strong>50%</strong>. Binnen 2026 gemeten is de daling circa 34% ten opzichte van het 2026-jaarhoogtepunt van circa €83.000.</p>
 
-<p>Wanneer Bitcoin een ATH bereikt en de markt het nieuws heeft "ingeprijsd", zoeken beleggers doorgaans naar grotere rendementen in kleinere coins. Altcoins reageren typisch later en heviger op bull-markt sentiment. Dit patroon is terug te zien in de 2017- en 2021-cycli en lijkt zich opnieuw te herhalen.</p>
-
-<div class="highlight-box">
-  <strong>Let op:</strong> Altcoin seasons gaan gepaard met extreme volatiliteit. Coins kunnen in korte tijd zowel 200% stijgen als 80% dalen. Risicobeheersing (stop-losses, positiegroottes) is essentieel.
-</div>
-
-<h2 id="fear-greed">Fear &amp; Greed: wanneer is "te greedy" een probleem?</h2>
-
-<p>De <strong>Crypto Fear &amp; Greed Index</strong> meet het sentiment in de markt op een schaal van 0 (Extreme Fear) tot 100 (Extreme Greed). De index staat momenteel op <strong>86</strong> — Extreme Greed-territorium.</p>
-
-<p>Historisch gezien zijn er twee interpretaties:</p>
-<ul>
-  <li><strong>Bull market view:</strong> In sterke bull markets kan de index wekenlang in Extreme Greed blijven zonder significante correctie. Het signaal is geen timing-tool.</li>
-  <li><strong>Bear market view:</strong> In de 2021-cyclus markeerde een vergelijkbaar niveau van 88–92 de korte termijn top voorafgaand aan een correctie van 15–25%. Voorzichtigheid is geboden.</li>
-</ul>
+<p>Er is nuance nodig. In de crypto-wereld zijn correcties van 30 tot 50% binnen een bredere bull run historisch normaal. De vraag is of dit het begin is van een langdurige neerwaartse cyclus (zoals 2018 en 2022) of een tijdelijke correctie binnen een bredere bullish trend (zoals de correcties van mei 2021 en september 2021).</p>
 
 <div class="stat-grid">
+  <div class="stat-box stat-down">
+    <div class="stat-value">-50%</div>
+    <div class="stat-label">Daling van ATH (€109.082)</div>
+  </div>
+  <div class="stat-box stat-down">
+    <div class="stat-value">-34%</div>
+    <div class="stat-label">Daling van 2026-top</div>
+  </div>
   <div class="stat-box">
-    <div class="stat-value">86</div>
+    <div class="stat-value">22</div>
     <div class="stat-label">Fear &amp; Greed Index</div>
   </div>
   <div class="stat-box">
-    <div class="stat-value">49%</div>
-    <div class="stat-label">Bitcoin Dominance</div>
+    <div class="stat-value">Q3 '26</div>
+    <div class="stat-label">Verwachte bodem (consensus)</div>
   </div>
-  <div class="stat-box stat-up">
-    <div class="stat-value">$3,4T</div>
+</div>
+
+<h2 id="macro">Macro-factoren achter de daling</h2>
+
+<p>De crypto-markt opereert niet in een vacuüm. De huidige daling valt samen met:</p>
+<ul>
+  <li><strong>Macro-onzekerheid:</strong> Nieuwe inflatiedata heeft twijfels gezaaid over het tempo van Fed-renteverlagingen. Hogere rente maakt risicovolle assets minder aantrekkelijk.</li>
+  <li><strong>Technische correctie:</strong> Na een sterke bull run van 2024 tot begin 2026 was een correctie technisch te verwachten. Winst nemen na een verdubbeling is normaal marktgedrag.</li>
+  <li><strong>Seasonaliteit:</strong> Historisch gezien zijn mei en juni zwakke maanden voor crypto. Het patroon "sell in May and go away" geldt ook in crypto-markten.</li>
+</ul>
+
+<h2 id="scenario">Drie scenario's voor de rest van 2026</h2>
+
+<p><strong>Scenario 1 (basis, kans circa 45%):</strong> Bitcoin houdt de $53.000 tot $56.000 als bodem, macro verbetert in H2 2026, herstel richting €70.000 tot €80.000 eind 2026.</p>
+
+<p><strong>Scenario 2 (negatief, kans circa 35%):</strong> Macro verslechtert, Bitcoin zakt door €45.000, langdurig herstel duurt tot 2027.</p>
+
+<p><strong>Scenario 3 (bullish, kans circa 20%):</strong> Positief macro-nieuws of grote institutionele aankondiging stuwt Bitcoin snel terug boven €70.000. Historisch zeldzaam na een daling van meer dan 30%, maar niet onmogelijk.</p>
+
+<div class="faq-section">
+  <div class="faq-title">Veelgestelde vragen</div>
+  <div class="faq-item">
+    <div class="faq-q">Hoe lang duurt de gemiddelde crypto bear market?</div>
+    <div class="faq-a">De crypto bear markets van 2018 en 2022 duurden respectievelijk 12 en 14 maanden van piek naar bodem. Als de huidige cyclus begon in oktober 2025 (na de ATH), zou een bodem en herstel richting Q3 tot Q4 2026 historisch in lijn zijn.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Moet ik nu mijn crypto verkopen?</div>
+    <div class="faq-a">Dat is een persoonlijke beslissing afhankelijk van je tijdshorizon, risicotolerantie en financiële situatie. Er is geen universeel goed antwoord. Dit is geen beleggingsadvies.</div>
+  </div>
+</div>
+`
+
+const art7Content = `
+${quickTake([
+  'Een bear market is emotioneel zwaar, maar ook de fase waarin de beste langetermijnposities worden opgebouwd.',
+  'DCA (dollar-cost averaging): periodiek kleine bedragen investeren verlaagt de gemiddelde inkoopprijs.',
+  'Portfolio-diversificatie en positiegroottes begrenzen het risico op permanente verliezen.',
+  'Psychologie: FOMO en angst zijn je grootste vijanden. Heb een strategie en houd je eraan.',
+])}
+
+${toc([
+  ['psychologie', 'Psychologie: de grootste vijand ben jezelf'],
+  ['dca', 'Strategie 1: Dollar-Cost Averaging'],
+  ['positiegrootte', 'Strategie 2: positiegroottes en risicobeheer'],
+  ['stablecoins', 'Strategie 3: stablecoins als buffer'],
+  ['fundamentals', 'Strategie 4: focus op fundamentals'],
+  ['faq', 'Veelgestelde vragen'],
+])}
+
+<h2 id="psychologie">Psychologie: de grootste vijand ben jezelf</h2>
+
+<p>In een bear market dalen niet alleen koersen, ook het vertrouwen en de discipline van beleggers. Onderzoek toont aan dat de meeste particuliere beleggers op de slechtst mogelijke momenten kopen (na sterke stijgingen, gedreven door FOMO) en verkopen (na sterke dalingen, gedreven door angst). Dit patroon wordt "buy high, sell low" genoemd en is de voornaamste reden waarom de meeste beleggers slechter presteren dan de markt.</p>
+
+<p>De oplossing: heb een plan en houd je eraan, ongeacht de emoties van de dag.</p>
+
+<div class="highlight-box">
+  <strong>Onthoud:</strong> In een bear market is geld niet "verdwenen", het is van de een naar de ander gegaan. De beste langetermijnrendementen worden doorgaans behaald door wie kopen en aanhouden tijdens bear markets, niet door wie uitstappen en later duurder terugkomen.
+</div>
+
+<h2 id="dca">Strategie 1: Dollar-Cost Averaging (DCA)</h2>
+
+<p><strong>Dollar-Cost Averaging (DCA)</strong> is de strategie van periodiek een vast bedrag investeren, ongeacht de koers. Koop je elke maand voor €100 Bitcoin, dan koop je bij lage koersen meer BTC en bij hoge koersen minder, wat resulteert in een lagere gemiddelde inkoopprijs over tijd.</p>
+
+<p>DCA werkt het best voor beleggers die een langetermijnhorizon hebben (minimaal 3 tot 5 jaar), niet de tijd hebben of willen besteden aan dagelijkse koersanalyse, en emotioneel rust willen bewaren.</p>
+
+<h2 id="positiegrootte">Strategie 2: positiegroottes en risicobeheer</h2>
+
+<p>Nooit meer investeren in een enkele positie dan je bereid bent volledig te verliezen. Een veelgebruikte vuistregel: <strong>crypto mag maximaal 5 tot 10% van je totale beleggingsportefeuille uitmaken</strong>. Binnen crypto zelf is diversificatie van belang: leg niet alles in één coin.</p>
+
+<h2 id="stablecoins">Strategie 3: stablecoins als buffer</h2>
+
+<p>Een gedeelte van je crypto-portefeuille aanhouden in stablecoins (USDC, EURC) geeft je liquiditeit om bij te kopen op dieptepunten, zonder je crypto te moeten omzetten naar fiat. Dit kan ook belastingvoordelig zijn omdat je geen belastbaar moment creëert bij omwisseling naar een stablecoin.</p>
+
+<h2 id="fundamentals">Strategie 4: focus op fundamentals</h2>
+
+<p>In een bear market daalt nagenoeg alles, ook goede projecten. De kunst is onderscheid te maken tussen projecten die dalen door marktsentiment (maar sterke fundamentals hebben) versus projecten die dalen omdat de technologie of het team tekortschiet. Focuseer op netwerk-activiteit, ontwikkelaarsgemeenschap en institutionele adoptie als indicatoren.</p>
+
+<div class="faq-section">
+  <div class="faq-title">Veelgestelde vragen</div>
+  <div class="faq-item">
+    <div class="faq-q">Moet ik uitstappen en later terugkopen?</div>
+    <div class="faq-a">Markttiming is bewezen moeilijk, ook voor professionele beleggers. Onderzoek toont aan dat beleggers die "uitstappen en later terugkopen" de beste handelsdagen vaak missen. Mis je de 10 beste handelsdagen in een jaar, dan halveert je rendement doorgaans. Tenzij je een bewezen timing-strategie hebt, is uitstappen riskant.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Wat is het verschil tussen een bear market en een correctie?</div>
+    <div class="faq-a">Een correctie is een tijdelijke daling van 10 tot 20% binnen een grotere opwaartse trend. Een bear market is een daling van meer dan 20% van een recente piek, waarbij het pessimistisch sentiment langdurig aanhoudt. In de praktijk is het verschil pas achteraf duidelijk.</div>
+  </div>
+</div>
+`
+
+const art8Content = `
+${quickTake([
+  'Bitcoin: circa €55.000 ($61.165) op 12 juni 2026, marktcap $2,1 biljoen.',
+  'Ethereum: circa €1.480 ($1.617), extreme angst in sentiment, historisch laag versus Bitcoin.',
+  'Fear and Greed Index: 22 (Angst), markt is nog niet in extreme bodemterritorie maar dichtbij.',
+  'Solana daalt harder dan alles: meer dan 20% in juni, maar Fortune-erkenning en institutionele kopers actief.',
+])}
+
+${toc([
+  ['overzicht', 'Weekoverzicht: breed rood, angst domineert'],
+  ['koersen', 'Koerstabel: de top 5 in beeld'],
+  ['fear-greed', 'Fear and Greed Index: 22'],
+  ['on-chain', 'On-chain: wat zegt de data?'],
+  ['faq', 'Veelgestelde vragen'],
+])}
+
+<h2 id="overzicht">Weekoverzicht: breed rood, angst domineert</h2>
+
+<p>De week van 8 tot 12 juni 2026 was voor cryptobeleggers zwaar. De gehele markt daalde breed: Bitcoin verloor circa 5% op weekbasis, Ethereum bijna 12% en Solana meer dan 15%. De totale marktkapitalisatie daalde van $2,25 biljoen naar $2,11 biljoen.</p>
+
+<p>Het macro-klimaat bleef onzeker: nieuwe inflatiedata uit de VS gaf gemengde signalen, waardoor de markten fluctueerden. De narratief van "Fed-renteverlagingen als redder" verloor aan kracht, wat risicovolle activa breed onder druk zette.</p>
+
+<p>Voor context: Bitcoin's absolute all-time high van €109.082 dateert van 6 oktober 2025. De huidige koers van circa €55.000 vertegenwoordigt een daling van bijna 50% ten opzichte van dat record.</p>
+
+<h2 id="koersen">Koerstabel: de top 5 in beeld</h2>
+
+<table class="comparison-table">
+  <thead>
+    <tr><th>Coin</th><th>Koers (12 jun '26)</th><th>7 dagen</th><th>t.o.v. ATH</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Bitcoin (BTC)</td><td>circa €55.000</td><td class="td-down">-5,1%</td><td class="td-down">-50%</td></tr>
+    <tr><td>Ethereum (ETH)</td><td>circa €1.480</td><td class="td-down">-11,8%</td><td class="td-down">-69%</td></tr>
+    <tr><td>Solana (SOL)</td><td>zie koerspagina</td><td class="td-down">-15,2%</td><td class="td-down">variabel</td></tr>
+    <tr><td>BNB</td><td>zie koerspagina</td><td class="td-down">-6,4%</td><td class="td-down">variabel</td></tr>
+    <tr><td>XRP</td><td>zie koerspagina</td><td class="td-down">-9,1%</td><td class="td-down">variabel</td></tr>
+  </tbody>
+</table>
+<p style="font-size:0.8rem;color:#94a3b8;margin-top:-0.5rem">Exacte live koersen op de <a href="/koersen">koersenpagina</a>.</p>
+
+<h2 id="fear-greed">Fear and Greed Index: 22</h2>
+
+<p>De <strong>Crypto Fear and Greed Index</strong> staat op <strong>22</strong>, in de "Angst"-zone (0 = extreme angst, 100 = extreme hebzucht). Dit is een significante omslag: slechts enkele maanden geleden stond de index nog boven de 70.</p>
+
+<p>Een stand van 22 is psychologisch voor veel beleggers een pijnlijk niveau, maar historisch gezien zijn dit de niveaus waarbij langetermijninvesteerders beginnen bij te kopen. Extreme angst (index onder de 10) werd in 2022 bij de bodem bereikt. Momenteel zijn we nog niet in dat extreme territorium.</p>
+
+<div class="stat-grid">
+  <div class="stat-box">
+    <div class="stat-value">22</div>
+    <div class="stat-label">Fear &amp; Greed Index</div>
+  </div>
+  <div class="stat-box stat-down">
+    <div class="stat-value">$2,11T</div>
     <div class="stat-label">Totale marktcap</div>
   </div>
   <div class="stat-box">
-    <div class="stat-value">$92B</div>
+    <div class="stat-value">52%</div>
+    <div class="stat-label">Bitcoin Dominance</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-value">$68B</div>
     <div class="stat-label">24u handelsvolume</div>
   </div>
 </div>
 
-<h2 id="watchlist">Coins om in de gaten te houden</h2>
+<h2 id="on-chain">On-chain: wat zegt de data?</h2>
 
-<p>Buiten de grote namen zijn er enkele projecten die technisch en fundamenteel interessant zijn voor de komende weken:</p>
 <ul>
-  <li><strong>Chainlink (LINK):</strong> De aankondiging van CCIP v2 (cross-chain interoperability) en groei in RWA-integraties positioneert LINK als infrastructuurproject.</li>
-  <li><strong>Avalanche (AVAX):</strong> Na de lancering van Avalanche9000 (goedkopere subnets) stijgt AVAX sterk. Partnership met Visa voor settlement-tests.</li>
-  <li><strong>Sui (SUI):</strong> Groeiend ecosysteem voor gaming en DeFi op de Sui-blockchain; technisch op een kritiek weerstandsniveau.</li>
+  <li><strong>Long-term holders:</strong> Het percentage Bitcoin dat meer dan een jaar niet bewogen heeft, blijft hoog. Ervaren houders verkopen niet.</li>
+  <li><strong>Exchange reserves:</strong> De hoeveelheid Bitcoin op exchanges daalt, wat betekent dat minder BTC beschikbaar is voor directe verkoop. Historisch een positief signaal.</li>
+  <li><strong>Realized price:</strong> Circa $53.600. We naderen een historisch steunniveau.</li>
+  <li><strong>NUPL (Net Unrealized Profit/Loss):</strong> Daalt richting "Capitulation"-zone, maar is er nog niet. Een bodem wordt doorgaans bereikt bij echte capitulatie.</li>
 </ul>
 
-<div class="warning-box">
-  <div class="warning-title">⚠️ Marktanalyse is geen beleggingsadvies</div>
-  Deze analyse is gebaseerd op publiek beschikbare data en is uitsluitend informatief. Handel in cryptocurrency is speculatief en brengt hoge risico's met zich mee, inclusief het risico het volledige belegde bedrag te verliezen.
+<div class="highlight-box">
+  <strong>On-chain consensus:</strong> De data wijst niet op onmiddellijk herstel, maar ook niet op een catastrofale verdere daling. We bevinden ons in een "pijn"-fase, lang genoeg gedaald om zwakke handen uit te schudden, maar nog niet diep genoeg voor een echte capitulatie-bodem.
 </div>
 
 <div class="faq-section">
   <div class="faq-title">Veelgestelde vragen</div>
   <div class="faq-item">
-    <div class="faq-q">Wat is een "altcoin season"?</div>
-    <div class="faq-a">Een altcoin season (of altseason) is een periode waarin altcoins (alle cryptocurrencies behalve Bitcoin) het collectief beter doen dan Bitcoin. Dit gaat typisch gepaard met een dalende Bitcoin Dominance. Altseasons zijn volatiel: er zijn grote winnaars maar ook veel projecten die in waarde crashen.</div>
+    <div class="faq-q">Wat is Bitcoin Dominance en waarom stijgt het?</div>
+    <div class="faq-a">Bitcoin Dominance geeft aan welk percentage van de totale crypto-marktcap Bitcoin uitmaakt. Bij 52% (gestegen ten opzichte van eerder dit jaar) presteren altcoins slechter dan Bitcoin. In bear markets stijgt de Bitcoin Dominance typisch: beleggers verkopen risicovolstere altcoins eerder dan Bitcoin.</div>
   </div>
   <div class="faq-item">
-    <div class="faq-q">Hoe betrouwbaar is de Fear &amp; Greed Index?</div>
-    <div class="faq-a">De index is een hulpmiddel, geen orakel. Het geeft een momentopname van marktsentiment gebaseerd op volatiliteit, volume, sociale media en surveys. Gebruik het als één van meerdere indicatoren in je analyse, niet als enige beslissingsgrond.</div>
-  </div>
-  <div class="faq-item">
-    <div class="faq-q">Wanneer is een goede tijd om winst te nemen?</div>
-    <div class="faq-a">Er is geen universeel antwoord. Populaire strategieën zijn: een vast percentage verkooporder instellen bij targets (bijv. 20% verkopen bij +50%), of DCA-exits (periodiek kleine hoeveelheden verkopen bij sterke stijging). Stem je strategie altijd af op je eigen financiële situatie en belastingpositie.</div>
+    <div class="faq-q">Hoe betrouwbaar zijn on-chain indicatoren?</div>
+    <div class="faq-a">On-chain data is transparant en manipulatie-resistent, maar de interpretatie ervan is niet altijd eenduidig. Gebruik ze als aanvullende context bij andere analyses, niet als enige beslissingsgrond. Historische patronen herhalen zich niet altijd exact.</div>
   </div>
 </div>
 `
@@ -784,114 +700,148 @@ ${toc([
 export const MOCK_ARTICLES: Article[] = [
   {
     id: 'mock-1',
-    title: 'Bitcoin doorbreekt €95.000: nieuw all-time high te midden van recordinstroom via spot-ETFs',
-    slug: 'bitcoin-doorbreekt-95000-all-time-high-spot-etf-instroom',
-    excerpt: 'Bitcoin bereikte woensdag een historisch nieuw all-time high van €95.847. Recordinstroom via spot-ETFs, institutionele adoptie en dalende rente stuwen de marktleider naar nieuwe hoogtepunten.',
+    title: 'Is €55.000 de bodem? Bitcoin daalt bijna 50% van zijn all-time high van €109.082',
+    slug: 'bitcoin-55000-bodem-bear-market-2026-etf-uitstroom',
+    excerpt: 'Bitcoin noteert op 12 juni 2026 rond €55.000, bijna 50% onder het absolute all-time high van €109.082 (oktober 2025). Bear market-verliezen naderen $211 miljard. CryptoQuant ziet mogelijke bodem in Q3 2026.',
     content: art1Content,
     image_url: 'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=1200&q=80',
-    image_alt: 'Bitcoin gouden munt close-up',
+    image_alt: 'Bitcoin munt close-up',
     source_url: null, source_name: null,
     author_name: 'Acrypto Redactie',
-    category: 'bitcoin', tags: ['bitcoin', 'all-time-high', 'etf', 'koers', 'institutioneel'],
-    status: 'published', featured: true, view_count: 4821,
-    published_at: ago(40), created_at: ago(40), updated_at: ago(40),
+    category: 'bitcoin', tags: ['bitcoin', 'bear-market', 'koers', 'etf', 'bodem'],
+    status: 'published', featured: true, view_count: 5821,
+    published_at: ago(45), created_at: ago(45), updated_at: ago(45),
+    faqs: [
+      { q: 'Wat was Bitcoin\'s all-time high?', a: 'Bitcoin bereikte zijn absolute all-time high op 6 oktober 2025 met een koers van €109.082. De huidige koers van €55.000 ligt bijna 50% onder dat record.' },
+      { q: 'Zitten we nu in een bear market of een correctie?', a: 'Met een daling van circa 50% van het ATH en 34% van het 2026-hoogtepunt kwalificeren analisten de huidige fase als een bear market.' },
+      { q: 'Is het slim om nu Bitcoin bij te kopen?', a: 'DCA (periodiek een vast bedrag investeren) kan het timingrisico spreiden. Investeer nooit meer dan je bereid bent volledig te verliezen. Dit is geen beleggingsadvies.' },
+    ],
   },
   {
     id: 'mock-2',
-    title: 'Ethereum Pectra-upgrade live: account abstraction en 60% goedkopere L2-transacties',
-    slug: 'ethereum-pectra-upgrade-live-account-abstraction-goedkopere-l2',
-    excerpt: 'De Pectra-hardfork is met succes geactiveerd op het Ethereum-mainnet. De grootste update sinds The Merge introduceert programmeerbare wallets en verhoogt de blobcapaciteit voor Layer 2-netwerken.',
+    title: 'Bitcoin ETFs: $4,4 miljard uitstroom in 13 dagen terwijl hedge funds de markt verlaten',
+    slug: 'bitcoin-etf-uitstroom-4-miljard-hedge-funds-verkopen',
+    excerpt: 'Professionele Bitcoin ETF-holdings daalden 17% in Q1 2026. Hedge funds verkochten 39% van hun posities. Banken en sovereign wealth funds kopen juist bij, een klassiek divergentiepatroon bij marktbodems.',
     content: art2Content,
-    image_url: 'https://images.unsplash.com/photo-1622630998477-20aa696ecb05?w=1200&q=80',
-    image_alt: 'Ethereum logo op achtergrond van netwerk',
+    image_url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&q=80',
+    image_alt: 'Handelsschermen met koersgrafieken',
     source_url: null, source_name: null,
     author_name: 'Acrypto Redactie',
-    category: 'ethereum', tags: ['ethereum', 'pectra', 'upgrade', 'account-abstraction', 'l2'],
-    status: 'published', featured: false, view_count: 2103,
+    category: 'bitcoin', tags: ['bitcoin', 'etf', 'institutioneel', 'uitstroom', 'hedge-funds'],
+    status: 'published', featured: false, view_count: 3204,
     published_at: ago(480), created_at: ago(480), updated_at: ago(480),
+    faqs: [
+      { q: 'Wat is een 13F-rapportage?', a: 'Institutionele beleggers met meer dan $100 miljoen beheerd vermogen moeten elk kwartaal een 13F-formulier indienen bij de SEC met hun beleggingen inclusief ETFs.' },
+      { q: 'Heeft ETF-uitstroom direct invloed op de Bitcoin-koers?', a: 'Indirect ja. Wanneer ETF-aandelen worden teruggegeven, verkopen ETF-aanbieders de onderliggende Bitcoin, wat verkoopdruk op de spotmarkt verhoogt.' },
+    ],
   },
   {
     id: 'mock-3',
-    title: 'MiCA volledig in werking: wat betekent de EU-cryptowet voor Nederlandse beleggers?',
-    slug: 'mica-volledig-van-kracht-eu-cryptowet-gevolgen-nederland',
-    excerpt: 'Per 1 juni 2026 is de Europese MiCA-verordening volledig van kracht. Crypto-aanbieders zonder licentie mogen niet meer actief zijn. Wat verandert er concreet voor jou als belegger?',
+    title: 'Ethereum koers crasht naar €1.480 terwijl sentiment in extreme angst-zone belandt',
+    slug: 'ethereum-koers-crash-1480-extreme-angst-sentiment',
+    excerpt: 'Ethereum noteert circa €1.480, het laagste punt in maanden. ETH ETF-uitstroom bedraagt $401M in mei. Analisten waarschuwen voor een daling richting €920 ($1.000) als het kritieke steunniveau breekt.',
     content: art3Content,
-    image_url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&q=80',
-    image_alt: 'EU vlag met digitale grafieken',
+    image_url: 'https://images.unsplash.com/photo-1622630998477-20aa696ecb05?w=1200&q=80',
+    image_alt: 'Ethereum logo op digitale achtergrond',
     source_url: null, source_name: null,
     author_name: 'Acrypto Redactie',
-    category: 'regulering', tags: ['mica', 'eu', 'regulering', 'dnb', 'afm', 'stablecoins'],
-    status: 'published', featured: false, view_count: 3456,
+    category: 'ethereum', tags: ['ethereum', 'koers', 'daling', 'etf', 'angst'],
+    status: 'published', featured: false, view_count: 4102,
     published_at: ago(900), created_at: ago(900), updated_at: ago(900),
+    faqs: [
+      { q: 'Kan Ethereum echt naar $1.000 zakken?', a: 'Technisch is het mogelijk. Meerdere analisten noemen $1.000 als worst-case scenario voor 2026. Historisch heeft Ethereum eerder extreme dalingen meegemaakt.' },
+      { q: 'Presteert Ethereum altijd slechter dan Bitcoin in een bear market?', a: 'Niet altijd, maar vaak. In bear markets heeft Bitcoin de neiging om relatief beter te presteren omdat het als digitaal goud wordt gezien.' },
+    ],
   },
   {
     id: 'mock-4',
-    title: 'Solana verwerkt 142 miljoen transacties op één dag — Firedancer en Chapter 2 stuwen groei',
-    slug: 'solana-142-miljoen-transacties-dag-record-firedancer-chapter-2',
-    excerpt: 'Solana verbreekt opnieuw zijn eigen record met 142 miljoen on-chain transacties in 24 uur. Firedancer draait nu op 18% van de validators en de Chapter 2-telefoon heeft 800.000 pre-orders.',
+    title: 'Solana daalt harder dan Ethereum in juni, maar Fortune plaatst SOL in zijn top 3 van 2026',
+    slug: 'solana-daling-juni-2026-harder-ethereum-fortune-top-3',
+    excerpt: 'Solana verliest meer dan 20% in juni 2026. Toch erkent Fortune het netwerk in zijn top 3 crypto-ranking. SOL Strategies kocht voor $18M en Circle maakt Solana de primaire USDC-infrastructuur.',
     content: art4Content,
     image_url: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=1200&q=80',
-    image_alt: 'Crypto blockchain netwerk visualisatie',
+    image_alt: 'Blockchain netwerkvisualisatie',
     source_url: null, source_name: null,
     author_name: 'Acrypto Redactie',
-    category: 'altcoins', tags: ['solana', 'sol', 'firedancer', 'record', 'transacties'],
-    status: 'published', featured: false, view_count: 1876,
+    category: 'altcoins', tags: ['solana', 'sol', 'daling', 'fortune', 'usdc'],
+    status: 'published', featured: false, view_count: 2876,
     published_at: ago(1260), created_at: ago(1260), updated_at: ago(1260),
+    faqs: [
+      { q: 'Waarom daalt Solana harder dan Bitcoin in een bear market?', a: 'Bitcoin wordt gezien als de veiligste crypto. Altcoins zoals Solana worden als risicovoller beschouwd. In een risk-off omgeving verkopen beleggers eerst hun risicovolste activa.' },
+      { q: 'Is Solana een goede langetermijninvestering?', a: 'Solana heeft sterke technologische fundamentals en groeiende institutionele adoptie. Tegelijkertijd is het volatile en daalt het harder dan Bitcoin in bear markets. Dit is geen beleggingsadvies.' },
+    ],
   },
   {
     id: 'mock-5',
-    title: 'Crypto belasting 2026: zo geef je Bitcoin, DeFi en staking-rewards correct op bij de Belastingdienst',
-    slug: 'crypto-belasting-2026-bitcoin-defi-staking-belastingdienst-aangifte',
-    excerpt: 'Aangifte 2026 staat voor de deur. De Belastingdienst verwacht volledige opgave van alle crypto in box 3. Met DAC8 deelt je exchange nu automatisch gegevens. Alles wat je moet weten.',
+    title: 'Crypto belasting aangifte 2026: box 3, DAC8 en DeFi uitgelegd',
+    slug: 'crypto-belasting-aangifte-2026-box3-dac8-defi',
+    excerpt: 'Aangifte 2026 staat voor de deur. Box 3, fictief rendement van 6,04%, peildatum 1 januari. Met DAC8 deelt Bitvavo je transacties automatisch met de Belastingdienst. Alles wat je moet weten.',
     content: art5Content,
     image_url: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1200&q=80',
-    image_alt: 'Laptop met belastingformulier en rekenmachine',
+    image_alt: 'Laptop met belastingformulier',
     source_url: null, source_name: null,
     author_name: 'Acrypto Redactie',
-    category: 'regulering', tags: ['belasting', 'box3', 'dac8', 'defi', 'staking', 'belastingdienst'],
-    status: 'published', featured: false, view_count: 5210,
+    category: 'regulering', tags: ['belasting', 'box3', 'dac8', 'aangifte', 'defi'],
+    status: 'published', featured: false, view_count: 6310,
     published_at: ago(1620), created_at: ago(1620), updated_at: ago(1620),
+    faqs: [
+      { q: 'Betaal ik belasting als mijn crypto in waarde is gedaald?', a: 'Ja, mogelijk wel. In box 3 betaal je over de waarde op de peildatum (1 januari), ongeacht wat er daarna met de koers gebeurt.' },
+      { q: 'Moet ik een hardware wallet ook opgeven?', a: 'Ja. Of je crypto op een exchange staat, in een software wallet of op een hardware wallet: de totale waarde op 1 januari moet worden opgegeven.' },
+      { q: 'Wat is DAC8?', a: 'DAC8 verplicht exchanges zoals Bitvavo om jouw transactiedata automatisch te delen met de Belastingdienst. Vanaf 2026 wisselen EU-landen automatisch belastingdata uit.' },
+    ],
   },
   {
     id: 'mock-6',
-    title: 'DeFi overschrijdt $200 miljard TVL: real-world assets en Aave V4 drijven nieuwe bull run',
-    slug: 'defi-200-miljard-tvl-record-real-world-assets-aave-v4',
-    excerpt: 'Het totaal vergrendelde vermogen in DeFi heeft voor het eerst de grens van $200 miljard gepasseerd. Real-world asset tokenisatie en upgrades van Aave V4 en Uniswap V5 zijn de drijvende krachten.',
+    title: 'Van €109.082 naar €55.000: is de crypto bull market van 2026 voorbij?',
+    slug: 'is-crypto-bull-market-2026-voorbij-drie-scenarios',
+    excerpt: 'Bitcoin bereikte op 6 oktober 2025 zijn absolute all-time high van €109.082. Nu, bijna 50% lager, vragen analisten zich af: tijdelijke correctie of echt begin van een bear market? Drie scenario\'s.',
     content: art6Content,
-    image_url: 'https://images.unsplash.com/photo-1642790106117-e829e14a795f?w=1200&q=80',
-    image_alt: 'DeFi liquidity protocol visualisatie',
+    image_url: 'https://images.unsplash.com/photo-1611079829529-fc15b25f72f4?w=1200&q=80',
+    image_alt: 'Koersgrafieken op handelsmonitor',
     source_url: null, source_name: null,
     author_name: 'Acrypto Redactie',
-    category: 'defi', tags: ['defi', 'tvl', 'aave', 'uniswap', 'rwa', 'record'],
-    status: 'published', featured: false, view_count: 1432,
+    category: 'marktanalyse', tags: ['bear-market', 'bull-market', 'analyse', 'bitcoin', 'ath'],
+    status: 'published', featured: false, view_count: 4987,
     published_at: ago(2040), created_at: ago(2040), updated_at: ago(2040),
+    faqs: [
+      { q: 'Hoe lang duurt de gemiddelde crypto bear market?', a: 'De crypto bear markets van 2018 en 2022 duurden respectievelijk 12 en 14 maanden van piek naar bodem. Als de huidige cyclus begon in oktober 2025, zou een bodem richting Q3 tot Q4 2026 historisch in lijn zijn.' },
+      { q: 'Moet ik nu mijn crypto verkopen?', a: 'Dat is een persoonlijke beslissing afhankelijk van je tijdshorizon en risicotolerantie. Dit is geen beleggingsadvies.' },
+    ],
   },
   {
     id: 'mock-7',
-    title: 'BlackRock IBIT overtreft goud-ETF: $52 miljard beheerd vermogen in 18 maanden',
-    slug: 'blackrock-ibit-bitcoin-etf-52-miljard-overtreft-goud-etf',
-    excerpt: 'BlackRock\'s Bitcoin ETF is groter dan het meest succesvolle goud-ETF ter wereld. De SEC keurde in-kind creaties goed en wealth managers bij Morgan Stanley en UBS mogen nu actief Bitcoin aanbevelen.',
+    title: 'Crypto bear market overleven: 4 strategieën voor DCA, risicobeheer en psychologie',
+    slug: 'crypto-bear-market-overleven-strategieen-dca-risicobeheer',
+    excerpt: 'Bear markets zijn emotioneel zwaar, maar ook de periode waarin de beste langetermijnposities worden opgebouwd. Vier bewezen strategieën om je portefeuille te beschermen en kansen te benutten.',
     content: art7Content,
-    image_url: 'https://images.unsplash.com/photo-1611079829529-fc15b25f72f4?w=1200&q=80',
-    image_alt: 'Beleggingen grafieken op monitor',
+    image_url: 'https://images.unsplash.com/photo-1642790106117-e829e14a795f?w=1200&q=80',
+    image_alt: 'Persoon die crypto-grafieken analyseert',
     source_url: null, source_name: null,
     author_name: 'Acrypto Redactie',
-    category: 'bitcoin', tags: ['blackrock', 'ibit', 'etf', 'institutioneel', 'goud'],
-    status: 'published', featured: false, view_count: 2987,
+    category: 'marktanalyse', tags: ['bear-market', 'strategie', 'dca', 'risicobeheer', 'psychologie'],
+    status: 'published', featured: false, view_count: 3432,
     published_at: ago(2520), created_at: ago(2520), updated_at: ago(2520),
+    faqs: [
+      { q: 'Moet ik uitstappen en later terugkopen?', a: 'Markttiming is bewezen moeilijk. Mis je de 10 beste handelsdagen in een jaar, dan halveert je rendement doorgaans. Tenzij je een bewezen timing-strategie hebt, is uitstappen riskant.' },
+      { q: 'Wat is het verschil tussen een bear market en een correctie?', a: 'Een correctie is een tijdelijke daling van 10 tot 20%. Een bear market is een daling van meer dan 20% waarbij het pessimisme langdurig aanhoudt.' },
+    ],
   },
   {
     id: 'mock-8',
-    title: 'Marktanalyse week 24: Bitcoin ATH, altcoin season begint en Fear & Greed op 86',
-    slug: 'marktanalyse-week-24-bitcoin-ath-altcoin-season-fear-greed',
-    excerpt: 'De cryptomarkt staat op $3,4 biljoen marktcap. Bitcoin dominance daalt naar 49% terwijl altcoins breed outperformen. De Fear & Greed Index staat op 86 — waar gaat de markt naartoe?',
+    title: 'Marktanalyse week 24: Bitcoin €55k, Fear and Greed op 22, marktcap $2,1 biljoen',
+    slug: 'marktanalyse-week-24-bitcoin-55k-fear-greed-22',
+    excerpt: 'De cryptomarkt staat op $2,1 biljoen marktcap. Fear and Greed Index: 22 (Angst). Bitcoin dominance stijgt naar 52%. On-chain data: we naderen de realized price van circa $53.600, historisch een bodemniveau.',
     content: art8Content,
     image_url: 'https://images.unsplash.com/photo-1535320903710-d993d3d77d29?w=1200&q=80',
-    image_alt: 'Crypto koersgrafiek analyse dashboard',
+    image_alt: 'Crypto koersgrafiek analyse',
     source_url: null, source_name: null,
     author_name: 'Acrypto Redactie',
-    category: 'marktanalyse', tags: ['marktanalyse', 'bitcoin', 'altcoins', 'fear-greed', 'dominance'],
-    status: 'published', featured: false, view_count: 3104,
+    category: 'marktanalyse', tags: ['marktanalyse', 'bitcoin', 'fear-greed', 'on-chain', 'week24'],
+    status: 'published', featured: false, view_count: 4104,
     published_at: ago(2880), created_at: ago(2880), updated_at: ago(2880),
+    faqs: [
+      { q: 'Wat is Bitcoin Dominance en waarom stijgt het?', a: 'Bitcoin Dominance geeft aan welk percentage van de totale crypto-marktcap Bitcoin uitmaakt. Bij 52% presteren altcoins slechter dan Bitcoin. In bear markets stijgt de Bitcoin Dominance typisch.' },
+      { q: 'Hoe betrouwbaar zijn on-chain indicatoren?', a: 'On-chain data is transparant en manipulatie-resistent, maar de interpretatie is niet altijd eenduidig. Gebruik ze als aanvullende context, niet als enige beslissingsgrond.' },
+    ],
   },
 ]

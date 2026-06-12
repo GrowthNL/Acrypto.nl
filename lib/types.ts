@@ -17,6 +17,7 @@ export interface Article {
   published_at: string
   created_at: string
   updated_at: string
+  faqs?: { q: string; a: string }[]
 }
 
 export interface KnowledgeArticle {
@@ -32,6 +33,7 @@ export interface KnowledgeArticle {
   published_at: string
   created_at: string
   updated_at: string
+  faqs?: { q: string; a: string }[]
 }
 
 export interface CryptoPrice {
