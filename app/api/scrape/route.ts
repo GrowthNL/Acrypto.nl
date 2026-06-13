@@ -1,16 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServiceSupabaseClient } from '@/lib/supabase-server'
+import { getDb } from '@/lib/db'
 import { fetchAllSources } from '@/lib/rss'
 import { generateDutchArticle } from '@/lib/claude'
 import { slugify } from '@/lib/utils'
 
-export const maxDuration = 300 // 5 min max for Vercel Pro
+export const maxDuration = 300
 
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get('authorization')
   const cronSecret = process.env.CRON_SECRET
 
-  // Allow Vercel cron (no auth needed) or manual trigger with secret
   const isVercelCron = req.headers.get('x-vercel-cron') === '1'
   const isAuthorized = isVercelCron || (cronSecret && authHeader === `Bearer ${cronSecret}`)
 
@@ -18,7 +17,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const supabase = createServiceSupabaseClient()
+  const db = getDb()
   const results = { fetched: 0, new: 0, published: 0, errors: 0 }
 
   try {
@@ -27,13 +26,8 @@ export async function GET(req: NextRequest) {
 
     for (const item of items) {
       // Check if already scraped
-      const { data: existing } = await supabase
-        .from('scraped_urls')
-        .select('id')
-        .eq('url', item.link)
-        .single()
-
-      if (existing) continue
+      const existing = await db`SELECT id FROM scraped_urls WHERE url = ${item.link} LIMIT 1`
+      if (existing.length > 0) continue
       results.new++
 
       // Generate Dutch article with Claude
@@ -45,49 +39,47 @@ export async function GET(req: NextRequest) {
 
       if (!generated) {
         results.errors++
-        // Still mark as scraped to avoid retrying
-        await supabase.from('scraped_urls').insert({ url: item.link })
+        await db`INSERT INTO scraped_urls (url) VALUES (${item.link}) ON CONFLICT DO NOTHING`
         continue
       }
 
       // Ensure unique slug
       let slug = generated.slug || slugify(generated.title)
-      const { data: slugExists } = await supabase
-        .from('articles')
-        .select('id')
-        .eq('slug', slug)
-        .single()
-
-      if (slugExists) {
+      const slugExists = await db`SELECT id FROM articles WHERE slug = ${slug} LIMIT 1`
+      if (slugExists.length > 0) {
         slug = `${slug}-${Date.now()}`
       }
 
       // Insert article
-      const { error: insertError } = await supabase.from('articles').insert({
-        title: generated.title,
-        slug,
-        excerpt: generated.excerpt,
-        content: generated.content,
-        image_url: item.imageUrl,
-        source_url: item.link,
-        source_name: item.source.name,
-        author_name: 'Acrypto Redactie',
-        category: generated.category || 'nieuws',
-        tags: generated.tags || [],
-        status: 'published',
-        featured: false,
-        published_at: new Date(item.pubDate).toISOString(),
-      })
-
-      if (insertError) {
-        results.errors++
-        console.error('Insert error:', insertError)
-      } else {
+      try {
+        await db`
+          INSERT INTO articles (
+            title, slug, excerpt, content, image_url, source_url, source_name,
+            author_name, category, tags, status, featured, published_at
+          ) VALUES (
+            ${generated.title},
+            ${slug},
+            ${generated.excerpt},
+            ${generated.content},
+            ${item.imageUrl || null},
+            ${item.link},
+            ${item.source.name},
+            ${'Acrypto Redactie'},
+            ${generated.category || 'nieuws'},
+            ${generated.tags || []},
+            ${'published'},
+            ${false},
+            ${new Date(item.pubDate).toISOString()}
+          )
+        `
         results.published++
+      } catch (insertErr) {
+        results.errors++
+        console.error('Insert error:', insertErr)
       }
 
       // Mark as scraped
-      await supabase.from('scraped_urls').insert({ url: item.link })
+      await db`INSERT INTO scraped_urls (url) VALUES (${item.link}) ON CONFLICT DO NOTHING`
 
       // Avoid rate limiting Claude API
       await new Promise(r => setTimeout(r, 1500))

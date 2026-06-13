@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft, Clock, Calendar, BookOpen, Tag } from 'lucide-react'
-import { createServerSupabaseClient } from '@/lib/supabase-server'
+import { getDb, DB_READY } from '@/lib/db'
 import { MOCK_KENNISBANK } from '@/lib/mock-kennisbank'
 import { KnowledgeArticleStructuredData, BreadcrumbStructuredData, FAQStructuredData } from '@/components/StructuredData'
 import { formatDate, readingTime } from '@/lib/utils'
@@ -19,12 +19,6 @@ interface Props {
   params: { slug: string }
 }
 
-const SUPABASE_READY = !!(
-  process.env.NEXT_PUBLIC_SUPABASE_URL &&
-  process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co' &&
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-)
-
 const difficultyConfig = {
   beginner:     { label: 'Beginners',  color: 'text-emerald-700', bg: 'bg-emerald-50 border-emerald-100' },
   intermediate: { label: 'Gevorderd',  color: 'text-amber-700',   bg: 'bg-amber-50 border-amber-100'     },
@@ -32,15 +26,15 @@ const difficultyConfig = {
 }
 
 async function getArticle(slug: string): Promise<KnowledgeArticle | null> {
-  if (!SUPABASE_READY) return MOCK_KENNISBANK.find(a => a.slug === slug) ?? null
+  if (!DB_READY) return MOCK_KENNISBANK.find(a => a.slug === slug) ?? null
   try {
-    const supabase = createServerSupabaseClient()
-    const { data } = await supabase
-      .from('knowledge_articles')
-      .select('*')
-      .eq('slug', slug)
-      .single()
-    if (data) return data as KnowledgeArticle
+    const db = getDb()
+    const rows = await db`
+      SELECT * FROM knowledge_articles
+      WHERE slug = ${slug}
+      LIMIT 1
+    `
+    if (rows.length > 0) return rows[0] as unknown as KnowledgeArticle
   } catch {}
   return MOCK_KENNISBANK.find(a => a.slug === slug) ?? null
 }

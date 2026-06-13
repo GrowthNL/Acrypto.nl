@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight, BookOpen, TrendingUp, Zap, Globe, Clock } from 'lucide-react'
-import { createServerSupabaseClient } from '@/lib/supabase-server'
+import { getDb, DB_READY } from '@/lib/db'
 import { fetchTopCoins } from '@/lib/coingecko'
 import { MOCK_ARTICLES } from '@/lib/mock-data'
 import ArticleCard from '@/components/ArticleCard'
@@ -15,23 +15,17 @@ export const revalidate = 300
 
 const FALLBACK = 'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=1200&q=80'
 
-const SUPABASE_READY = !!(
-  process.env.NEXT_PUBLIC_SUPABASE_URL &&
-  process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co' &&
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-)
-
 async function getArticles(): Promise<Article[]> {
-  if (!SUPABASE_READY) return MOCK_ARTICLES
+  if (!DB_READY) return MOCK_ARTICLES
   try {
-    const supabase = createServerSupabaseClient()
-    const { data } = await supabase
-      .from('articles')
-      .select('*')
-      .eq('status', 'published')
-      .order('published_at', { ascending: false })
-      .limit(13)
-    return (data as Article[])?.length ? (data as Article[]) : MOCK_ARTICLES
+    const db = getDb()
+    const data = await db`
+      SELECT * FROM articles
+      WHERE status = 'published'
+      ORDER BY published_at DESC
+      LIMIT 13
+    `
+    return data.length ? (data as unknown as Article[]) : MOCK_ARTICLES
   } catch {
     return MOCK_ARTICLES
   }

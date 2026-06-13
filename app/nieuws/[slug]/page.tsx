@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Clock, Calendar, ArrowLeft, ExternalLink, Tag } from 'lucide-react'
-import { createServerSupabaseClient } from '@/lib/supabase-server'
+import { getDb, DB_READY } from '@/lib/db'
 import { MOCK_ARTICLES } from '@/lib/mock-data'
 import { ArticleStructuredData, BreadcrumbStructuredData, FAQStructuredData } from '@/components/StructuredData'
 import ArticleCard from '@/components/ArticleCard'
@@ -20,42 +20,35 @@ interface Props {
   params: { slug: string }
 }
 
-const SUPABASE_READY = !!(
-  process.env.NEXT_PUBLIC_SUPABASE_URL &&
-  process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co' &&
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-)
-
 async function getArticle(slug: string): Promise<Article | null> {
-  if (!SUPABASE_READY) return MOCK_ARTICLES.find(a => a.slug === slug) ?? null
+  if (!DB_READY) return MOCK_ARTICLES.find(a => a.slug === slug) ?? null
   try {
-    const supabase = createServerSupabaseClient()
-    const { data } = await supabase
-      .from('articles')
-      .select('*')
-      .eq('slug', slug)
-      .eq('status', 'published')
-      .single()
-    if (data) return data as Article
+    const db = getDb()
+    const rows = await db`
+      SELECT * FROM articles
+      WHERE slug = ${slug} AND status = 'published'
+      LIMIT 1
+    `
+    if (rows.length > 0) return rows[0] as unknown as Article
   } catch {}
   return MOCK_ARTICLES.find(a => a.slug === slug) ?? null
 }
 
 async function getRelated(article: Article): Promise<Article[]> {
-  if (!SUPABASE_READY) {
+  if (!DB_READY) {
     return MOCK_ARTICLES.filter(a => a.category === article.category && a.id !== article.id).slice(0, 3)
   }
   try {
-    const supabase = createServerSupabaseClient()
-    const { data } = await supabase
-      .from('articles')
-      .select('*')
-      .eq('status', 'published')
-      .eq('category', article.category)
-      .neq('id', article.id)
-      .order('published_at', { ascending: false })
-      .limit(3)
-    if (data && (data as Article[]).length > 0) return data as Article[]
+    const db = getDb()
+    const rows = await db`
+      SELECT * FROM articles
+      WHERE status = 'published'
+        AND category = ${article.category}
+        AND id != ${article.id}
+      ORDER BY published_at DESC
+      LIMIT 3
+    `
+    if (rows.length > 0) return rows as unknown as Article[]
   } catch {}
   return MOCK_ARTICLES.filter(a => a.category === article.category && a.id !== article.id).slice(0, 3)
 }
