@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getDb } from '@/lib/db'
 import { fetchAllSources, titlesAreSimilar } from '@/lib/rss'
 import { generateDutchArticle } from '@/lib/claude'
+import { fetchUnsplashImage } from '@/lib/unsplash'
 import { slugify } from '@/lib/utils'
 
 export const maxDuration = 300
@@ -64,6 +65,9 @@ export async function GET(req: NextRequest) {
       // Add generated title to recent list so same-run duplicates are also caught
       recentTitles.push(generated.title)
 
+      // Fetch unique Unsplash image (ignores scraped image to avoid watermarks/logos)
+      const imageUrl = await fetchUnsplashImage(generated.category || 'nieuws', generated.tags || [])
+
       // Ensure unique slug
       let slug = generated.slug || slugify(generated.title)
       const slugExists = await db`SELECT id FROM articles WHERE slug = ${slug} LIMIT 1`
@@ -83,7 +87,7 @@ export async function GET(req: NextRequest) {
             ${generated.excerpt},
             ${generated.tldr || null},
             ${generated.content},
-            ${item.imageUrl || null},
+            ${imageUrl || null},
             ${item.link},
             ${item.source.name},
             ${'Acrypto Redactie'},
