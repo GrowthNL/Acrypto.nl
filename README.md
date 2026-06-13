@@ -1,15 +1,15 @@
 # Acrypto.nl
 
-Modern Nederlands crypto nieuws platform — automatisch gegenereerde artikelen, live koersen en kennisbank.
+Modern Nederlands crypto nieuws platform: automatisch gegenereerde artikelen, live koersen en kennisbank.
 
 ## Stack
 
 - **Next.js 14** (App Router, TypeScript)
-- **Tailwind CSS** — donker thema met Bitcoin oranje
-- **Supabase** — PostgreSQL database + Row Level Security
-- **Claude API** — Nederlandse artikelen genereren vanuit RSS
-- **CoinGecko API** — live crypto koersen
-- **Vercel** — hosting + cron jobs
+- **Tailwind CSS**: donker thema met Bitcoin oranje
+- **Supabase**: PostgreSQL database + Row Level Security
+- **Claude API**: Nederlandse artikelen genereren vanuit RSS
+- **CoinGecko API**: live crypto koersen
+- **Vercel**: hosting + cron jobs
 
 ## Features
 
@@ -39,12 +39,12 @@ cp .env.example .env.local
 ```
 
 Vul in:
-- `NEXT_PUBLIC_SUPABASE_URL` — Project URL van Supabase
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Anon key van Supabase
-- `SUPABASE_SERVICE_KEY` — Service role key (voor server-side writes)
-- `ANTHROPIC_API_KEY` — Claude API key
-- `CRON_SECRET` — Willekeurige string voor cron beveiliging
-- `NEXT_PUBLIC_SITE_URL` — https://acrypto.nl (of localhost:3000)
+- `NEXT_PUBLIC_SUPABASE_URL`: Project URL van Supabase
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Anon key van Supabase
+- `SUPABASE_SERVICE_KEY`: Service role key (voor server-side writes)
+- `ANTHROPIC_API_KEY`: Claude API key
+- `CRON_SECRET`: Willekeurige string voor cron beveiliging
+- `NEXT_PUBLIC_SITE_URL`: https://acrypto.nl (of localhost:3000)
 
 ### 3. Database setup
 
@@ -68,13 +68,13 @@ Open [http://localhost:3000](http://localhost:3000)
 
 ### Vercel Cron (aanbevolen)
 Stel in Vercel de environment variables in. De `vercel.json` configureert automatisch:
-- `/api/scrape` — elke 3 uur (nieuws scrapen + publiceren)
-- `/api/prices` — elke 10 minuten (koersen updaten)
+- `/api/scrape`: elke 3 uur (nieuws scrapen + publiceren)
+- `/api/prices`: elke 10 minuten (koersen updaten)
 
 ### GitHub Actions (backup)
 Voeg toe in GitHub repository secrets:
-- `CRON_SECRET` — zelfde waarde als in Vercel
-- `SITE_URL` — https://acrypto.nl
+- `CRON_SECRET`: zelfde waarde als in Vercel
+- `SITE_URL`: https://acrypto.nl
 
 ### Handmatig triggeren
 ```bash

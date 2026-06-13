@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
     const items = await fetchAllSources()
     results.fetched = items.length
 
-    // Load recent article titles from DB once — used for cross-batch duplicate detection
+    // Load recent article titles from DB once : used for cross-batch duplicate detection
     const recentRows = await db`
       SELECT title FROM articles
       WHERE published_at > NOW() - INTERVAL '48 hours'
@@ -75,12 +75,13 @@ export async function GET(req: NextRequest) {
       try {
         await db`
           INSERT INTO articles (
-            title, slug, excerpt, content, image_url, source_url, source_name,
-            author_name, category, tags, status, featured, published_at
+            title, slug, excerpt, tldr, content, image_url, source_url, source_name,
+            author_name, category, tags, faqs, status, featured, published_at
           ) VALUES (
             ${generated.title},
             ${slug},
             ${generated.excerpt},
+            ${generated.tldr || null},
             ${generated.content},
             ${item.imageUrl || null},
             ${item.link},
@@ -88,6 +89,7 @@ export async function GET(req: NextRequest) {
             ${'Acrypto Redactie'},
             ${generated.category || 'nieuws'},
             ${generated.tags || []},
+            ${JSON.stringify(generated.faqs || [])},
             ${'published'},
             ${false},
             ${new Date(item.pubDate).toISOString()}

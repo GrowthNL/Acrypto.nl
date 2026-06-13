@@ -17,7 +17,7 @@ jobs:
   scrape:
     name: Scrape & Publish Articles
     runs-on: ubuntu-latest
-    # Only run on schedule or manual dispatch — not on push
+    # Only run on schedule or manual dispatch : not on push
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     timeout-minutes: 15
 
@@ -28,7 +28,7 @@ jobs:
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
         run: |
           if [ -z "$SITE_URL" ] || [ -z "$CRON_SECRET" ]; then
-            echo "SITE_URL or CRON_SECRET not configured — skipping scrape."
+            echo "SITE_URL or CRON_SECRET not configured : skipping scrape."
             echo "Set these secrets in GitHub → Settings → Secrets and variables → Actions."
             exit 0
           fi

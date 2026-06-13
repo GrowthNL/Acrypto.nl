@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Standalone scrape script — can be run locally or in CI
+ * Standalone scrape script : can be run locally or in CI
  * Usage: CRON_SECRET=xxx SITE_URL=https://acrypto.nl node scripts/scrape.mjs
  */
 

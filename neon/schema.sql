@@ -95,6 +95,10 @@ CREATE TABLE IF NOT EXISTS scraped_urls (
   scraped_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Migration: add tldr and faqs columns (run if upgrading from earlier schema)
+ALTER TABLE articles ADD COLUMN IF NOT EXISTS tldr TEXT;
+ALTER TABLE articles ADD COLUMN IF NOT EXISTS faqs JSONB DEFAULT '[]';
+
 -- Auto-cleanup old scraped URLs (keep 90 days)
 CREATE OR REPLACE FUNCTION cleanup_old_scraped_urls()
 RETURNS void AS $$
