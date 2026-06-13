@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServiceSupabaseClient } from '@/lib/supabase-server'
+import { getDb, DB_READY } from '@/lib/db'
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,18 +10,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Ongeldig e-mailadres' }, { status: 400 })
     }
 
-    const supabase = createServiceSupabaseClient()
-    const { error } = await supabase
-      .from('newsletter_subscribers')
-      .upsert({ email, active: true }, { onConflict: 'email' })
-
-    if (error) {
-      console.error('Newsletter error:', error)
-      return NextResponse.json({ error: 'Aanmelding mislukt' }, { status: 500 })
+    if (!DB_READY) {
+      return NextResponse.json({ success: true })
     }
 
+    const db = getDb()
+    await db`
+      INSERT INTO newsletter_subscribers (email, active)
+      VALUES (${email}, true)
+      ON CONFLICT (email) DO UPDATE SET active = true
+    `
+
     return NextResponse.json({ success: true })
-  } catch {
-    return NextResponse.json({ error: 'Ongeldige aanvraag' }, { status: 400 })
+  } catch (err) {
+    console.error('Newsletter error:', err)
+    return NextResponse.json({ error: 'Aanmelding mislukt' }, { status: 500 })
   }
 }

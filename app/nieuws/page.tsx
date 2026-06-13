@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Suspense } from 'react'
-import { createServerSupabaseClient } from '@/lib/supabase-server'
+import { getDb, DB_READY } from '@/lib/db'
 import { MOCK_ARTICLES } from '@/lib/mock-data'
 import ArticleCard from '@/components/ArticleCard'
 import SearchBar from '@/components/SearchBar'
@@ -14,12 +14,6 @@ export const revalidate = 300
 interface Props {
   searchParams: { cat?: string; q?: string; page?: string }
 }
-
-const SUPABASE_READY = !!(
-  process.env.NEXT_PUBLIC_SUPABASE_URL &&
-  process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co' &&
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-)
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const { cat, q } = searchParams
@@ -63,21 +57,31 @@ export default async function NieuwsPage({ searchParams }: Props) {
   let articles: Article[] = filterMock(MOCK_ARTICLES, category, query)
   let totalCount = articles.length
 
-  if (SUPABASE_READY) {
+  if (DB_READY) {
     try {
-      const supabase = createServerSupabaseClient()
-      let q = supabase
-        .from('articles')
-        .select('*', { count: 'exact' })
-        .eq('status', 'published')
-        .order('published_at', { ascending: false })
-        .range(offset, offset + perPage - 1)
-      if (category) q = q.eq('category', category)
-      if (query) q = q.or(`title.ilike.%${query}%,excerpt.ilike.%${query}%`)
-      const { data, count } = await q
-      if (data?.length) {
-        articles   = data as Article[]
-        totalCount = count || 0
+      const db = getDb()
+      const params: unknown[] = ['published']
+      const conditions = ['status = $1']
+
+      if (category) {
+        params.push(category)
+        conditions.push(`category = $${params.length}`)
+      }
+      if (query) {
+        params.push(`%${query}%`, `%${query}%`)
+        conditions.push(`(title ILIKE $${params.length - 1} OR excerpt ILIKE $${params.length})`)
+      }
+
+      const whereStr = `WHERE ${conditions.join(' AND ')}`
+
+      const [countRows, dataRows] = await Promise.all([
+        db.query(`SELECT COUNT(*) as count FROM articles ${whereStr}`, params),
+        db.query(`SELECT * FROM articles ${whereStr} ORDER BY published_at DESC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`, [...params, perPage, offset]),
+      ])
+
+      if (dataRows.length > 0) {
+        articles   = dataRows as unknown as Article[]
+        totalCount = parseInt(String((countRows[0] as { count: string }).count || '0'))
       }
     } catch {}
   }
