@@ -253,6 +253,44 @@ export default async function KennisbankArticlePage({ params }: Props) {
             </div>
           </aside>
         </div>
+
+        {/* Related articles – full-width below the grid */}
+        {related.length > 0 && (
+          <div className="mt-12 pt-8 border-t border-slate-100">
+            <h2 className="text-xl font-bold text-slate-900 mb-6">Meer uit de kennisbank</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {related.slice(0, 3).map(rel => {
+                const rdiff = difficultyConfig[rel.difficulty]
+                return (
+                  <Link
+                    key={rel.id}
+                    href={`/kennisbank/${rel.slug}`}
+                    className="group flex flex-col bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover hover:border-primary-100 transition-all duration-250 p-5"
+                  >
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className={cn('text-xs px-2 py-0.5 rounded-full font-semibold border', rdiff.bg, rdiff.color)}>
+                        {rdiff.label}
+                      </span>
+                      <span className="text-xs text-slate-400">{rel.category}</span>
+                    </div>
+                    <h3 className="font-semibold text-slate-900 group-hover:text-primary-600 transition-colors line-clamp-2 leading-snug mb-2">
+                      {rel.title}
+                    </h3>
+                    {rel.excerpt && (
+                      <p className="text-sm text-slate-500 line-clamp-2 flex-1 leading-relaxed">
+                        {rel.excerpt}
+                      </p>
+                    )}
+                    <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-3 pt-3 border-t border-slate-50">
+                      <Clock className="w-3 h-3" />
+                      <span>{readingTime(rel.content)}</span>
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </>
   )

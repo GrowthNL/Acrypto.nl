@@ -321,6 +321,18 @@ export default async function ArticlePage({ params }: Props) {
             </div>
           </aside>
         </div>
+
+        {/* Related articles – full-width below the grid */}
+        {related.length > 0 && (
+          <div className="mt-12 pt-8 border-t border-slate-100">
+            <h2 className="text-xl font-bold text-slate-900 mb-6">Gerelateerde artikelen</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {related.map(rel => (
+                <ArticleCard key={rel.id} article={rel} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </>
   )
