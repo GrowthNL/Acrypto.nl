@@ -15,7 +15,7 @@ export default function NotFound() {
         De pagina die je zoekt bestaat niet (meer) of is verplaatst.<br />
         Probeer het nieuws of de kennisbank.
       </p>
-      <div className="flex flex-col sm:flex-row gap-3 justify-center">
+      <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
         <Link
           href="/"
           className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 text-white text-sm font-semibold rounded-xl hover:bg-primary-700 transition-colors"
@@ -30,6 +30,12 @@ export default function NotFound() {
           <Search className="w-4 h-4" />
           Bekijk nieuws
         </Link>
+      </div>
+
+      <div className="flex flex-wrap gap-x-5 gap-y-2 justify-center text-sm">
+        {[['Live koersen','/koersen'],['Kennisbank','/kennisbank'],['Contact','/contact']].map(([l,h]) => (
+          <Link key={h} href={h} className="text-primary-600 hover:underline">{l}</Link>
+        ))}
       </div>
     </div>
   )

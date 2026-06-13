@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { BookOpen, TrendingUp, Shield, Zap } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Over Acrypto.nl | Nederlands Crypto Nieuws Platform',
-  description: 'Acrypto.nl is het meest betrouwbare Nederlandse platform voor crypto nieuws, live koersen en educatie. Leer meer over onze missie en redactie.',
+  title: 'Over Acrypto.nl',
+  description: 'Acrypto.nl is een Nederlands platform voor crypto nieuws, live koersen en educatie. Lees meer over onze missie, werkwijze en redactionele aanpak.',
   alternates: { canonical: '/over-ons' },
 }
 
@@ -49,24 +49,38 @@ export default function OverOnsPage() {
         ))}
       </div>
 
+      {/* Werkwijze / redactie */}
+      <div className="bg-white border border-slate-100 rounded-2xl p-6 mb-10 shadow-sm">
+        <h2 className="text-lg font-bold text-slate-900 mb-2">Onze werkwijze</h2>
+        <p className="text-slate-600 leading-relaxed mb-3">
+          Onze redactie selecteert nieuws op relevantie en feitelijke onderbouwing, controleert bronnen en schrijft
+          in begrijpelijk Nederlands. Koersdata is indicatief en afkomstig van CoinGecko. Een deel van onze content
+          komt tot stand met behulp van AI-tools, altijd onder redactionele verantwoordelijkheid.
+        </p>
+        <Link href="/redactioneel-beleid" className="text-sm font-semibold text-primary-600 hover:underline">
+          Lees ons volledige redactioneel beleid
+        </Link>
+      </div>
+
       <div className="border border-amber-100 bg-amber-50 rounded-2xl p-6 mb-10">
         <h2 className="text-sm font-bold text-amber-800 mb-2">Geen beleggingsadvies</h2>
         <p className="text-sm text-amber-700 leading-relaxed">
           Alle content op Acrypto.nl is uitsluitend bedoeld voor informatieve en educatieve doeleinden.
           Niets op deze website vormt financieel of beleggingsadvies. Handel in cryptocurrencies brengt
           aanzienlijke risico&apos;s met zich mee. Doe altijd je eigen onderzoek (DYOR) en raadpleeg een
-          financieel adviseur voor persoonlijk advies.
+          financieel adviseur voor persoonlijk advies. Lees ook onze{' '}
+          <Link href="/disclaimer" className="underline hover:text-amber-900">disclaimer</Link>.
         </p>
       </div>
 
       <div className="text-center">
         <p className="text-slate-500 mb-4 text-sm">Vragen, tips of samenwerking? We horen het graag.</p>
-        <a
-          href="mailto:info@acrypto.nl"
+        <Link
+          href="/contact"
           className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 text-white text-sm font-semibold rounded-xl hover:bg-primary-700 transition-colors"
         >
           Contact opnemen
-        </a>
+        </Link>
       </div>
     </div>
   )

@@ -23,6 +23,10 @@ Eisen:
 - Sluit af met een korte conclusie of vooruitblik
 - Gebruik geen bronvermelding in de tekst
 - Gebruik NOOIT een liggend streepje (em-dash). Gebruik gewone leestekens.
+- Geef GEEN beleggingsadvies en GEEN koersvoorspellingen.
+- Vermijd stellige claims als "gegarandeerd", "zeker rendement", "beste investering", "moet je kopen" of "nu instappen".
+- Gebruik neutrale, nuchtere taal: "kan interessant zijn", "de risico's blijven groot", "historische koersen bieden geen garantie", "doe eigen onderzoek".
+- Schrijf voor zowel beginners als geinteresseerde beleggers: helder, betrouwbaar, zonder hype of casino-achtige taal.
 
 Retourneer UITSLUITEND geldige JSON (geen markdown, geen uitleg eromheen):
 {

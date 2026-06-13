@@ -16,20 +16,33 @@ interface Props {
 }
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
-  const { cat, q } = searchParams
+  const { cat, q, page } = searchParams
   const catLabel = CATEGORIES.find(c => c.id === cat?.toLowerCase())?.label
+  const pageNum = parseInt(page || '1')
+
+  // Zoekresultaten en gefilterde lijsten niet indexeren (dunne/duplicate content).
+  // Categoriefilters kennen een eigen, rijke hubpagina onder /categorie/[slug];
+  // daar verwijst de canonical naartoe.
+  const isFiltered = !!q || !!cat || pageNum > 1
+
   const title = q
-    ? `Zoekresultaten voor "${q}" | Acrypto.nl`
+    ? `Zoekresultaten voor "${q}"`
     : catLabel
-    ? `${catLabel} nieuws | Acrypto.nl`
-    : 'Crypto Nieuws | Acrypto.nl'
+    ? `${catLabel} nieuws`
+    : 'Crypto nieuws'
   const description = q
-    ? `Crypto nieuwsartikelen over "${q}"`
+    ? `Crypto nieuwsartikelen over "${q}" op Acrypto.nl.`
+    : catLabel
+    ? `Het laatste ${catLabel} nieuws in het Nederlands. Nuchter en dagelijks bijgewerkt.`
     : 'Het laatste cryptocurrency nieuws in het Nederlands. Dagelijks bijgewerkt over Bitcoin, Ethereum, DeFi en meer.'
+
+  const canonical = cat ? `/categorie/${cat.toLowerCase()}` : '/nieuws'
+
   return {
     title,
     description,
-    alternates: { canonical: cat ? `/nieuws?cat=${cat}` : '/nieuws' },
+    alternates: { canonical },
+    robots: isFiltered ? { index: false, follow: true } : undefined,
   }
 }
 
@@ -126,7 +139,7 @@ export default async function NieuwsPage({ searchParams }: Props) {
           {CATEGORIES.map(cat => (
             <Link
               key={cat.id}
-              href={`/nieuws?cat=${cat.id}`}
+              href={`/categorie/${cat.id}`}
               className={`text-sm px-4 py-1.5 rounded-full border font-medium transition-colors ${
                 category === cat.id
                   ? 'bg-primary-600 text-white border-primary-600 shadow-sm'

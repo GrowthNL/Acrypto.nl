@@ -29,8 +29,8 @@ export default function PrivacyPage() {
       <Section title="1. Verwerkingsverantwoordelijke">
         <p>
           Acrypto.nl is verantwoordelijk voor de verwerking van persoonsgegevens zoals beschreven in dit
-          privacybeleid. Voor vragen kunt u contact opnemen via{' '}
-          <a href="mailto:info@acrypto.nl" className="text-primary-600 hover:underline">info@acrypto.nl</a>.
+          privacybeleid. Voor vragen kunt u contact met ons opnemen via ons{' '}
+          <Link href="/contact" className="text-primary-600 hover:underline">contactformulier</Link>.
         </p>
       </Section>
 
@@ -73,8 +73,8 @@ export default function PrivacyPage() {
           <li><strong>Dataportabiliteit:</strong> u kunt uw gegevens opvragen in een overdraagbaar formaat</li>
         </ul>
         <p>
-          Voor het uitoefenen van uw rechten kunt u mailen naar{' '}
-          <a href="mailto:info@acrypto.nl" className="text-primary-600 hover:underline">info@acrypto.nl</a>.
+          Voor het uitoefenen van uw rechten kunt u contact met ons opnemen via ons{' '}
+          <Link href="/contact" className="text-primary-600 hover:underline">contactformulier</Link>.
           U heeft ook het recht een klacht in te dienen bij de{' '}
           <a href="https://autoriteitpersoonsgegevens.nl" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">
             Autoriteit Persoonsgegevens
@@ -104,7 +104,8 @@ export default function PrivacyPage() {
         <ul className="list-disc pl-5 space-y-1">
           <li><strong>CoinGecko API:</strong> voor live koersdata (geen persoonsgegevens gedeeld)</li>
           <li><strong>Vercel:</strong> voor hosting (zie Vercel&apos;s privacybeleid)</li>
-          <li><strong>Supabase:</strong> voor databaseopslag (zie Supabase&apos;s privacybeleid)</li>
+          <li><strong>Neon:</strong> voor databaseopslag (zie Neon&apos;s privacybeleid)</li>
+          <li><strong>Resend:</strong> voor het afhandelen van berichten via het contactformulier</li>
         </ul>
       </Section>
 

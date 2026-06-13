@@ -1,8 +1,10 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import { TrendingUp, TrendingDown } from 'lucide-react'
 import { CryptoPrice } from '@/lib/types'
 import { formatEur, formatPriceChange } from '@/lib/utils'
 import { cn } from '@/lib/utils'
+import { getCoinSlugByGeckoId } from '@/lib/coins'
 
 interface Props {
   prices: CryptoPrice[]
@@ -44,7 +46,13 @@ export default function PriceTable({ prices, compact = false }: Props) {
                       <div className="w-8 h-8 rounded-full bg-slate-100 flex-shrink-0" />
                     )}
                     <div className="min-w-0">
-                      <span className="font-semibold text-slate-900">{coin.name}</span>
+                      {getCoinSlugByGeckoId(coin.coin_id) ? (
+                        <Link href={`/koersen/${getCoinSlugByGeckoId(coin.coin_id)}`} className="font-semibold text-slate-900 hover:text-primary-600 transition-colors">
+                          {coin.name}
+                        </Link>
+                      ) : (
+                        <span className="font-semibold text-slate-900">{coin.name}</span>
+                      )}
                       <span className="ml-2 text-xs text-slate-400 font-mono">{coin.symbol}</span>
                     </div>
                   </div>

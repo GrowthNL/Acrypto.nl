@@ -122,6 +122,10 @@ export default async function ArticlePage({ params }: Props) {
   const contentWithIds = addHeadingIds(article.content)
   const faqs = Array.isArray(article.faqs) ? article.faqs : []
   const contentWithLinks = injectInternalLinks(contentWithIds, related)
+  // "Bijgewerkt" tonen als de update minstens een uur na publicatie ligt.
+  const isUpdated =
+    !!article.updated_at &&
+    new Date(article.updated_at).getTime() - new Date(article.published_at).getTime() > 3600_000
 
   return (
     <>
@@ -149,13 +153,21 @@ export default async function ArticlePage({ params }: Props) {
 
             {/* Category & meta */}
             <div className="flex flex-wrap items-center gap-3 mb-4">
-              <span className={cn('text-xs px-2.5 py-1 rounded-full font-semibold', categoryStyle)}>
+              <Link
+                href={`/categorie/${article.category?.toLowerCase()}`}
+                className={cn('text-xs px-2.5 py-1 rounded-full font-semibold hover:opacity-90 transition-opacity', categoryStyle)}
+              >
                 {article.category}
-              </span>
+              </Link>
               <div className="flex items-center gap-1.5 text-xs text-slate-400">
                 <Calendar className="w-3.5 h-3.5" />
                 <span>{formatDate(article.published_at)}</span>
               </div>
+              {isUpdated && (
+                <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                  <span>Bijgewerkt: {formatDate(article.updated_at)}</span>
+                </div>
+              )}
               <div className="flex items-center gap-1.5 text-xs text-slate-400">
                 <Clock className="w-3.5 h-3.5" />
                 <span>{readingTime(article.content)}</span>
@@ -177,11 +189,14 @@ export default async function ArticlePage({ params }: Props) {
               </p>
             )}
 
-            {/* TLDR box */}
+            {/* TLDR box - "In het kort" */}
             {article.tldr && (
-              <div className="mb-6 p-4 bg-primary-50 border border-primary-100 rounded-xl">
-                <p className="text-xs font-bold text-primary-700 uppercase tracking-wide mb-1.5">Samenvatting</p>
+              <div className="mb-6 p-4 bg-primary-50 border border-primary-100 rounded-xl quick-take">
+                <p className="text-xs font-bold text-primary-700 uppercase tracking-wide mb-1.5">In het kort</p>
                 <p className="text-sm text-primary-900 leading-relaxed">{article.tldr}</p>
+                <p className="text-[11px] text-primary-600/80 mt-2 pt-2 border-t border-primary-100">
+                  Informatief, geen financieel advies.
+                </p>
               </div>
             )}
 

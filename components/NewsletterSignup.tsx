@@ -39,8 +39,9 @@ export default function NewsletterSignup() {
         <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
           Dagelijks crypto nieuws in je inbox
         </h2>
-        <p className="text-primary-200 text-sm md:text-base mb-8 max-w-md mx-auto leading-relaxed">
-          Elke ochtend een helder overzicht van het belangrijkste nieuws. Geen spam, altijd gratis.
+        <p className="text-primary-200 text-sm md:text-base mb-8 max-w-lg mx-auto leading-relaxed">
+          Ontvang elke ochtend de belangrijkste crypto ontwikkelingen. Bitcoin, Ethereum, altcoins,
+          regelgeving en marktcontext in normaal Nederlands. Gratis, en je kunt je altijd uitschrijven.
         </p>
 
         {status === 'success' ? (
