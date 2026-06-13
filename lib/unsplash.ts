@@ -23,7 +23,7 @@ export async function fetchUnsplashImage(category: string, tags: string[] = []):
   try {
     const resp = await fetch(
       `https://api.unsplash.com/photos/random?query=${encodeURIComponent(query)}&orientation=landscape&client_id=${key}`,
-      { signal: AbortSignal.timeout(6000) }
+      { signal: AbortSignal.timeout(4000) }
     )
     if (!resp.ok) return null
 

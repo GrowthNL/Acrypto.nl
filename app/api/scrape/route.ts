@@ -7,7 +7,7 @@ import { slugify } from '@/lib/utils'
 
 export const maxDuration = 300
 
-const MAX_ARTICLES_PER_RUN = 5
+const MAX_ARTICLES_PER_RUN = 3
 
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get('authorization')
