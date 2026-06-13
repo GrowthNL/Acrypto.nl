@@ -6,6 +6,8 @@ import { slugify } from '@/lib/utils'
 
 export const maxDuration = 300
 
+const MAX_ARTICLES_PER_RUN = 5
+
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get('authorization')
   const cronSecret = process.env.CRON_SECRET
@@ -92,6 +94,10 @@ export async function GET(req: NextRequest) {
           )
         `
         results.published++
+        if (results.published >= MAX_ARTICLES_PER_RUN) {
+          await db`INSERT INTO scraped_urls (url) VALUES (${item.link}) ON CONFLICT DO NOTHING`
+          break
+        }
       } catch (insertErr) {
         results.errors++
         console.error('Insert error:', insertErr)
