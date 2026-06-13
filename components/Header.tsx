@@ -8,6 +8,7 @@ const navLinks = [
   { href: '/nieuws',     label: 'Nieuws'     },
   { href: '/koersen',    label: 'Koersen'    },
   { href: '/kennisbank', label: 'Kennisbank' },
+  { href: '/contact',    label: 'Contact'    },
 ]
 
 function Logo() {
