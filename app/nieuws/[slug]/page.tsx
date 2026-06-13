@@ -34,6 +34,20 @@ function addHeadingIds(html: string): string {
   })
 }
 
+function injectInternalLinks(html: string, related: Article[]): string {
+  if (related.length === 0) return html
+  const picks = related.slice(0, 2)
+  const box = `<div class="not-prose my-6 p-4 bg-blue-50 border-l-4 border-blue-500 rounded-r-xl">
+<p class="text-xs font-bold text-blue-700 uppercase tracking-wide mb-2">Lees ook</p>
+${picks.map(a => `<a href="/nieuws/${a.slug}" class="block text-sm font-semibold text-blue-600 hover:underline mb-1">${a.title}</a>`).join('')}
+</div>`
+  let count = 0
+  return html.replace(/<\/p>/gi, m => {
+    count++
+    return count === 2 ? `</p>${box}` : m
+  })
+}
+
 async function getArticle(slug: string): Promise<Article | null> {
   if (!DB_READY) return MOCK_ARTICLES.find(a => a.slug === slug) ?? null
   try {
@@ -107,6 +121,7 @@ export default async function ArticlePage({ params }: Props) {
   const headings = extractHeadings(article.content)
   const contentWithIds = addHeadingIds(article.content)
   const faqs = Array.isArray(article.faqs) ? article.faqs : []
+  const contentWithLinks = injectInternalLinks(contentWithIds, related)
 
   return (
     <>
@@ -208,7 +223,7 @@ export default async function ArticlePage({ params }: Props) {
             {/* Content */}
             <div
               className="article-content"
-              dangerouslySetInnerHTML={{ __html: contentWithIds }}
+              dangerouslySetInnerHTML={{ __html: contentWithLinks }}
             />
 
             {/* FAQ section */}
