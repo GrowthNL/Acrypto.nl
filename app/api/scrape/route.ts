@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getDb } from '@/lib/db'
-import { fetchAllSources } from '@/lib/rss'
+import { fetchAllSources, titlesAreSimilar } from '@/lib/rss'
 import { generateDutchArticle } from '@/lib/claude'
 import { slugify } from '@/lib/utils'
 
@@ -18,16 +18,32 @@ export async function GET(req: NextRequest) {
   }
 
   const db = getDb()
-  const results = { fetched: 0, new: 0, published: 0, errors: 0 }
+  const results = { fetched: 0, new: 0, published: 0, skipped_duplicate: 0, errors: 0 }
 
   try {
     const items = await fetchAllSources()
     results.fetched = items.length
 
+    // Load recent article titles from DB once — used for cross-batch duplicate detection
+    const recentRows = await db`
+      SELECT title FROM articles
+      WHERE published_at > NOW() - INTERVAL '48 hours'
+    `
+    const recentTitles = (recentRows as { title: string }[]).map(r => r.title)
+
     for (const item of items) {
-      // Check if already scraped
+      // Skip if this URL was already scraped
       const existing = await db`SELECT id FROM scraped_urls WHERE url = ${item.link} LIMIT 1`
       if (existing.length > 0) continue
+
+      // Skip if a similar story was already published in the last 48 hours
+      const isCrossBatchDuplicate = recentTitles.some(t => titlesAreSimilar(t, item.title))
+      if (isCrossBatchDuplicate) {
+        results.skipped_duplicate++
+        await db`INSERT INTO scraped_urls (url) VALUES (${item.link}) ON CONFLICT DO NOTHING`
+        continue
+      }
+
       results.new++
 
       // Generate Dutch article with Claude
@@ -42,6 +58,9 @@ export async function GET(req: NextRequest) {
         await db`INSERT INTO scraped_urls (url) VALUES (${item.link}) ON CONFLICT DO NOTHING`
         continue
       }
+
+      // Add generated title to recent list so same-run duplicates are also caught
+      recentTitles.push(generated.title)
 
       // Ensure unique slug
       let slug = generated.slug || slugify(generated.title)
@@ -78,7 +97,7 @@ export async function GET(req: NextRequest) {
         console.error('Insert error:', insertErr)
       }
 
-      // Mark as scraped
+      // Mark URL as scraped
       await db`INSERT INTO scraped_urls (url) VALUES (${item.link}) ON CONFLICT DO NOTHING`
 
       // Avoid rate limiting Claude API
