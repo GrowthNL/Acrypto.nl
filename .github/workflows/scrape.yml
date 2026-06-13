@@ -10,15 +10,11 @@ on:
         description: 'Dry run (no database writes)'
         required: false
         default: 'false'
-  push:
-    branches: [main]
 
 jobs:
   scrape:
     name: Scrape & Publish Articles
     runs-on: ubuntu-latest
-    # Only run on schedule or manual dispatch : not on push
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     timeout-minutes: 15
 
     steps:
