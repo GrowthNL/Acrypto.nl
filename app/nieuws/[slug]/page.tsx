@@ -7,14 +7,13 @@ import { getDb, DB_READY } from '@/lib/db'
 import { MOCK_ARTICLES } from '@/lib/mock-data'
 import { ArticleStructuredData, BreadcrumbStructuredData, FAQStructuredData } from '@/components/StructuredData'
 import ArticleCard from '@/components/ArticleCard'
-import { formatDate, readingTime, getCategoryStyle, timeAgo } from '@/lib/utils'
+import { formatDate, readingTime, getCategoryStyle, getCategoryImage, timeAgo } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 import type { Article } from '@/lib/types'
 
 export const revalidate = 3600
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://acrypto.nl'
-const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=1200&q=80'
 
 interface Props {
   params: { slug: string }
@@ -57,6 +56,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const article = await getArticle(params.slug)
   if (!article) return { title: 'Artikel niet gevonden' }
 
+  const ogImage = article.image_url || getCategoryImage(article.category)
   return {
     title: `${article.title} | Acrypto.nl`,
     description: article.excerpt || undefined,
@@ -67,9 +67,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: `${SITE_URL}/nieuws/${article.slug}`,
       title: article.title,
       description: article.excerpt || undefined,
-      images: article.image_url
-        ? [{ url: article.image_url, width: 1200, height: 630, alt: article.title }]
-        : [{ url: `${SITE_URL}/api/og?title=${encodeURIComponent(article.title)}&category=${encodeURIComponent(article.category)}`, width: 1200, height: 630 }],
+      images: [{ url: ogImage, width: 1200, height: 630, alt: article.title }],
       publishedTime: article.published_at,
       modifiedTime: article.updated_at,
       authors: [`${SITE_URL}`],
@@ -79,7 +77,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: 'summary_large_image',
       title: article.title,
       description: article.excerpt || undefined,
-      images: [article.image_url || `${SITE_URL}/api/og`],
+      images: [ogImage],
     },
   }
 }
@@ -90,7 +88,7 @@ export default async function ArticlePage({ params }: Props) {
 
   const related = await getRelated(article)
   const categoryStyle = getCategoryStyle(article.category)
-  const imageUrl = article.image_url || FALLBACK_IMAGE
+  const imageUrl = article.image_url || getCategoryImage(article.category)
 
   return (
     <>

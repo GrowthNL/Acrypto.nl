@@ -2,19 +2,8 @@
 const nextConfig = {
   images: {
     remotePatterns: [
-      { protocol: 'https', hostname: 'images.unsplash.com' },
-      { protocol: 'https', hostname: 'coin-images.coingecko.com' },
-      { protocol: 'https', hostname: 'assets.coingecko.com' },
-      { protocol: 'https', hostname: 'images.cointelegraph.com' },
-      { protocol: 'https', hostname: 'www.coindesk.com' },
-      { protocol: 'https', hostname: 'decrypt.co' },
-      { protocol: 'https', hostname: 'bitcoinmagazine.com' },
-      { protocol: 'https', hostname: 'cryptoslate.com' },
-      { protocol: 'https', hostname: 'www.newsbtc.com' },
-      { protocol: 'https', hostname: 'crypto-insiders.nl' },
-      { protocol: 'https', hostname: 'bitcoinmagazine.nl' },
-      { protocol: 'https', hostname: '**.cloudfront.net' },
-      { protocol: 'https', hostname: '**.supabase.co' },
+      { protocol: 'https', hostname: '**' },
+      { protocol: 'http', hostname: '**' },
     ],
   },
   async headers() {
@@ -25,6 +14,7 @@ const nextConfig = {
           { key: 'X-DNS-Prefetch-Control', value: 'on' },
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          { key: 'X-Robots-Tag', value: 'max-image-preview:large' },
         ],
       },
     ]

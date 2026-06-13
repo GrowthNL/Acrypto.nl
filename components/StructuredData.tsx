@@ -1,14 +1,16 @@
 import { Article, KnowledgeArticle } from '@/lib/types'
+import { getCategoryImage } from '@/lib/utils'
 
 const SITE_NAME = 'Acrypto.nl'
 
 export function ArticleStructuredData({ article, siteUrl }: { article: Article; siteUrl: string }) {
+  const image = article.image_url || getCategoryImage(article.category)
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
     headline: article.title,
     description: article.excerpt,
-    image: article.image_url ? [article.image_url] : [`${siteUrl}/images/crypto-default.jpg`],
+    image: [{ '@type': 'ImageObject', url: image, width: 1200, height: 630 }],
     datePublished: article.published_at,
     dateModified: article.updated_at,
     inLanguage: 'nl-NL',
