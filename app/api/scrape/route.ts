@@ -7,7 +7,7 @@ import { slugify } from '@/lib/utils'
 
 export const maxDuration = 300
 
-const MAX_ARTICLES_PER_RUN = 3
+const MAX_ARTICLES_PER_RUN = 2
 
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get('authorization')
@@ -111,9 +111,6 @@ export async function GET(req: NextRequest) {
 
       // Mark URL as scraped
       await db`INSERT INTO scraped_urls (url) VALUES (${item.link}) ON CONFLICT DO NOTHING`
-
-      // Avoid rate limiting Claude API
-      await new Promise(r => setTimeout(r, 1500))
     }
 
     return NextResponse.json({ success: true, ...results })

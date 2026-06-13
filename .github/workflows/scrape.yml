@@ -40,6 +40,11 @@ jobs:
 
           echo "Response code: $RESPONSE"
 
+          if [ "$RESPONSE" = "504" ]; then
+            echo "Scrape timed out (504) - will retry on next schedule"
+            exit 0
+          fi
+
           if [ "$RESPONSE" != "200" ]; then
             echo "Scrape failed with status $RESPONSE"
             exit 1
