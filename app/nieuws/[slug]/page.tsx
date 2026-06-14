@@ -2,22 +2,50 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { Clock, Calendar, ArrowLeft, ExternalLink, Tag } from 'lucide-react'
+import { Clock, Calendar, ArrowLeft, ExternalLink, Tag, List, ChevronRight } from 'lucide-react'
 import { getDb, DB_READY } from '@/lib/db'
 import { MOCK_ARTICLES } from '@/lib/mock-data'
 import { ArticleStructuredData, BreadcrumbStructuredData, FAQStructuredData } from '@/components/StructuredData'
 import ArticleCard from '@/components/ArticleCard'
-import { formatDate, readingTime, getCategoryStyle, timeAgo } from '@/lib/utils'
+import { formatDate, readingTime, getCategoryStyle, getCategoryImage, timeAgo, slugify } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 import type { Article } from '@/lib/types'
 
 export const revalidate = 3600
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://acrypto.nl'
-const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=1200&q=80'
 
 interface Props {
   params: { slug: string }
+}
+
+function extractHeadings(html: string): { id: string; text: string }[] {
+  const matches = Array.from(html.matchAll(/<h2[^>]*>(.*?)<\/h2>/gi))
+  return matches.map(m => ({
+    text: m[1].replace(/<[^>]*>/g, ''),
+    id: slugify(m[1].replace(/<[^>]*>/g, '')),
+  }))
+}
+
+function addHeadingIds(html: string): string {
+  return html.replace(/<h2([^>]*)>(.*?)<\/h2>/gi, (_, attrs, text) => {
+    const id = slugify(text.replace(/<[^>]*>/g, ''))
+    return `<h2${attrs} id="${id}">${text}</h2>`
+  })
+}
+
+function injectInternalLinks(html: string, related: Article[]): string {
+  if (related.length === 0) return html
+  const picks = related.slice(0, 2)
+  const box = `<div class="not-prose my-6 p-4 bg-blue-50 border-l-4 border-blue-500 rounded-r-xl">
+<p class="text-xs font-bold text-blue-700 uppercase tracking-wide mb-2">Lees ook</p>
+${picks.map(a => `<a href="/nieuws/${a.slug}" class="block text-sm font-semibold text-blue-600 hover:underline mb-1">${a.title}</a>`).join('')}
+</div>`
+  let count = 0
+  return html.replace(/<\/p>/gi, m => {
+    count++
+    return count === 2 ? `</p>${box}` : m
+  })
 }
 
 async function getArticle(slug: string): Promise<Article | null> {
@@ -57,6 +85,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const article = await getArticle(params.slug)
   if (!article) return { title: 'Artikel niet gevonden' }
 
+  const ogImage = article.image_url || getCategoryImage(article.category)
   return {
     title: `${article.title} | Acrypto.nl`,
     description: article.excerpt || undefined,
@@ -67,9 +96,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: `${SITE_URL}/nieuws/${article.slug}`,
       title: article.title,
       description: article.excerpt || undefined,
-      images: article.image_url
-        ? [{ url: article.image_url, width: 1200, height: 630, alt: article.title }]
-        : [{ url: `${SITE_URL}/api/og?title=${encodeURIComponent(article.title)}&category=${encodeURIComponent(article.category)}`, width: 1200, height: 630 }],
+      images: [{ url: ogImage, width: 1200, height: 630, alt: article.title }],
       publishedTime: article.published_at,
       modifiedTime: article.updated_at,
       authors: [`${SITE_URL}`],
@@ -79,7 +106,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: 'summary_large_image',
       title: article.title,
       description: article.excerpt || undefined,
-      images: [article.image_url || `${SITE_URL}/api/og`],
+      images: [ogImage],
     },
   }
 }
@@ -90,7 +117,15 @@ export default async function ArticlePage({ params }: Props) {
 
   const related = await getRelated(article)
   const categoryStyle = getCategoryStyle(article.category)
-  const imageUrl = article.image_url || FALLBACK_IMAGE
+  const imageUrl = article.image_url || getCategoryImage(article.category)
+  const headings = extractHeadings(article.content)
+  const contentWithIds = addHeadingIds(article.content)
+  const faqs = Array.isArray(article.faqs) ? article.faqs : []
+  const contentWithLinks = injectInternalLinks(contentWithIds, related)
+  // "Bijgewerkt" tonen als de update minstens een uur na publicatie ligt.
+  const isUpdated =
+    !!article.updated_at &&
+    new Date(article.updated_at).getTime() - new Date(article.published_at).getTime() > 3600_000
 
   return (
     <>
@@ -100,7 +135,7 @@ export default async function ArticlePage({ params }: Props) {
         { name: 'Nieuws', path: '/nieuws' },
         { name: article.title, path: `/nieuws/${article.slug}` },
       ]} />
-      {article.faqs?.length ? <FAQStructuredData faqs={article.faqs} /> : null}
+      {faqs.length > 0 && <FAQStructuredData faqs={faqs} />}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8">
@@ -118,13 +153,21 @@ export default async function ArticlePage({ params }: Props) {
 
             {/* Category & meta */}
             <div className="flex flex-wrap items-center gap-3 mb-4">
-              <span className={cn('text-xs px-2.5 py-1 rounded-full font-semibold', categoryStyle)}>
+              <Link
+                href={`/categorie/${article.category?.toLowerCase()}`}
+                className={cn('text-xs px-2.5 py-1 rounded-full font-semibold hover:opacity-90 transition-opacity', categoryStyle)}
+              >
                 {article.category}
-              </span>
+              </Link>
               <div className="flex items-center gap-1.5 text-xs text-slate-400">
                 <Calendar className="w-3.5 h-3.5" />
                 <span>{formatDate(article.published_at)}</span>
               </div>
+              {isUpdated && (
+                <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                  <span>Bijgewerkt: {formatDate(article.updated_at)}</span>
+                </div>
+              )}
               <div className="flex items-center gap-1.5 text-xs text-slate-400">
                 <Clock className="w-3.5 h-3.5" />
                 <span>{readingTime(article.content)}</span>
@@ -141,9 +184,43 @@ export default async function ArticlePage({ params }: Props) {
 
             {/* Excerpt */}
             {article.excerpt && (
-              <p className="text-lg text-slate-600 leading-relaxed mb-6 border-l-3 border-primary-500 pl-4 border-l-4">
+              <p className="text-lg text-slate-600 leading-relaxed mb-6 border-l-4 border-primary-500 pl-4">
                 {article.excerpt}
               </p>
+            )}
+
+            {/* TLDR box - "In het kort" */}
+            {article.tldr && (
+              <div className="mb-6 p-4 bg-primary-50 border border-primary-100 rounded-xl quick-take">
+                <p className="text-xs font-bold text-primary-700 uppercase tracking-wide mb-1.5">In het kort</p>
+                <p className="text-sm text-primary-900 leading-relaxed">{article.tldr}</p>
+                <p className="text-[11px] text-primary-600/80 mt-2 pt-2 border-t border-primary-100">
+                  Informatief, geen financieel advies.
+                </p>
+              </div>
+            )}
+
+            {/* Table of Contents */}
+            {headings.length >= 3 && (
+              <nav className="mb-6 p-4 bg-slate-50 border border-slate-100 rounded-xl">
+                <div className="flex items-center gap-2 mb-3">
+                  <List className="w-4 h-4 text-slate-500" />
+                  <span className="text-sm font-bold text-slate-700">Inhoudsopgave</span>
+                </div>
+                <ol className="space-y-1">
+                  {headings.map((h, i) => (
+                    <li key={h.id} className="flex items-start gap-2">
+                      <span className="text-xs text-slate-400 font-mono mt-0.5 w-4 flex-shrink-0">{i + 1}.</span>
+                      <a
+                        href={`#${h.id}`}
+                        className="text-sm text-primary-600 hover:text-primary-700 hover:underline leading-snug"
+                      >
+                        {h.text}
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
             )}
 
             {/* Hero image */}
@@ -161,8 +238,28 @@ export default async function ArticlePage({ params }: Props) {
             {/* Content */}
             <div
               className="article-content"
-              dangerouslySetInnerHTML={{ __html: article.content }}
+              dangerouslySetInnerHTML={{ __html: contentWithLinks }}
             />
+
+            {/* FAQ section */}
+            {faqs.length > 0 && (
+              <div className="mt-10">
+                <h2 className="text-xl font-bold text-slate-900 mb-4">Veelgestelde vragen</h2>
+                <div className="space-y-3">
+                  {faqs.map((faq, i) => (
+                    <details key={i} className="group border border-slate-100 rounded-xl overflow-hidden">
+                      <summary className="flex items-center justify-between gap-3 p-4 cursor-pointer font-semibold text-sm text-slate-800 hover:text-primary-600 transition-colors list-none">
+                        {faq.q}
+                        <ChevronRight className="w-4 h-4 flex-shrink-0 text-slate-400 group-open:rotate-90 transition-transform" />
+                      </summary>
+                      <p className="px-4 pb-4 text-sm text-slate-600 leading-relaxed border-t border-slate-50 pt-3">
+                        {faq.a}
+                      </p>
+                    </details>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Tags */}
             {article.tags && article.tags.length > 0 && (
@@ -239,6 +336,18 @@ export default async function ArticlePage({ params }: Props) {
             </div>
           </aside>
         </div>
+
+        {/* Related articles – full-width below the grid */}
+        {related.length > 0 && (
+          <div className="mt-12 pt-8 border-t border-slate-100">
+            <h2 className="text-xl font-bold text-slate-900 mb-6">Gerelateerde artikelen</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {related.map(rel => (
+                <ArticleCard key={rel.id} article={rel} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </>
   )

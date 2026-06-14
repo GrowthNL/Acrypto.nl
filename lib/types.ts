@@ -17,6 +17,7 @@ export interface Article {
   published_at: string
   created_at: string
   updated_at: string
+  tldr?: string | null
   faqs?: { q: string; a: string }[]
 }
 
@@ -66,7 +67,9 @@ export interface GeneratedArticle {
   title: string
   slug: string
   excerpt: string
+  tldr: string
   content: string
   tags: string[]
   category: string
+  faqs?: { q: string; a: string }[]
 }

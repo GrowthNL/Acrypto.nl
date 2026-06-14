@@ -119,7 +119,7 @@ function titleKeywords(title: string): Set<string> {
   )
 }
 
-// Returns true if two titles share 3+ significant keywords — same story, different source
+// Returns true if two titles share 3+ significant keywords : same story, different source
 export function titlesAreSimilar(a: string, b: string): boolean {
   const kA = titleKeywords(a)
   const kB = titleKeywords(b)

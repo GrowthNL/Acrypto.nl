@@ -37,7 +37,7 @@ export default function Footer() {
           <div>
             <h3 className="text-sm font-semibold text-white mb-3">Nieuws</h3>
             <ul className="space-y-2 text-sm">
-              {[['Laatste nieuws','/nieuws'],['Bitcoin','/nieuws?cat=bitcoin'],['Ethereum','/nieuws?cat=ethereum'],['Altcoins','/nieuws?cat=altcoins'],['DeFi','/nieuws?cat=defi']].map(([l,h]) => (
+              {[['Laatste nieuws','/nieuws'],['Bitcoin','/categorie/bitcoin'],['Ethereum','/categorie/ethereum'],['Altcoins','/categorie/altcoins'],['DeFi','/categorie/defi']].map(([l,h]) => (
                 <li key={h}><Link href={h} className="hover:text-white transition-colors">{l}</Link></li>
               ))}
             </ul>
@@ -46,7 +46,7 @@ export default function Footer() {
           <div>
             <h3 className="text-sm font-semibold text-white mb-3">Informatie</h3>
             <ul className="space-y-2 text-sm">
-              {[['Alle koersen','/koersen'],['Kennisbank','/kennisbank'],['Voor beginners','/kennisbank?niveau=beginner']].map(([l,h]) => (
+              {[['Alle koersen','/koersen'],['Bitcoin koers','/koersen/bitcoin'],['Ethereum koers','/koersen/ethereum'],['Kennisbank','/kennisbank']].map(([l,h]) => (
                 <li key={h}><Link href={h} className="hover:text-white transition-colors">{l}</Link></li>
               ))}
             </ul>
@@ -55,7 +55,7 @@ export default function Footer() {
           <div>
             <h3 className="text-sm font-semibold text-white mb-3">Acrypto.nl</h3>
             <ul className="space-y-2 text-sm">
-              {[['Over ons','/over-ons'],['Contact','/contact'],['Privacybeleid','/privacy'],['Disclaimer','/disclaimer']].map(([l,h]) => (
+              {[['Over ons','/over-ons'],['Redactioneel beleid','/redactioneel-beleid'],['Contact','/contact'],['Disclaimer','/disclaimer'],['Privacybeleid','/privacy']].map(([l,h]) => (
                 <li key={h}><Link href={h} className="hover:text-white transition-colors">{l}</Link></li>
               ))}
             </ul>

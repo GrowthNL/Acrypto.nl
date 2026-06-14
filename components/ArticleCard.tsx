@@ -1,8 +1,11 @@
+'use client'
+
 import Link from 'next/link'
 import Image from 'next/image'
+import { useState } from 'react'
 import { Clock } from 'lucide-react'
 import { Article } from '@/lib/types'
-import { timeAgo, getCategoryStyle, truncate, readingTime } from '@/lib/utils'
+import { timeAgo, getCategoryStyle, truncate, readingTime, getCategoryImage } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 
 interface Props {
@@ -10,10 +13,9 @@ interface Props {
   variant?: 'default' | 'compact' | 'hero'
 }
 
-const FALLBACK = 'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=800&q=80'
-
 export default function ArticleCard({ article, variant = 'default' }: Props) {
-  const img = article.image_url || FALLBACK
+  const fallback = getCategoryImage(article.category)
+  const [imgSrc, setImgSrc] = useState(article.image_url || fallback)
   const catStyle = getCategoryStyle(article.category)
 
   if (variant === 'compact') {
@@ -21,8 +23,9 @@ export default function ArticleCard({ article, variant = 'default' }: Props) {
       <Link href={`/nieuws/${article.slug}`} className="flex gap-3 group py-3 border-b border-slate-100 last:border-0">
         <div className="relative w-20 h-[60px] flex-shrink-0 rounded-lg overflow-hidden bg-slate-100">
           <Image
-            src={img} alt={article.image_alt || article.title}
+            src={imgSrc} alt={article.image_alt || article.title}
             fill className="object-cover group-hover:scale-105 transition-transform duration-300" sizes="80px"
+            onError={() => setImgSrc(fallback)}
           />
         </div>
         <div className="flex-1 min-w-0">
@@ -45,8 +48,9 @@ export default function ArticleCard({ article, variant = 'default' }: Props) {
     >
       <div className="relative aspect-[16/9] overflow-hidden bg-slate-100">
         <Image
-          src={img} alt={article.image_alt || article.title}
+          src={imgSrc} alt={article.image_alt || article.title}
           fill className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="(max-width: 768px) 100vw, 400px"
+          onError={() => setImgSrc(fallback)}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
         <span className={cn('absolute top-3 left-3 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wide', catStyle)}>

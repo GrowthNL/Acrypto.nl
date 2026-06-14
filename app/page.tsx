@@ -47,20 +47,52 @@ export default async function HomePage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
       {/* ── Page header ── */}
-      <div className="pt-8 pb-6 flex items-end justify-between">
-        <div>
+      <div className="pt-8 pb-4 flex items-end justify-between gap-6">
+        <div className="max-w-2xl">
           <p className="text-xs font-bold uppercase tracking-widest text-primary-600 mb-1">Dagelijks bijgewerkt</p>
           <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 leading-tight">
-            Crypto nieuws dat telt
+            Nederlands crypto nieuws en live koersen
           </h1>
+          <p className="text-slate-500 mt-2 leading-relaxed">
+            Het laatste cryptonieuws, actuele koersen en begrijpelijke uitleg voor beginners en gevorderden.
+            Nuchter en zonder hype. Geen financieel advies.
+          </p>
         </div>
-        <div className="hidden sm:flex gap-6 text-center">
-          {[['20+','Artikelen/dag'],['8','Bronnen'],['50+','Coins']].map(([v,l]) => (
+        <div className="hidden sm:flex gap-6 text-center flex-shrink-0">
+          {[['Dagelijks','Vers nieuws'],['8','Bronnen'],['50+','Coins']].map(([v,l]) => (
             <div key={l}>
               <p className="text-2xl font-extrabold text-slate-900">{v}</p>
               <p className="text-xs text-slate-400 mt-0.5">{l}</p>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* ── Trust signals + primary CTAs ── */}
+      <div className="pb-6 flex flex-col gap-4">
+        <div className="flex flex-wrap gap-x-5 gap-y-2 text-xs text-slate-500">
+          {[
+            'Koersdata via CoinGecko',
+            'Nederlandstalige uitleg',
+            'Redactioneel onafhankelijk',
+            'Geen financieel advies',
+          ].map(s => (
+            <span key={s} className="inline-flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              {s}
+            </span>
+          ))}
+        </div>
+        <div className="flex flex-wrap gap-2.5">
+          <Link href="/nieuws" className="px-4 py-2 text-sm font-semibold bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-colors">
+            Bekijk laatste nieuws
+          </Link>
+          <Link href="/koersen" className="px-4 py-2 text-sm font-semibold border border-slate-200 text-slate-700 rounded-xl hover:border-primary-300 hover:text-primary-700 transition-colors">
+            Bekijk live koersen
+          </Link>
+          <Link href="/kennisbank" className="px-4 py-2 text-sm font-semibold border border-slate-200 text-slate-700 rounded-xl hover:border-primary-300 hover:text-primary-700 transition-colors">
+            Start met de kennisbank
+          </Link>
         </div>
       </div>
 
@@ -160,7 +192,7 @@ export default async function HomePage() {
                 {['Bitcoin','Ethereum','Altcoins','DeFi','NFT','Regulering','Marktanalyse'].map(cat => (
                   <Link
                     key={cat}
-                    href={`/nieuws?cat=${cat.toLowerCase()}`}
+                    href={`/categorie/${cat.toLowerCase()}`}
                     className="text-xs px-3 py-1.5 bg-slate-50 hover:bg-primary-50 hover:text-primary-700 border border-slate-200 hover:border-primary-200 rounded-full transition-colors font-medium"
                   >
                     {cat}

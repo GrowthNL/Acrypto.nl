@@ -2,11 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getDb } from '@/lib/db'
 import { fetchAllSources, titlesAreSimilar } from '@/lib/rss'
 import { generateDutchArticle } from '@/lib/claude'
+import { fetchUnsplashImage } from '@/lib/unsplash'
 import { slugify } from '@/lib/utils'
 
 export const maxDuration = 300
 
-const MAX_ARTICLES_PER_RUN = 5
+const MAX_ARTICLES_PER_RUN = 1
 
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get('authorization')
@@ -26,7 +27,7 @@ export async function GET(req: NextRequest) {
     const items = await fetchAllSources()
     results.fetched = items.length
 
-    // Load recent article titles from DB once — used for cross-batch duplicate detection
+    // Load recent article titles from DB once : used for cross-batch duplicate detection
     const recentRows = await db`
       SELECT title FROM articles
       WHERE published_at > NOW() - INTERVAL '48 hours'
@@ -64,6 +65,9 @@ export async function GET(req: NextRequest) {
       // Add generated title to recent list so same-run duplicates are also caught
       recentTitles.push(generated.title)
 
+      // Fetch unique Unsplash image (ignores scraped image to avoid watermarks/logos)
+      const imageUrl = await fetchUnsplashImage(generated.category || 'nieuws', generated.tags || [])
+
       // Ensure unique slug
       let slug = generated.slug || slugify(generated.title)
       const slugExists = await db`SELECT id FROM articles WHERE slug = ${slug} LIMIT 1`
@@ -75,19 +79,21 @@ export async function GET(req: NextRequest) {
       try {
         await db`
           INSERT INTO articles (
-            title, slug, excerpt, content, image_url, source_url, source_name,
-            author_name, category, tags, status, featured, published_at
+            title, slug, excerpt, tldr, content, image_url, source_url, source_name,
+            author_name, category, tags, faqs, status, featured, published_at
           ) VALUES (
             ${generated.title},
             ${slug},
             ${generated.excerpt},
+            ${generated.tldr || null},
             ${generated.content},
-            ${item.imageUrl || null},
+            ${imageUrl || null},
             ${item.link},
             ${item.source.name},
             ${'Acrypto Redactie'},
             ${generated.category || 'nieuws'},
             ${generated.tags || []},
+            ${JSON.stringify(generated.faqs || [])},
             ${'published'},
             ${false},
             ${new Date(item.pubDate).toISOString()}
@@ -105,9 +111,6 @@ export async function GET(req: NextRequest) {
 
       // Mark URL as scraped
       await db`INSERT INTO scraped_urls (url) VALUES (${item.link}) ON CONFLICT DO NOTHING`
-
-      // Avoid rate limiting Claude API
-      await new Promise(r => setTimeout(r, 1500))
     }
 
     return NextResponse.json({ success: true, ...results })

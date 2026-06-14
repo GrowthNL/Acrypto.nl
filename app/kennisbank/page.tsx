@@ -4,10 +4,29 @@ import { ChevronRight, BookOpen, Zap, Shield, GraduationCap } from 'lucide-react
 
 export const revalidate = 3600
 
-export const metadata: Metadata = {
-  title: 'Crypto Kennisbank',
-  description: 'Leer alles over cryptocurrencies in begrijpelijk Nederlands. Van Bitcoin basics tot DeFi: de meest complete Nederlandse crypto kennisbank.',
-  alternates: { canonical: '/kennisbank' },
+interface Props {
+  searchParams: { niveau?: string }
+}
+
+const NIVEAU_LABELS: Record<string, string> = {
+  beginner: 'Beginners',
+  intermediate: 'Gevorderd',
+  advanced: 'Expert',
+}
+
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const niveau = searchParams.niveau?.toLowerCase()
+  const niveauLabel = niveau ? NIVEAU_LABELS[niveau] : undefined
+
+  return {
+    title: niveauLabel ? `Crypto kennisbank: ${niveauLabel}` : 'Crypto kennisbank',
+    description: niveauLabel
+      ? `Crypto-uitleg op niveau ${niveauLabel.toLowerCase()} in begrijpelijk Nederlands. Van Bitcoin basics tot geavanceerde concepten.`
+      : 'Leer alles over cryptocurrencies in begrijpelijk Nederlands. Van Bitcoin basics tot DeFi: de complete Nederlandse crypto kennisbank.',
+    // Canonical altijd naar de hoofdpagina; niveaufilters niet los indexeren.
+    alternates: { canonical: '/kennisbank' },
+    robots: niveauLabel ? { index: false, follow: true } : undefined,
+  }
 }
 
 const levels = [
@@ -34,7 +53,13 @@ const diffLabel: Record<string, { label: string; color: string; bg: string }> = 
   advanced:     { label: 'Expert',    color: 'text-violet-700',  bg: 'bg-violet-50'  },
 }
 
-export default function KennisbankPage() {
+export default function KennisbankPage({ searchParams }: Props) {
+  const niveau = searchParams.niveau?.toLowerCase()
+  const activeNiveau = niveau && NIVEAU_LABELS[niveau] ? niveau : undefined
+  const visibleArticles = activeNiveau
+    ? articles.filter(a => a.difficulty === activeNiveau)
+    : articles
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
 
@@ -53,32 +78,45 @@ export default function KennisbankPage() {
 
       {/* Level cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12">
-        {levels.map(l => (
-          <Link
-            key={l.key}
-            href={`/kennisbank?niveau=${l.key}`}
-            className={`group flex items-center gap-4 p-5 bg-white border ${l.border} rounded-2xl shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all`}
-          >
-            <div className={`w-11 h-11 rounded-xl ${l.bg} flex items-center justify-center flex-shrink-0`}>
-              <l.icon className={`w-5 h-5 ${l.color}`} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className={`font-bold ${l.color}`}>{l.label}</p>
-              <p className="text-xs text-slate-500 mt-0.5">{l.desc}</p>
-            </div>
-            <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-primary-400 transition-colors flex-shrink-0" />
-          </Link>
-        ))}
+        {levels.map(l => {
+          const isActive = activeNiveau === l.key
+          return (
+            <Link
+              key={l.key}
+              href={isActive ? '/kennisbank' : `/kennisbank?niveau=${l.key}`}
+              aria-pressed={isActive}
+              className={`group flex items-center gap-4 p-5 bg-white border ${isActive ? 'border-primary-300 ring-2 ring-primary-100' : l.border} rounded-2xl shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all`}
+            >
+              <div className={`w-11 h-11 rounded-xl ${l.bg} flex items-center justify-center flex-shrink-0`}>
+                <l.icon className={`w-5 h-5 ${l.color}`} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className={`font-bold ${l.color}`}>{l.label}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{l.desc}</p>
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-primary-400 transition-colors flex-shrink-0" />
+            </Link>
+          )
+        })}
       </div>
 
       {/* Articles grid */}
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-xl font-bold text-slate-900">Populaire artikelen</h2>
-        <span className="text-sm text-slate-400">{articles.length} artikelen</span>
+        <h2 className="text-xl font-bold text-slate-900">
+          {activeNiveau ? `${NIVEAU_LABELS[activeNiveau]} artikelen` : 'Populaire artikelen'}
+        </h2>
+        <div className="flex items-center gap-3">
+          {activeNiveau && (
+            <Link href="/kennisbank" className="text-sm font-semibold text-primary-600 hover:underline">
+              Toon alles
+            </Link>
+          )}
+          <span className="text-sm text-slate-400">{visibleArticles.length} artikelen</span>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {articles.map(a => {
+        {visibleArticles.map(a => {
           const diff = diffLabel[a.difficulty]
           return (
             <Link

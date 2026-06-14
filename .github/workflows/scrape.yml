@@ -10,15 +10,11 @@ on:
         description: 'Dry run (no database writes)'
         required: false
         default: 'false'
-  push:
-    branches: [main]
 
 jobs:
   scrape:
     name: Scrape & Publish Articles
     runs-on: ubuntu-latest
-    # Only run on schedule or manual dispatch — not on push
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     timeout-minutes: 15
 
     steps:
@@ -28,8 +24,8 @@ jobs:
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
         run: |
           if [ -z "$SITE_URL" ] || [ -z "$CRON_SECRET" ]; then
-            echo "SITE_URL or CRON_SECRET not configured — skipping scrape."
-            echo "Set these secrets in GitHub → Settings → Secrets and variables → Actions."
+            echo "SITE_URL or CRON_SECRET not configured : skipping scrape."
+            echo "Set these secrets in GitHub -> Settings -> Secrets and variables -> Actions."
             exit 0
           fi
 
@@ -39,6 +35,11 @@ jobs:
             "$SITE_URL/api/scrape")
 
           echo "Response code: $RESPONSE"
+
+          if [ "$RESPONSE" = "504" ]; then
+            echo "Scrape timed out (504) - will retry on next schedule"
+            exit 0
+          fi
 
           if [ "$RESPONSE" != "200" ]; then
             echo "Scrape failed with status $RESPONSE"

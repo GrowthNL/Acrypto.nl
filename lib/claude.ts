@@ -22,13 +22,24 @@ Eisen:
 - Geoptimaliseerd voor Google Discover: actueel, relevant, meeslepend
 - Sluit af met een korte conclusie of vooruitblik
 - Gebruik geen bronvermelding in de tekst
+- Gebruik NOOIT een liggend streepje (em-dash). Gebruik gewone leestekens.
+- Geef GEEN beleggingsadvies en GEEN koersvoorspellingen.
+- Vermijd stellige claims als "gegarandeerd", "zeker rendement", "beste investering", "moet je kopen" of "nu instappen".
+- Gebruik neutrale, nuchtere taal: "kan interessant zijn", "de risico's blijven groot", "historische koersen bieden geen garantie", "doe eigen onderzoek".
+- Schrijf voor zowel beginners als geinteresseerde beleggers: helder, betrouwbaar, zonder hype of casino-achtige taal.
 
 Retourneer UITSLUITEND geldige JSON (geen markdown, geen uitleg eromheen):
 {
   "title": "Nederlandse pakkende titel",
   "slug": "url-vriendelijke-slug",
   "excerpt": "Meta beschrijving van 130-155 tekens voor SEO",
+  "tldr": "2-3 zinnen: de absolute kern van dit artikel voor lezers die snel willen weten wat er speelt",
   "content": "<p>HTML artikel content met <h2> subkopjes...</p>",
+  "faqs": [
+    {"q": "Vraag die lezers over dit onderwerp hebben?", "a": "Duidelijk en volledig antwoord in 2-3 zinnen."},
+    {"q": "Tweede relevante vraag?", "a": "Antwoord."},
+    {"q": "Derde vraag?", "a": "Antwoord."}
+  ],
   "tags": ["bitcoin", "ethereum", "tag3"],
   "category": "nieuws"
 }

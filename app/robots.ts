@@ -1,8 +1,15 @@
 import { MetadataRoute } from 'next'
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://acrypto.nl'
+import { SITE_URL, IS_PRODUCTION } from '@/lib/config'
 
 export default function robots(): MetadataRoute.Robots {
+  // Preview- en development-omgevingen volledig blokkeren voor crawlers.
+  if (!IS_PRODUCTION) {
+    return {
+      rules: [{ userAgent: '*', disallow: '/' }],
+    }
+  }
+
+  // Productie: alles toestaan behalve interne/API-routes.
   return {
     rules: [
       {
@@ -12,5 +19,6 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
+    host: SITE_URL,
   }
 }

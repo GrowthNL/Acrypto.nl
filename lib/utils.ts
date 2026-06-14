@@ -89,6 +89,21 @@ export function getCategoryStyle(category: string): string {
   return cat?.color ?? 'bg-slate-600 text-white'
 }
 
+const CATEGORY_IMAGES: Record<string, string> = {
+  bitcoin:      'https://images.unsplash.com/photo-1605792657660-596af9009e82?w=1200&q=80',
+  ethereum:     'https://images.unsplash.com/photo-1516245834210-c4c142787335?w=1200&q=80',
+  altcoins:     'https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=1200&q=80',
+  defi:         'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=1200&q=80',
+  nft:          'https://images.unsplash.com/photo-1634704784915-aacf363b021f?w=1200&q=80',
+  regulering:   'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=1200&q=80',
+  marktanalyse: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&q=80',
+  nieuws:       'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=1200&q=80',
+}
+
+export function getCategoryImage(category: string): string {
+  return CATEGORY_IMAGES[category?.toLowerCase()] ?? CATEGORY_IMAGES.nieuws
+}
+
 export function getArticleCount(articles: { category: string }[], categoryId: string): number {
   return articles.filter(a => a.category === categoryId).length
 }
