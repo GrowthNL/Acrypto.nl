@@ -59,7 +59,7 @@ ${sourceContent.substring(0, 3000)}`
         max_tokens: 2048,
         messages: [{ role: 'user', content: prompt }],
       },
-      { timeout: 220_000 },
+      { timeout: 180_000 },
     )
 
     const text = message.content[0].type === 'text' ? message.content[0].text : ''

@@ -59,7 +59,7 @@ export async function GET(req: NextRequest) {
       if (!generated) {
         results.errors++
         await db`INSERT INTO scraped_urls (url) VALUES (${item.link}) ON CONFLICT DO NOTHING`
-        continue
+        break
       }
 
       // Add generated title to recent list so same-run duplicates are also caught
