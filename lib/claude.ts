@@ -53,11 +53,14 @@ Inhoud:
 ${sourceContent.substring(0, 3000)}`
 
   try {
-    const message = await client.messages.create({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 2048,
-      messages: [{ role: 'user', content: prompt }],
-    })
+    const message = await client.messages.create(
+      {
+        model: 'claude-sonnet-4-6',
+        max_tokens: 2048,
+        messages: [{ role: 'user', content: prompt }],
+      },
+      { timeout: 220_000 },
+    )
 
     const text = message.content[0].type === 'text' ? message.content[0].text : ''
     const jsonMatch = text.match(/\{[\s\S]*\}/)
