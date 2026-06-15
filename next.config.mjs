@@ -13,14 +13,25 @@ const nextConfig = {
     ],
   },
   async redirects() {
-    // Oude query-categorie-URL's (/nieuws?cat=bitcoin) doorsturen naar de
-    // schone hubpagina's (/categorie/bitcoin) voor betere SEO en geen duplicate content.
-    return CATEGORY_SLUGS.map(slug => ({
-      source: '/nieuws',
-      has: [{ type: 'query', key: 'cat', value: slug }],
-      destination: `/categorie/${slug}`,
-      permanent: true,
-    }))
+    return [
+      // www -> non-www (apex) afdwingen, zodat er maar een canonieke host is.
+      // Vercel kan dit ook op domeinniveau doen; deze regel is een extra
+      // waarborg en voorkomt duplicate content op www.acrypto.nl.
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.acrypto.nl' }],
+        destination: 'https://acrypto.nl/:path*',
+        permanent: true,
+      },
+      // Oude query-categorie-URL's (/nieuws?cat=bitcoin) doorsturen naar de
+      // schone hubpagina's (/categorie/bitcoin) voor betere SEO en geen duplicate content.
+      ...CATEGORY_SLUGS.map(slug => ({
+        source: '/nieuws',
+        has: [{ type: 'query', key: 'cat', value: slug }],
+        destination: `/categorie/${slug}`,
+        permanent: true,
+      })),
+    ]
   },
   async headers() {
     return [

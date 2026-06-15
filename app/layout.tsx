@@ -25,6 +25,13 @@ export const metadata: Metadata = {
   publisher: SITE_NAME,
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: '/' },
+  manifest: '/manifest.json',
+  icons: {
+    icon: '/icon.svg',
+    apple: '/icon.svg',
+  },
+  // Dynamisch gegenereerde OG-afbeelding (1200x630) via /api/og, zodat social
+  // previews altijd werken zonder afhankelijk te zijn van een statisch bestand.
   openGraph: {
     type: 'website',
     locale: 'nl_NL',
@@ -32,13 +39,13 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     title: 'Acrypto.nl | Nederlands crypto nieuws en live koersen',
     description: SITE_DESCRIPTION,
-    images: [{ url: '/og-default.jpg', width: 1200, height: 630, alt: 'Acrypto.nl' }],
+    images: [{ url: '/api/og', width: 1200, height: 630, alt: 'Acrypto.nl' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Acrypto.nl | Nederlands crypto nieuws en live koersen',
     description: SITE_DESCRIPTION,
-    images: ['/og-default.jpg'],
+    images: ['/api/og'],
   },
   // Alleen indexeren op de echte productie-deploy. Preview/development = noindex.
   robots: IS_PRODUCTION
