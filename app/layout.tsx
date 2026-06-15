@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import Script from 'next/script'
 import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import PriceTicker from '@/components/PriceTicker'
+import CookieConsent from '@/components/CookieConsent'
 import { WebsiteStructuredData, OrganizationStructuredData } from '@/components/StructuredData'
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, IS_PRODUCTION } from '@/lib/config'
 
@@ -65,16 +65,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <WebsiteStructuredData siteUrl={SITE_URL} />
         <OrganizationStructuredData siteUrl={SITE_URL} />
         <meta name="theme-color" content="#4f46e5" />
-        {/* Microsoft Clarity - alleen op productie laden. */}
-        {IS_PRODUCTION && (
-          <Script id="ms-clarity" strategy="afterInteractive">
-            {`(function(c,l,a,r,i,t,y){
-              c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-              t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-              y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-            })(window, document, "clarity", "script", "x7kufp1uch");`}
-          </Script>
-        )}
       </head>
       <body className={`${inter.variable} font-sans bg-white text-slate-900 min-h-screen`}>
         <a
@@ -87,6 +77,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <main id="main-content" className="min-h-[60vh]">{children}</main>
         <Footer />
+        {/* Cookie-consent: laadt Microsoft Clarity pas na toestemming, alleen op productie. */}
+        {IS_PRODUCTION && <CookieConsent />}
       </body>
     </html>
   )

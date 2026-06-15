@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import CookieSettingsButton from '@/components/CookieSettingsButton'
 
 export const metadata: Metadata = {
   title: 'Privacybeleid | Acrypto.nl',
@@ -39,7 +40,7 @@ export default function PrivacyPage() {
         <ul className="list-disc pl-5 space-y-1">
           <li><strong>Nieuwsbrief:</strong> e-mailadres (alleen als u zich aanmeldt)</li>
           <li><strong>Contactformulier:</strong> naam en e-mailadres</li>
-          <li><strong>Analytische gegevens:</strong> geanonimiseerde bezoekersstatistieken via cookieloze analytics</li>
+          <li><strong>Analytische gegevens:</strong> gebruiksstatistieken via Microsoft Clarity, uitsluitend als u hiervoor toestemming geeft</li>
           <li><strong>Technische gegevens:</strong> IP-adres (geanonimiseerd), browsertype, apparaattype</li>
         </ul>
       </Section>
@@ -85,10 +86,19 @@ export default function PrivacyPage() {
       <Section title="6. Cookies">
         <p>
           Acrypto.nl maakt gebruik van functionele cookies die noodzakelijk zijn voor het correct
-          functioneren van de website. Voor analytische cookies gebruiken wij cookieloze tracking die
-          geen toestemming vereist conform de ePrivacy-richtlijn.
+          functioneren van de website. Deze plaatsen wij zonder toestemming, omdat ze strikt
+          noodzakelijk zijn.
         </p>
-        <p>Wij plaatsen geen tracking cookies van derden zonder uw uitdrukkelijke toestemming.</p>
+        <p>
+          Daarnaast gebruiken wij analytische cookies van <strong>Microsoft Clarity</strong> om te
+          begrijpen hoe bezoekers onze website gebruiken (zoals klikgedrag en sessieopnames met
+          gemaskeerde inhoud). Deze cookies plaatsen wij <strong>uitsluitend nadat u hiervoor
+          toestemming heeft gegeven</strong> via onze cookiebanner. Geeft u geen toestemming, dan
+          wordt Microsoft Clarity niet geladen.
+        </p>
+        <p>
+          U kunt uw keuze op elk moment wijzigen of intrekken: <CookieSettingsButton />.
+        </p>
       </Section>
 
       <Section title="7. Beveiliging">
@@ -104,6 +114,7 @@ export default function PrivacyPage() {
         <ul className="list-disc pl-5 space-y-1">
           <li><strong>CoinGecko API:</strong> voor live koersdata (geen persoonsgegevens gedeeld)</li>
           <li><strong>Vercel:</strong> voor hosting (zie Vercel&apos;s privacybeleid)</li>
+          <li><strong>Microsoft Clarity:</strong> voor geanonimiseerde gebruiksstatistieken en sessieopnames (alleen met uw toestemming; zie Microsoft&apos;s privacybeleid)</li>
           <li><strong>Neon:</strong> voor databaseopslag (zie Neon&apos;s privacybeleid)</li>
           <li><strong>Resend:</strong> voor het afhandelen van berichten via het contactformulier</li>
         </ul>
