@@ -9,10 +9,51 @@ import { ArticleStructuredData, BreadcrumbStructuredData, FAQStructuredData } fr
 import ArticleCard from '@/components/ArticleCard'
 import AuthorBox from '@/components/AuthorBox'
 import ShareButtons from '@/components/ShareButtons'
+import ViewTracker from '@/components/ViewTracker'
 import { getAuthor } from '@/lib/authors'
+import { COIN_SLUGS, getCoinConfig } from '@/lib/coins'
 import { formatDate, readingTime, getCategoryStyle, getCategoryImage, timeAgo, slugify } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 import type { Article } from '@/lib/types'
+
+// Coin-naam -> slug, langste namen eerst zodat 'Bitcoin Cash' vóór 'Bitcoin' matcht.
+const COIN_LINKS: [string, string][] = COIN_SLUGS
+  .map(slug => [getCoinConfig(slug)?.name || '', slug] as [string, string])
+  .filter(([name]) => name.length > 2)
+  .sort((a, b) => b[0].length - a[0].length)
+
+function escapeRegex(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+// Linkt de eerste vermelding van elke coin-naam naar de coinpagina. Werkt alleen
+// in tekst-nodes buiten koppen/links, zodat de HTML niet breekt.
+function autoLinkCoins(html: string): string {
+  const linked = new Set<string>()
+  let skipDepth = 0
+  return html
+    .split(/(<[^>]+>)/)
+    .map(part => {
+      if (part.startsWith('<')) {
+        const t = part.toLowerCase()
+        if (/^<(a|h[1-6])\b/.test(t)) skipDepth++
+        else if (/^<\/(a|h[1-6])>/.test(t)) skipDepth = Math.max(0, skipDepth - 1)
+        return part
+      }
+      if (skipDepth > 0) return part
+      let text = part
+      for (const [name, slug] of COIN_LINKS) {
+        if (linked.has(slug)) continue
+        const re = new RegExp(`\\b(${escapeRegex(name)})\\b`)
+        if (re.test(text)) {
+          text = text.replace(re, `<a href="/koersen/${slug}" class="text-primary-600 hover:underline font-medium">$1</a>`)
+          linked.add(slug)
+        }
+      }
+      return text
+    })
+    .join('')
+}
 
 export const revalidate = 3600
 
@@ -124,7 +165,7 @@ export default async function ArticlePage({ params }: Props) {
   const headings = extractHeadings(article.content)
   const contentWithIds = addHeadingIds(article.content)
   const faqs = Array.isArray(article.faqs) ? article.faqs : []
-  const contentWithLinks = injectInternalLinks(contentWithIds, related)
+  const contentWithLinks = injectInternalLinks(autoLinkCoins(contentWithIds), related)
   // "Bijgewerkt" tonen als de update minstens een uur na publicatie ligt.
   const isUpdated =
     !!article.updated_at &&
@@ -132,6 +173,7 @@ export default async function ArticlePage({ params }: Props) {
 
   return (
     <>
+      <ViewTracker slug={article.slug} />
       <ArticleStructuredData article={article} siteUrl={SITE_URL} />
       <BreadcrumbStructuredData siteUrl={SITE_URL} items={[
         { name: 'Home', path: '/' },
