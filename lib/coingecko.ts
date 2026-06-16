@@ -47,6 +47,25 @@ export async function fetchTickerCoins(): Promise<CryptoPrice[]> {
   return fetchTopCoins(20)
 }
 
+/** Historische koerspunten (EUR) voor een coin; gedownsampled naar ~60 punten. */
+export async function fetchCoinMarketChart(coingeckoId: string, days = 30): Promise<{ t: number; p: number }[]> {
+  try {
+    const params = new URLSearchParams({ vs_currency: 'eur', days: String(days) })
+    const res = await fetch(`${BASE_URL}/coins/${coingeckoId}/market_chart?${params}`, {
+      headers,
+      next: { revalidate: 1800 },
+      signal: AbortSignal.timeout(6000),
+    })
+    if (!res.ok) return []
+    const data = (await res.json()) as { prices?: [number, number][] }
+    const prices = data.prices ?? []
+    const step = Math.max(1, Math.floor(prices.length / 60))
+    return prices.filter((_, i) => i % step === 0).map(([t, p]) => ({ t, p }))
+  } catch {
+    return []
+  }
+}
+
 /**
  * Haalt marktdata van een enkele coin op via het CoinGecko id (bijv. 'bitcoin').
  * Retourneert null bij fouten zodat de pagina niet breekt.

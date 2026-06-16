@@ -57,9 +57,14 @@ export default function OverOnsPage() {
           in begrijpelijk Nederlands. Koersdata is indicatief en afkomstig van CoinGecko. Een deel van onze content
           komt tot stand met behulp van AI-tools, altijd onder redactionele verantwoordelijkheid.
         </p>
-        <Link href="/redactioneel-beleid" className="text-sm font-semibold text-primary-600 hover:underline">
-          Lees ons volledige redactioneel beleid
-        </Link>
+        <div className="flex flex-wrap gap-4">
+          <Link href="/redactioneel-beleid" className="text-sm font-semibold text-primary-600 hover:underline">
+            Lees ons volledige redactioneel beleid
+          </Link>
+          <Link href="/auteur/lars-mulder" className="text-sm font-semibold text-primary-600 hover:underline">
+            Maak kennis met onze redacteur
+          </Link>
+        </div>
       </div>
 
       <div className="border border-amber-100 bg-amber-50 rounded-2xl p-6 mb-10">

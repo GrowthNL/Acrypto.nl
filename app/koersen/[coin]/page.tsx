@@ -5,8 +5,9 @@ import { notFound } from 'next/navigation'
 import { ChevronRight, BookOpen, TrendingUp, TrendingDown, ArrowLeft, RefreshCw } from 'lucide-react'
 import { getDb, DB_READY } from '@/lib/db'
 import { MOCK_ARTICLES } from '@/lib/mock-data'
-import { fetchCoinById } from '@/lib/coingecko'
+import { fetchCoinById, fetchCoinMarketChart } from '@/lib/coingecko'
 import ArticleCard from '@/components/ArticleCard'
+import PriceChart from '@/components/PriceChart'
 import { BreadcrumbStructuredData, FAQStructuredData } from '@/components/StructuredData'
 import { getCoinConfig, COIN_SLUGS } from '@/lib/coins'
 import { SITE_URL } from '@/lib/config'
@@ -63,9 +64,10 @@ export default async function CoinPage({ params }: Props) {
   const coin = getCoinConfig(params.coin)
   if (!coin) notFound()
 
-  const [price, news] = await Promise.all([
+  const [price, news, chart] = await Promise.all([
     fetchCoinById(coin.coingeckoId),
     getCoinNews(coin.newsCategory, coin.name),
+    fetchCoinMarketChart(coin.coingeckoId, 30),
   ])
 
   const up = (price?.price_change_percentage_24h ?? 0) >= 0
@@ -139,10 +141,27 @@ export default async function CoinPage({ params }: Props) {
             </div>
           )}
 
+          {chart.length > 1 && (
+            <div className="mt-6 pt-6 border-t border-slate-100">
+              <PriceChart points={chart} up={up} days={30} />
+            </div>
+          )}
+
           <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-4">
             <RefreshCw className="w-3 h-3" />
             Bijgewerkt: {formatDateTime(new Date())} · Databron: CoinGecko · Indicatief
           </div>
+        </div>
+
+        {/* Waar kopen CTA */}
+        <div className="bg-gradient-to-br from-primary-50 to-violet-50 border border-primary-100 rounded-2xl p-6 mb-10 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 className="text-lg font-bold text-slate-900">Waar koop je {coin.name}?</h2>
+            <p className="text-sm text-slate-600 mt-0.5">Vergelijk betrouwbare exchanges op kosten, coins en iDEAL.</p>
+          </div>
+          <Link href="/exchanges" className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-colors whitespace-nowrap">
+            Exchanges vergelijken <ChevronRight className="w-4 h-4" />
+          </Link>
         </div>
 
         {/* Intro / uitleg */}
