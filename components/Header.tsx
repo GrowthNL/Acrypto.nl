@@ -1,13 +1,15 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { Menu, X } from 'lucide-react'
+import SearchBar from './SearchBar'
 
 const navLinks = [
   { href: '/nieuws',     label: 'Nieuws'     },
   { href: '/koersen',    label: 'Koersen'    },
   { href: '/kennisbank', label: 'Kennisbank' },
+  { href: '/exchanges',  label: 'Exchanges'  },
   { href: '/contact',    label: 'Contact'    },
 ]
 
@@ -63,25 +65,27 @@ export default function Header() {
               {l.label}
             </Link>
           ))}
-          <Link
-            href="/nieuws"
-            className="ml-3 px-4 py-2 text-sm font-semibold bg-gradient-to-r from-primary-600 to-violet-600 hover:from-primary-700 hover:to-violet-700 text-white rounded-xl transition-all shadow-sm hover:shadow-md"
-          >
-            Laatste nieuws
-          </Link>
         </nav>
 
-        <button
-          onClick={() => setOpen(!open)}
-          className="md:hidden p-2 text-slate-500 hover:text-slate-900 rounded-lg transition-colors"
-          aria-label="Menu"
-        >
-          {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
+        <div className="flex items-center gap-3">
+          <div className="hidden lg:block w-56">
+            <Suspense fallback={null}><SearchBar /></Suspense>
+          </div>
+          <button
+            onClick={() => setOpen(!open)}
+            className="md:hidden p-2 text-slate-500 hover:text-slate-900 rounded-lg transition-colors"
+            aria-label="Menu"
+          >
+            {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
 
       {open && (
         <div className="md:hidden border-t border-slate-100 bg-white">
+          <div className="px-4 py-3 border-b border-slate-50">
+            <Suspense fallback={null}><SearchBar /></Suspense>
+          </div>
           {navLinks.map(l => (
             <Link
               key={l.href}

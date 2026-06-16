@@ -35,8 +35,20 @@ async function getPrices(): Promise<CryptoPrice[]> {
   try { return await fetchTopCoins(10) } catch { return [] }
 }
 
+async function getStats(): Promise<{ count: number; lastUpdated: string | null }> {
+  if (!DB_READY) return { count: MOCK_ARTICLES.length, lastUpdated: MOCK_ARTICLES[0]?.published_at ?? null }
+  try {
+    const db = getDb()
+    const rows = await db`SELECT COUNT(*)::int AS count, MAX(published_at) AS last FROM articles WHERE status = 'published'`
+    const r = rows[0] as { count: number; last: string | null }
+    return { count: Number(r.count) || 0, lastUpdated: r.last }
+  } catch {
+    return { count: 0, lastUpdated: null }
+  }
+}
+
 export default async function HomePage() {
-  const [articles, prices] = await Promise.all([getArticles(), getPrices()])
+  const [articles, prices, stats] = await Promise.all([getArticles(), getPrices(), getStats()])
 
   const featured  = articles.find(a => a.featured) || articles[0]
   const secondary = articles.filter(a => a.id !== featured?.id).slice(0, 2)
@@ -57,9 +69,15 @@ export default async function HomePage() {
             Het laatste cryptonieuws, actuele koersen en begrijpelijke uitleg voor beginners en gevorderden.
             Nuchter en zonder hype. Geen financieel advies.
           </p>
+          {stats.lastUpdated && (
+            <p className="text-xs text-slate-400 mt-2 inline-flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Laatst bijgewerkt {timeAgo(stats.lastUpdated)}
+            </p>
+          )}
         </div>
         <div className="hidden sm:flex gap-6 text-center flex-shrink-0">
-          {[['Dagelijks','Vers nieuws'],['8','Bronnen'],['50+','Coins']].map(([v,l]) => (
+          {[[String(stats.count || '—'),'Artikelen'],['8','Bronnen'],['50+','Coins']].map(([v,l]) => (
             <div key={l}>
               <p className="text-2xl font-extrabold text-slate-900">{v}</p>
               <p className="text-xs text-slate-400 mt-0.5">{l}</p>
