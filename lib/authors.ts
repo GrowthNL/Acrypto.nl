@@ -41,7 +41,10 @@ export const REDACTIE: Author = {
     'plaatst ontwikkelingen in context voor de Nederlandse lezer. Informatief, geen financieel advies.',
 }
 
-const KNOWN: Author[] = [LARS, REDACTIE]
+// Alleen echte auteursprofielen die als zodanig getoond worden. De generieke
+// "Acrypto Redactie"-byline staat hier bewust NIET in, zodat bestaande artikelen
+// met die naam terugvallen op de hoofdauteur (Lars) i.p.v. een losse redactie-byline.
+const KNOWN: Author[] = [LARS]
 
 /** De standaard/hoofdauteur die op artikelen wordt getoond. */
 export const PRIMARY_AUTHOR = LARS
