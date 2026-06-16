@@ -20,6 +20,9 @@ import { fetchUnsplashImage } from '../lib/unsplash'
 import { slugify } from '../lib/utils'
 
 const MAX_ARTICLES = Math.max(1, Number(process.env.MAX_ARTICLES || 3))
+// Veiligheidsremmen zodat een trage/mislukkende batch nooit de hele Action-tijd opslokt.
+const MAX_ATTEMPTS = Math.max(MAX_ARTICLES, Number(process.env.MAX_ATTEMPTS || 8))
+const TIME_BUDGET_MS = Math.max(1, Number(process.env.TIME_BUDGET_MIN || 10)) * 60_000
 
 async function main() {
   if (!process.env.DATABASE_URL) {
@@ -34,6 +37,9 @@ async function main() {
   const db = getDb()
   const results = { fetched: 0, new: 0, published: 0, skipped_duplicate: 0, errors: 0 }
 
+  const deadline = Date.now() + TIME_BUDGET_MS
+  let attempts = 0
+
   const items = await fetchAllSources()
   results.fetched = items.length
   console.log(`[scrape] ${items.length} unieke items opgehaald; doel: max ${MAX_ARTICLES} artikel(en)`)
@@ -47,6 +53,14 @@ async function main() {
 
   for (const item of items) {
     if (results.published >= MAX_ARTICLES) break
+    if (attempts >= MAX_ATTEMPTS) {
+      console.log(`[scrape] max pogingen (${MAX_ATTEMPTS}) bereikt - stoppen`)
+      break
+    }
+    if (Date.now() > deadline) {
+      console.log('[scrape] tijdsbudget bereikt - stoppen')
+      break
+    }
 
     // Al eerder gescrapet? Overslaan.
     const existing = await db`SELECT id FROM scraped_urls WHERE url = ${item.link} LIMIT 1`
@@ -60,7 +74,8 @@ async function main() {
     }
 
     results.new++
-    console.log(`[scrape] genereren: "${item.title}" (${item.source.name})`)
+    attempts++
+    console.log(`[scrape] genereren (poging ${attempts}/${MAX_ATTEMPTS}): "${item.title}" (${item.source.name})`)
 
     const generated = await generateDutchArticle(item.title, item.content, item.source.name)
     if (!generated) {

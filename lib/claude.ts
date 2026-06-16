@@ -56,7 +56,7 @@ ${sourceContent.substring(0, 3000)}`
     const message = await client.messages.create(
       {
         model: 'claude-sonnet-4-6',
-        max_tokens: 2048,
+        max_tokens: 4096,
         messages: [{ role: 'user', content: prompt }],
       },
       { timeout: 180_000 },
