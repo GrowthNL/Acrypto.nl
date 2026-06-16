@@ -44,6 +44,17 @@ const nextConfig = {
           { key: 'X-Robots-Tag', value: 'max-image-preview:large' },
         ],
       },
+      {
+        // De productie-deploy is ook bereikbaar via *.vercel.app (zelfde build,
+        // dus VERCEL_ENV=production). Die host op noindex zetten zodat alleen
+        // het echte domein acrypto.nl geindexeerd wordt en er geen dubbele
+        // (vercel.app) versie in Google verschijnt.
+        source: '/(.*)',
+        has: [{ type: 'host', value: '.*\\.vercel\\.app' }],
+        headers: [
+          { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
+        ],
+      },
     ]
   },
 }
