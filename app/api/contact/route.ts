@@ -51,6 +51,7 @@ export async function POST(req: NextRequest) {
       to: CONTACT_TO,
       replyTo: email,
       subject: `[Acrypto.nl${type === 'adverteren' ? ' - Adverteren' : ''}] ${subject}`,
+      text: `Nieuw bericht via acrypto.nl\n\nType: ${type === 'adverteren' ? 'Advertentie-aanvraag' : 'Algemeen contact'}\nNaam: ${name}\nE-mail: ${email}\nOnderwerp: ${subject}\n\n${message}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px;">
           <h2 style="color: #4f46e5;">Nieuw bericht via acrypto.nl</h2>
