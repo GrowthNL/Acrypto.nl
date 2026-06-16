@@ -4,6 +4,7 @@ import { fetchAllSources, titlesAreSimilar } from '@/lib/rss'
 import { generateDutchArticle } from '@/lib/claude'
 import { fetchUnsplashImage } from '@/lib/unsplash'
 import { slugify } from '@/lib/utils'
+import { PRIMARY_AUTHOR } from '@/lib/authors'
 
 export const maxDuration = 300
 
@@ -90,7 +91,7 @@ export async function GET(req: NextRequest) {
             ${imageUrl || null},
             ${item.link},
             ${item.source.name},
-            ${'Acrypto Redactie'},
+            ${PRIMARY_AUTHOR.name},
             ${generated.category || 'nieuws'},
             ${generated.tags || []},
             ${JSON.stringify(generated.faqs || [])},
