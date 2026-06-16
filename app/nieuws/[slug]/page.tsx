@@ -7,6 +7,8 @@ import { getDb, DB_READY } from '@/lib/db'
 import { MOCK_ARTICLES } from '@/lib/mock-data'
 import { ArticleStructuredData, BreadcrumbStructuredData, FAQStructuredData } from '@/components/StructuredData'
 import ArticleCard from '@/components/ArticleCard'
+import AuthorBox from '@/components/AuthorBox'
+import { getAuthor } from '@/lib/authors'
 import { formatDate, readingTime, getCategoryStyle, getCategoryImage, timeAgo, slugify } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 import type { Article } from '@/lib/types'
@@ -276,6 +278,9 @@ export default async function ArticlePage({ params }: Props) {
                 ))}
               </div>
             )}
+
+            {/* Author box (E-E-A-T) */}
+            <AuthorBox author={getAuthor(article.author_name)} />
 
             {/* Source */}
             {article.source_url && (

@@ -1,7 +1,49 @@
 import { Article, KnowledgeArticle } from '@/lib/types'
 import { getCategoryImage } from '@/lib/utils'
+import { getAuthor } from '@/lib/authors'
 
 const SITE_NAME = 'Acrypto.nl'
+
+// Google Discover/News houdt van grote afbeeldingen (>=1200px) in meerdere
+// verhoudingen (16:9, 4:3, 1:1). We genereren die uit de bron-URL (Unsplash
+// ondersteunt w/h/fit/crop). Niet-parseerbare URL's vallen terug op een enkel beeld.
+function imageVariants(url: string) {
+  try {
+    const make = (w: number, h: number) => {
+      const u = new URL(url)
+      u.searchParams.set('w', String(w))
+      u.searchParams.set('h', String(h))
+      u.searchParams.set('fit', 'crop')
+      u.searchParams.set('q', '80')
+      return { '@type': 'ImageObject' as const, url: u.toString(), width: w, height: h }
+    }
+    return [make(1200, 675), make(1200, 900), make(1200, 1200)]
+  } catch {
+    return [{ '@type': 'ImageObject' as const, url, width: 1200, height: 630 }]
+  }
+}
+
+// Echte auteur als Person (sterker voor E-E-A-T); de redactie-byline blijft Organization.
+function authorNode(name: string | undefined | null, siteUrl: string) {
+  const a = getAuthor(name)
+  if (a.id === 'redactie') {
+    return { '@type': 'Organization', name: a.name, url: `${siteUrl}/redactioneel-beleid` }
+  }
+  return {
+    '@type': 'Person',
+    name: a.name,
+    description: a.bio,
+    url: `${siteUrl}/redactioneel-beleid`,
+    ...(a.sameAs?.length ? { sameAs: a.sameAs } : {}),
+  }
+}
+
+const publisherLogo = (siteUrl: string) => ({
+  '@type': 'ImageObject',
+  url: `${siteUrl}/logo.png`,
+  width: 512,
+  height: 512,
+})
 
 export function ArticleStructuredData({ article, siteUrl }: { article: Article; siteUrl: string }) {
   const image = article.image_url || getCategoryImage(article.category)
@@ -10,20 +52,16 @@ export function ArticleStructuredData({ article, siteUrl }: { article: Article; 
     '@type': 'NewsArticle',
     headline: article.title,
     description: article.excerpt,
-    image: [{ '@type': 'ImageObject', url: image, width: 1200, height: 630 }],
+    image: imageVariants(image),
     datePublished: article.published_at,
     dateModified: article.updated_at,
     inLanguage: 'nl-NL',
-    author: {
-      '@type': 'Organization',
-      name: article.author_name || 'Acrypto Redactie',
-      url: siteUrl,
-    },
+    author: authorNode(article.author_name, siteUrl),
     publisher: {
       '@type': 'Organization',
       name: SITE_NAME,
       url: siteUrl,
-      logo: { '@type': 'ImageObject', url: `${siteUrl}/icon.svg` },
+      logo: publisherLogo(siteUrl),
     },
     mainEntityOfPage: { '@type': 'WebPage', '@id': `${siteUrl}/nieuws/${article.slug}` },
     keywords: article.tags?.join(', '),
@@ -59,7 +97,7 @@ export function KnowledgeArticleStructuredData({ article, siteUrl }: { article: 
       '@type': 'Organization',
       name: SITE_NAME,
       url: siteUrl,
-      logo: { '@type': 'ImageObject', url: `${siteUrl}/icon.svg` },
+      logo: publisherLogo(siteUrl),
     },
     mainEntityOfPage: { '@type': 'WebPage', '@id': `${siteUrl}/kennisbank/${article.slug}` },
     keywords: article.tags?.join(', '),
@@ -131,7 +169,7 @@ export function OrganizationStructuredData({ siteUrl }: { siteUrl: string }) {
     '@id': `${siteUrl}/#organization`,
     name: SITE_NAME,
     url: siteUrl,
-    logo: { '@type': 'ImageObject', url: `${siteUrl}/icon.svg`, width: 512, height: 512 },
+    logo: publisherLogo(siteUrl),
     description: 'Nederlands platform voor crypto nieuws, live koersen en een begrijpelijke kennisbank.',
     foundingDate: '2026',
     knowsLanguage: 'nl-NL',
