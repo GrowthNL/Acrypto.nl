@@ -47,8 +47,24 @@ async function getStats(): Promise<{ count: number; lastUpdated: string | null }
   }
 }
 
+async function getMostRead(): Promise<Article[]> {
+  if (!DB_READY) return []
+  try {
+    const db = getDb()
+    const rows = await db`
+      SELECT * FROM articles
+      WHERE status = 'published' AND published_at > NOW() - INTERVAL '30 days'
+      ORDER BY view_count DESC NULLS LAST, published_at DESC
+      LIMIT 5
+    `
+    return rows as unknown as Article[]
+  } catch {
+    return []
+  }
+}
+
 export default async function HomePage() {
-  const [articles, prices, stats] = await Promise.all([getArticles(), getPrices(), getStats()])
+  const [articles, prices, stats, mostRead] = await Promise.all([getArticles(), getPrices(), getStats(), getMostRead()])
 
   const featured  = articles.find(a => a.featured) || articles[0]
   const secondary = articles.filter(a => a.id !== featured?.id).slice(0, 2)
@@ -194,6 +210,22 @@ export default async function HomePage() {
 
           {/* Sidebar */}
           <div className="space-y-4">
+            {mostRead.length >= 3 && (
+              <div className="bg-white border border-slate-100 rounded-2xl p-4 shadow-card">
+                <h3 className="text-sm font-bold text-slate-700 mb-3">Meest gelezen</h3>
+                <ol className="space-y-2.5">
+                  {mostRead.map((a, i) => (
+                    <li key={a.id} className="flex items-start gap-3">
+                      <span className="text-base font-extrabold text-primary-200 leading-none w-5 flex-shrink-0">{i + 1}</span>
+                      <Link href={`/nieuws/${a.slug}`} className="text-sm font-medium text-slate-700 hover:text-primary-600 transition-colors leading-snug line-clamp-2">
+                        {a.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+
             <div className="bg-white border border-slate-100 rounded-2xl p-4 shadow-card">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-sm font-bold text-slate-700">Meer nieuws</h3>

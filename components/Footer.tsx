@@ -64,8 +64,8 @@ export default function Footer() {
 
         <div className="pt-6 text-xs text-slate-500 leading-relaxed">
           <p className="mb-1">
-            Acrypto.nl is een uitgave van <span className="text-slate-300 font-medium">Growth Media</span>.
-            {' '}KvK: <span className="text-slate-400">[KvK-nummer]</span>. Contact via het{' '}
+            Acrypto.nl is een uitgave van <span className="text-slate-300 font-medium">Growth - Online Marketing Bureau Almere</span>.
+            {' '}KvK 67106366 · Zeussingel 77, 1363 TM Almere. Contact via het{' '}
             <Link href="/contact" className="text-slate-300 hover:text-white underline">contactformulier</Link>.
           </p>
         </div>

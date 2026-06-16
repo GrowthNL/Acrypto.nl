@@ -29,8 +29,10 @@ export default function PrivacyPage() {
 
       <Section title="1. Verwerkingsverantwoordelijke">
         <p>
-          Acrypto.nl is verantwoordelijk voor de verwerking van persoonsgegevens zoals beschreven in dit
-          privacybeleid. Voor vragen kunt u contact met ons opnemen via ons{' '}
+          Acrypto.nl is een uitgave van <strong>Growth - Online Marketing Bureau Almere</strong>
+          {' '}(KvK 67106366), Zeussingel 77, 1363 TM Almere. Wij zijn verantwoordelijk voor de verwerking
+          van persoonsgegevens zoals beschreven in dit privacybeleid. Voor vragen kunt u contact met ons
+          opnemen via ons{' '}
           <Link href="/contact" className="text-primary-600 hover:underline">contactformulier</Link>.
         </p>
       </Section>
