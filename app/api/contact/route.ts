@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Ongeldig e-mailadres.' }, { status: 400 })
     }
 
-    await resend.emails.send({
+    const { data, error } = await resend.emails.send({
       from: 'Acrypto.nl <noreply@acrypto.nl>',
       to: 'info@growthmedia.nl',
       replyTo: email,
@@ -40,7 +40,18 @@ export async function POST(req: NextRequest) {
       `,
     })
 
-    return NextResponse.json({ success: true })
+    // De Resend-SDK gooit geen exception bij een geweigerde verzending,
+    // maar geeft een error-object terug. Dat moeten we expliciet afvangen,
+    // anders meldt het formulier "verzonden" terwijl er niets verstuurd is.
+    if (error) {
+      console.error('Resend error:', error)
+      return NextResponse.json(
+        { error: 'Verzenden mislukt. Probeer het later opnieuw of mail ons direct.' },
+        { status: 502 },
+      )
+    }
+
+    return NextResponse.json({ success: true, id: data?.id })
   } catch (err) {
     console.error('Contact email error:', err)
     return NextResponse.json({ error: 'Verzenden mislukt. Probeer het later opnieuw.' }, { status: 500 })
