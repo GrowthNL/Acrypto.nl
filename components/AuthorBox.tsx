@@ -27,15 +27,20 @@ export default function AuthorBox({ author }: { author: Author }) {
         </div>
       )}
       <div>
-        <p className="text-sm font-bold text-slate-900">{author.name}</p>
+        <p className="text-[11px] font-bold uppercase tracking-wide text-slate-400 mb-0.5">Geschreven door</p>
+        <Link href={`/auteur/${author.id}`} className="text-sm font-bold text-slate-900 hover:text-primary-600 transition-colors">
+          {author.name}
+        </Link>
         <p className="text-xs text-primary-600 font-medium mb-1.5">{author.role}</p>
         <p className="text-sm text-slate-600 leading-relaxed">{author.bio}</p>
-        <Link
-          href="/redactioneel-beleid"
-          className="inline-block mt-2 text-xs font-semibold text-primary-600 hover:underline"
-        >
-          Ons redactioneel beleid
-        </Link>
+        <div className="flex flex-wrap gap-3 mt-2">
+          <Link href={`/auteur/${author.id}`} className="text-xs font-semibold text-primary-600 hover:underline">
+            Meer van {author.name.split(' ')[0]}
+          </Link>
+          <Link href="/redactioneel-beleid" className="text-xs font-semibold text-slate-500 hover:underline">
+            Redactioneel beleid
+          </Link>
+        </div>
       </div>
     </div>
   )

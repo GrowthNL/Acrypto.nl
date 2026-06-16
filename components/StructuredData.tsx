@@ -32,8 +32,11 @@ function authorNode(name: string | undefined | null, siteUrl: string) {
   return {
     '@type': 'Person',
     name: a.name,
+    jobTitle: a.role,
     description: a.bio,
-    url: `${siteUrl}/redactioneel-beleid`,
+    url: `${siteUrl}/auteur/${a.id}`,
+    ...(a.avatar ? { image: `${siteUrl}${a.avatar}` } : {}),
+    ...(a.knowsAbout?.length ? { knowsAbout: a.knowsAbout } : {}),
     ...(a.sameAs?.length ? { sameAs: a.sameAs } : {}),
   }
 }
@@ -186,4 +189,27 @@ export function OrganizationStructuredData({ siteUrl }: { siteUrl: string }) {
 
 export function FAQStructuredDataFromList({ faqs }: { faqs: { q: string; a: string }[] }) {
   return <FAQStructuredData faqs={faqs} />
+}
+
+export function PersonStructuredData({
+  author,
+  siteUrl,
+}: {
+  author: { id: string; name: string; role: string; bio: string; avatar?: string; knowsAbout?: string[]; sameAs?: string[] }
+  siteUrl: string
+}) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    '@id': `${siteUrl}/auteur/${author.id}#person`,
+    name: author.name,
+    jobTitle: author.role,
+    description: author.bio,
+    url: `${siteUrl}/auteur/${author.id}`,
+    ...(author.avatar ? { image: `${siteUrl}${author.avatar}` } : {}),
+    ...(author.knowsAbout?.length ? { knowsAbout: author.knowsAbout } : {}),
+    ...(author.sameAs?.length ? { sameAs: author.sameAs } : {}),
+    worksFor: { '@type': 'Organization', name: SITE_NAME, url: siteUrl },
+  }
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
 }

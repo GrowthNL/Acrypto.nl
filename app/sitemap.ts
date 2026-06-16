@@ -5,6 +5,7 @@ import { MOCK_KENNISBANK } from '@/lib/mock-kennisbank'
 import { SITE_URL } from '@/lib/config'
 import { CATEGORY_SLUGS } from '@/lib/categories'
 import { COIN_SLUGS } from '@/lib/coins'
+import { PRIMARY_AUTHOR } from '@/lib/authors'
 
 export const revalidate = 3600
 
@@ -17,6 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/koersen`,             lastModified: now, changeFrequency: 'always',  priority: 0.8 },
     { url: `${SITE_URL}/kennisbank`,          lastModified: now, changeFrequency: 'weekly',  priority: 0.7 },
     { url: `${SITE_URL}/over-ons`,            lastModified: now, changeFrequency: 'monthly', priority: 0.4 },
+    { url: `${SITE_URL}/auteur/${PRIMARY_AUTHOR.id}`, lastModified: now, changeFrequency: 'weekly', priority: 0.4 },
     { url: `${SITE_URL}/contact`,             lastModified: now, changeFrequency: 'yearly',  priority: 0.3 },
     { url: `${SITE_URL}/redactioneel-beleid`, lastModified: now, changeFrequency: 'yearly',  priority: 0.4 },
     { url: `${SITE_URL}/disclaimer`,          lastModified: now, changeFrequency: 'yearly',  priority: 0.3 },

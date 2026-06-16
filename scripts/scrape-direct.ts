@@ -18,6 +18,7 @@ import { fetchAllSources, titlesAreSimilar } from '../lib/rss'
 import { generateDutchArticle } from '../lib/claude'
 import { fetchUnsplashImage } from '../lib/unsplash'
 import { slugify } from '../lib/utils'
+import { PRIMARY_AUTHOR } from '../lib/authors'
 
 const MAX_ARTICLES = Math.max(1, Number(process.env.MAX_ARTICLES || 3))
 // Veiligheidsremmen zodat een trage/mislukkende batch nooit de hele Action-tijd opslokt.
@@ -108,7 +109,7 @@ async function main() {
           ${imageUrl || null},
           ${item.link},
           ${item.source.name},
-          ${'Acrypto Redactie'},
+          ${PRIMARY_AUTHOR.name},
           ${generated.category || 'nieuws'},
           ${generated.tags || []},
           ${JSON.stringify(generated.faqs || [])},
