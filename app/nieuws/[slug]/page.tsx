@@ -8,6 +8,7 @@ import { MOCK_ARTICLES } from '@/lib/mock-data'
 import { ArticleStructuredData, BreadcrumbStructuredData, FAQStructuredData } from '@/components/StructuredData'
 import ArticleCard from '@/components/ArticleCard'
 import AuthorBox from '@/components/AuthorBox'
+import ShareButtons from '@/components/ShareButtons'
 import { getAuthor } from '@/lib/authors'
 import { formatDate, readingTime, getCategoryStyle, getCategoryImage, timeAgo, slugify } from '@/lib/utils'
 import { cn } from '@/lib/utils'
@@ -224,6 +225,11 @@ export default async function ArticlePage({ params }: Props) {
                 </ol>
               </nav>
             )}
+
+            {/* Delen */}
+            <div className="mb-6">
+              <ShareButtons url={`${SITE_URL}/nieuws/${article.slug}`} title={article.title} />
+            </div>
 
             {/* Hero image */}
             <div className="relative aspect-[16/9] rounded-2xl overflow-hidden mb-8 shadow-card">
