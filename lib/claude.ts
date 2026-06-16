@@ -20,6 +20,11 @@ Eisen:
 - Minimaal 650 woorden, gestructureerd in alinea's met <h2> subkopjes
 - Objectief, informatief en toegankelijk voor Nederlandse cryptolezers
 - Geoptimaliseerd voor Google Discover: actueel, relevant, meeslepend
+- VOEG ECHTE TOEGEVOEGDE WAARDE TOE (belangrijk): herhaal niet alleen het bronbericht,
+  maar plaats het in context. Voeg achtergrond toe (eerdere ontwikkelingen, hoe dit past
+  in een grotere trend) en leg uit wat het concreet betekent voor Nederlandse lezers/beleggers.
+- Voeg een aparte duidingsalinea toe onder een <h2>-kop zoals "Wat betekent dit?" met een
+  nuchtere, eigen analyse (geen koersvoorspelling, geen advies).
 - Sluit af met een korte conclusie of vooruitblik
 - Gebruik geen bronvermelding in de tekst
 - Gebruik NOOIT een liggend streepje (em-dash). Gebruik gewone leestekens.
