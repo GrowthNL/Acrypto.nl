@@ -1,8 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { Resend } from 'resend'
+import nodemailer from 'nodemailer'
+
+// Node-runtime nodig voor SMTP (nodemailer werkt niet op de edge runtime).
+export const runtime = 'nodejs'
+
+const SMTP_HOST = process.env.SMTP_HOST
+const SMTP_PORT = Number(process.env.SMTP_PORT || 465)
+const SMTP_USER = process.env.SMTP_USER
+const SMTP_PASS = process.env.SMTP_PASS
+// Afzender: standaard de mailbox zelf (zo blijven SPF/DKIM kloppend).
+const SMTP_FROM = process.env.SMTP_FROM || (SMTP_USER ? `Acrypto.nl <${SMTP_USER}>` : '')
+// Ontvanger: waar de contactberichten heen moeten.
+const CONTACT_TO = process.env.CONTACT_TO || 'info@growthmedia.nl'
 
 export async function POST(req: NextRequest) {
-  const resend = new Resend(process.env.RESEND_API_KEY)
+  if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) {
+    console.error('Contact: SMTP-config ontbreekt (SMTP_HOST/SMTP_USER/SMTP_PASS).')
+    return NextResponse.json(
+      { error: 'E-mail is nog niet geconfigureerd. Probeer het later opnieuw.' },
+      { status: 503 },
+    )
+  }
+
   try {
     const { name, email, subject, message, type } = await req.json() as {
       name: string
@@ -20,9 +39,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Ongeldig e-mailadres.' }, { status: 400 })
     }
 
-    const { data, error } = await resend.emails.send({
-      from: 'Acrypto.nl <noreply@acrypto.nl>',
-      to: 'info@growthmedia.nl',
+    const transporter = nodemailer.createTransport({
+      host: SMTP_HOST,
+      port: SMTP_PORT,
+      secure: SMTP_PORT === 465, // 465 = impliciet SSL, 587 = STARTTLS
+      auth: { user: SMTP_USER, pass: SMTP_PASS },
+    })
+
+    await transporter.sendMail({
+      from: SMTP_FROM,
+      to: CONTACT_TO,
       replyTo: email,
       subject: `[Acrypto.nl${type === 'adverteren' ? ' - Adverteren' : ''}] ${subject}`,
       html: `
@@ -40,20 +66,9 @@ export async function POST(req: NextRequest) {
       `,
     })
 
-    // De Resend-SDK gooit geen exception bij een geweigerde verzending,
-    // maar geeft een error-object terug. Dat moeten we expliciet afvangen,
-    // anders meldt het formulier "verzonden" terwijl er niets verstuurd is.
-    if (error) {
-      console.error('Resend error:', error)
-      return NextResponse.json(
-        { error: 'Verzenden mislukt. Probeer het later opnieuw of mail ons direct.' },
-        { status: 502 },
-      )
-    }
-
-    return NextResponse.json({ success: true, id: data?.id })
+    return NextResponse.json({ success: true })
   } catch (err) {
     console.error('Contact email error:', err)
-    return NextResponse.json({ error: 'Verzenden mislukt. Probeer het later opnieuw.' }, { status: 500 })
+    return NextResponse.json({ error: 'Verzenden mislukt. Probeer het later opnieuw.' }, { status: 502 })
   }
 }
