@@ -4,8 +4,8 @@
   "description": "Het meest betrouwbare Nederlandse platform voor crypto nieuws en koersen",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#4f46e5",
+  "background_color": "#F3F4EF",
+  "theme_color": "#0C100E",
   "icons": [
     {
       "src": "/icon.svg",

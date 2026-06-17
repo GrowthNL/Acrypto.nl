@@ -15,33 +15,14 @@ const navLinks = [
 
 function Logo() {
   return (
-    <Link href="/" className="flex items-center gap-2.5 group">
-      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-        <defs>
-          <linearGradient id="lg" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
-            <stop offset="0%"   stopColor="#4f46e5" />
-            <stop offset="100%" stopColor="#7c3aed" />
-          </linearGradient>
-        </defs>
-        <rect width="36" height="36" rx="9" fill="url(#lg)" />
-        {/* A shape */}
-        <path
-          d="M9.5 26L18 10L26.5 26"
-          stroke="white" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"
-        />
-        <path
-          d="M13 21.5H23"
-          stroke="white" strokeWidth="2.8" strokeLinecap="round"
-        />
-        {/* Subtle upward tick top-right */}
-        <path
-          d="M23.5 13.5L26 11L28 12.5"
-          stroke="rgba(255,255,255,0.55)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
-        />
+    <Link href="/" className="flex items-center gap-2.5 group" aria-label="Acrypto.nl home">
+      {/* Apex-beeldmerk: inkt A met lime dwarsbalk */}
+      <svg width="30" height="30" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+        <path d="M28 97 L60 29 L92 97" stroke="#0C100E" strokeWidth="13" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M42 69 L78 69" stroke="#C5FA4A" strokeWidth="13" strokeLinecap="round" />
       </svg>
-      <span className="text-xl font-bold tracking-tight text-slate-900">
-        <span className="gradient-text">a</span>crypto
-        <span className="text-slate-400 font-medium">.nl</span>
+      <span className="font-display text-xl font-bold tracking-tight text-ink">
+        acrypto<span className="text-primary-600">.nl</span>
       </span>
     </Link>
   )

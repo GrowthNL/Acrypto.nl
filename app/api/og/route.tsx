@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
     (
       <div
         style={{
-          background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 55%, #4c1d95 100%)',
+          background: 'linear-gradient(135deg, #0C100E 0%, #161E1B 60%, #1C2622 100%)',
           width: '100%',
           height: '100%',
           display: 'flex',
@@ -36,15 +36,15 @@ export async function GET(req: NextRequest) {
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            background: 'rgba(255,255,255,0.12)',
-            color: 'rgba(255,255,255,0.85)',
+            background: 'rgba(197,250,74,0.14)',
+            color: '#C5FA4A',
             padding: '6px 18px',
             borderRadius: '100px',
             fontSize: '17px',
             fontWeight: 600,
             marginBottom: '28px',
             width: 'fit-content',
-            border: '1px solid rgba(255,255,255,0.15)',
+            border: '1px solid rgba(197,250,74,0.35)',
           }}>
             {category.toUpperCase()}
           </div>
@@ -75,21 +75,21 @@ export async function GET(req: NextRequest) {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{
-              width: '36px',
-              height: '36px',
-              borderRadius: '9px',
-              background: 'rgba(255,255,255,0.15)',
+              width: '40px',
+              height: '40px',
+              borderRadius: '11px',
+              background: '#C5FA4A',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '20px',
+              fontSize: '24px',
               fontWeight: 800,
-              color: 'white',
+              color: '#0C100E',
             }}>
               A
             </div>
             <span style={{ fontSize: '24px', fontWeight: 800, color: 'white', letterSpacing: '-0.02em' }}>
-              acrypto<span style={{ color: 'rgba(255,255,255,0.4)' }}>.nl</span>
+              acrypto<span style={{ color: '#C5FA4A' }}>.nl</span>
             </span>
           </div>
           <span style={{ fontSize: '16px', color: 'rgba(255,255,255,0.45)' }}>

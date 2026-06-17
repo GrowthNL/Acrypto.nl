@@ -118,7 +118,7 @@ export default async function HomePage() {
           ))}
         </div>
         <div className="flex flex-wrap gap-2.5">
-          <Link href="/nieuws" className="px-4 py-2 text-sm font-semibold bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-colors">
+          <Link href="/nieuws" className="px-4 py-2 text-sm font-bold bg-brand text-ink rounded-xl hover:bg-brand-dim transition-colors">
             Bekijk laatste nieuws
           </Link>
           <Link href="/koersen" className="px-4 py-2 text-sm font-semibold border border-slate-200 text-slate-700 rounded-xl hover:border-primary-300 hover:text-primary-700 transition-colors">
