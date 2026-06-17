@@ -2,8 +2,8 @@ import { ImageResponse } from 'next/og'
 
 export const runtime = 'edge'
 
-// Rastervariant van het logo (PNG) - door Google geprefereerd als publisher-logo
-// in NewsArticle/Organization structured data (Discover/News). 512x512.
+// Rastervariant van het logo (PNG) in de huisstijl - publisher-logo voor
+// NewsArticle/Organization structured data (Discover/News). 512x512.
 export function GET() {
   return new ImageResponse(
     (
@@ -15,28 +15,28 @@ export function GET() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          background: '#ffffff',
-          gap: 28,
+          background: '#F3F4EF',
+          gap: 24,
         }}
       >
         <div
           style={{
-            width: 200,
-            height: 200,
-            borderRadius: 48,
-            background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+            width: 220,
+            height: 220,
+            borderRadius: 52,
+            background: '#C5FA4A',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
           }}
         >
-          <svg width="120" height="120" viewBox="0 0 36 36" fill="none">
-            <path d="M9.5 26L18 10L26.5 26" stroke="white" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M13 21.5H23" stroke="white" strokeWidth="2.8" strokeLinecap="round" />
+          <svg width="150" height="150" viewBox="0 0 120 120" fill="none">
+            <path d="M36 92 L60 38 L84 92" stroke="#0C100E" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M47 70 L73 70" stroke="#0C100E" strokeWidth="12" strokeLinecap="round" />
           </svg>
         </div>
-        <div style={{ display: 'flex', fontSize: 56, fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em' }}>
-          acrypto<span style={{ color: '#94a3b8' }}>.nl</span>
+        <div style={{ display: 'flex', fontSize: 56, fontWeight: 800, color: '#0C100E', letterSpacing: '-0.03em' }}>
+          acrypto<span style={{ color: '#52790F' }}>.nl</span>
         </div>
       </div>
     ),

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Space_Grotesk, Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -8,11 +8,9 @@ import CookieConsent from '@/components/CookieConsent'
 import { WebsiteStructuredData, OrganizationStructuredData } from '@/components/StructuredData'
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, IS_PRODUCTION } from '@/lib/config'
 
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-})
+const space = Space_Grotesk({ subsets: ['latin'], variable: '--font-space', weight: ['500', '600', '700'], display: 'swap' })
+const jakarta = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-jakarta', display: 'swap' })
+const mono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono', display: 'swap' })
 
 export const metadata: Metadata = {
   title: {
@@ -64,9 +62,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <WebsiteStructuredData siteUrl={SITE_URL} />
         <OrganizationStructuredData siteUrl={SITE_URL} />
-        <meta name="theme-color" content="#4f46e5" />
+        <meta name="theme-color" content="#0C100E" />
       </head>
-      <body className={`${inter.variable} font-sans bg-white text-slate-900 min-h-screen`}>
+      <body className={`${space.variable} ${jakarta.variable} ${mono.variable} font-sans bg-paper text-ink min-h-screen`}>
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary-600 focus:text-white focus:rounded-lg focus:text-sm focus:font-semibold"

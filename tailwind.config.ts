@@ -9,24 +9,31 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Huisstijl: lime-deep ramp voor accent-tekst/links/knoppen (leesbaar op licht).
         primary: {
-          50:  '#eef2ff',
-          100: '#e0e7ff',
-          200: '#c7d2fe',
-          500: '#6366f1',
-          600: '#4f46e5',
-          700: '#4338ca',
-          900: '#312e81',
+          50:  '#f3f9e3',
+          100: '#e7f3c6',
+          200: '#d3e996',
+          500: '#6f9e16',
+          600: '#52790f',
+          700: '#3f5d0b',
+          900: '#283c07',
         },
-        surface:  '#F8FAFC',
-        surface2: '#F1F5F9',
-        border:   '#E2E8F0',
-        muted:    '#64748B',
-        up:   '#059669',
-        down: '#DC2626',
+        brand:       '#C5FA4A',  // Signal Lime - signatuuraccent / CTA
+        'brand-dim': '#A9D63B',
+        ink:      '#0C100E',     // tekst / donkere basis
+        paper:    '#F3F4EF',     // lichte achtergrond
+        surface:  '#FFFFFF',
+        surface2: '#EEF0E8',
+        border:   '#E2E5DB',
+        muted:    '#69726C',
+        up:   '#10B981',
+        down: '#EF4444',
       },
       fontFamily: {
-        sans: ['var(--font-inter)', 'Inter', 'system-ui', 'sans-serif'],
+        sans:    ['var(--font-jakarta)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-space)', 'system-ui', 'sans-serif'],
+        mono:    ['var(--font-mono)', 'ui-monospace', 'monospace'],
       },
       animation: {
         ticker:   'ticker 60s linear infinite',
@@ -49,7 +56,7 @@ const config: Config = {
       },
       boxShadow: {
         card: '0 1px 3px 0 rgba(0,0,0,.06), 0 1px 2px -1px rgba(0,0,0,.04)',
-        'card-hover': '0 8px 24px -4px rgba(79,70,229,.12), 0 2px 6px -2px rgba(0,0,0,.06)',
+        'card-hover': '0 8px 24px -4px rgba(12,16,14,.12), 0 2px 6px -2px rgba(0,0,0,.06)',
         'ticker': 'inset -24px 0 16px -8px #fff, inset 24px 0 16px -8px #fff',
       },
     },
