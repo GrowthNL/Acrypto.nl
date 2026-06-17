@@ -17,11 +17,11 @@ function Logo() {
   return (
     <Link href="/" className="flex items-center gap-2.5 group" aria-label="Acrypto.nl home">
       {/* Apex-beeldmerk: inkt A met lime dwarsbalk */}
-      <svg width="30" height="30" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+      <svg width="40" height="40" viewBox="0 0 120 120" fill="none" aria-hidden="true">
         <path d="M28 97 L60 29 L92 97" stroke="#0C100E" strokeWidth="13" strokeLinecap="round" strokeLinejoin="round" />
         <path d="M42 69 L78 69" stroke="#C5FA4A" strokeWidth="13" strokeLinecap="round" />
       </svg>
-      <span className="font-display text-xl font-bold tracking-tight text-ink">
+      <span className="font-display text-2xl font-bold tracking-tight text-ink">
         acrypto<span className="text-primary-600">.nl</span>
       </span>
     </Link>
