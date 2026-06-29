@@ -2,8 +2,10 @@ name: Crypto News Scraper
 
 on:
   schedule:
-    # Elke 3 uur (GitHub kan dit throttlen; loopt in de praktijk een paar keer per dag)
-    - cron: '0 */3 * * *'
+    # Elke 6 uur (4 runs/dag) - ruim genoeg vers nieuws en blijft binnen de
+    # gratis Actions-minuten. Op een public repo zijn de minuten sowieso gratis,
+    # maar minder runs scheelt ook in de Anthropic API-kosten.
+    - cron: '0 */6 * * *'
   workflow_dispatch:
 
 jobs:
