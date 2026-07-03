@@ -23,7 +23,10 @@ export const metadata: Metadata = {
   creator: SITE_NAME,
   publisher: SITE_NAME,
   metadataBase: new URL(SITE_URL),
-  alternates: { canonical: '/' },
+  alternates: {
+    canonical: '/',
+    types: { 'application/rss+xml': '/feed.xml' },
+  },
   manifest: '/manifest.json',
   icons: {
     icon: '/icon.svg',

@@ -1,0 +1,33 @@
+name: Content Audit
+
+# Handmatig te starten (Actions -> Content Audit -> Run workflow).
+# Draait read-only tegen de database en print een rapport in de logs.
+on:
+  workflow_dispatch:
+
+jobs:
+  audit:
+    name: Analyseer gepubliceerde artikelen
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run content audit
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "DATABASE_URL niet ingesteld - audit overgeslagen."
+            exit 0
+          fi
+          npm run audit:content
