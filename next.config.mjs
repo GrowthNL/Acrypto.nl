@@ -31,6 +31,13 @@ const nextConfig = {
         destination: `/categorie/${slug}`,
         permanent: true,
       })),
+      // Opgeschoonde dubbele artikelen: 301 naar de behouden versie zodat
+      // eventuele links/indexatie hun waarde doorgeven i.p.v. een 404.
+      {
+        source: '/nieuws/xrp-copy-trading-populair-onder-nederlanders-1781625876490',
+        destination: '/nieuws/xrp-copy-trading-populair-onder-nederlanders',
+        permanent: true,
+      },
     ]
   },
   async headers() {

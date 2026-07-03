@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "scrape": "node scripts/scrape.mjs",
     "scrape:direct": "tsx scripts/scrape-direct.ts",
-    "audit:content": "tsx scripts/audit-content.ts"
+    "audit:content": "tsx scripts/audit-content.ts",
+    "prune:articles": "tsx scripts/prune-articles.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.29.0",

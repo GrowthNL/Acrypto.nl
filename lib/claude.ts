@@ -7,15 +7,27 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 export async function generateDutchArticle(
   sourceTitle: string,
   sourceContent: string,
-  sourceName: string
+  sourceName: string,
+  recentTitles: string[] = []
 ): Promise<GeneratedArticle | null> {
+  // Recent gebruikte titels meegeven zodat het model bewust een andere
+  // structuur/formulering kiest en er geen repeterend patroon ontstaat.
+  const avoidBlock = recentTitles.length
+    ? `\n\nRecent gebruikte titels op de site (kies BEWUST een andere structuur en andere openingswoorden; kopieer dit patroon NIET):\n${recentTitles.slice(0, 20).map(t => `- ${t}`).join('\n')}`
+    : ''
+
   const prompt = `Je bent een professionele Nederlandse crypto journalist voor acrypto.nl, een betrouwbare, moderne crypto nieuwssite.
 
 Schrijf een VOLLEDIG ORIGINEEL Nederlands artikel gebaseerd op het onderstaande bronbericht.
 Kopieer NOOIT letterlijk. Schrijf vanuit een eigen invalshoek, voeg context en analyse toe.
 
 Eisen:
-- Pakkende Nederlandse titel (max 65 tekens, SEO-geoptimaliseerd)
+- Pakkende Nederlandse titel (max 65 tekens, SEO-geoptimaliseerd).
+  VARIEER de titelstructuur sterk. Vermijd terugkerende sjablonen zoals
+  "X: wat betekent dit voor crypto?", "X zakt onder cruciale grens...",
+  "Wat nu voor de koers?" of "X stijgt Y%: dit zijn de drijvende krachten".
+  Wissel af tussen nieuwszinnen, vraagvormen, cijfer-openers en directe
+  statements. Begin niet elke titel met dezelfde muntnaam of hetzelfde woord.
 - Duidelijke intro die de lezer direct aanspreekt
 - Minimaal 650 woorden, gestructureerd in alinea's met <h2> subkopjes
 - Objectief, informatief en toegankelijk voor Nederlandse cryptolezers
@@ -49,7 +61,7 @@ Retourneer UITSLUITEND geldige JSON (geen markdown, geen uitleg eromheen):
   "category": "nieuws"
 }
 
-Categorieën (kies de meest passende): nieuws, bitcoin, ethereum, altcoins, defi, nft, regulering, marktanalyse
+Categorieën (kies de meest passende): nieuws, bitcoin, ethereum, altcoins, defi, nft, regulering, marktanalyse${avoidBlock}
 
 Bronbericht van ${sourceName}:
 Titel: ${sourceTitle}

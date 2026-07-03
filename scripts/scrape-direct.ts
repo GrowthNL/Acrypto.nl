@@ -78,7 +78,7 @@ async function main() {
     attempts++
     console.log(`[scrape] genereren (poging ${attempts}/${MAX_ATTEMPTS}): "${item.title}" (${item.source.name})`)
 
-    const generated = await generateDutchArticle(item.title, item.content, item.source.name)
+    const generated = await generateDutchArticle(item.title, item.content, item.source.name, recentTitles)
     if (!generated) {
       results.errors++
       // Markeer als verwerkt zodat we deze bron niet eindeloos opnieuw proberen.
