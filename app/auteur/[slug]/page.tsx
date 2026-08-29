@@ -27,7 +27,7 @@ export function generateMetadata({ params }: Props): Metadata {
     openGraph: {
       type: 'profile',
       url: `${SITE_URL}/auteur/${author.id}`,
-      title: `${author.name} - ${author.role} | Acrypto.nl`,
+      title: `${author.name} - ${author.role}`,
       description: author.bio,
       images: author.avatar ? [{ url: `${SITE_URL}${author.avatar}`, alt: author.name }] : undefined,
     },

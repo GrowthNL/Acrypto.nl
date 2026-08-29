@@ -52,7 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const diff = difficultyConfig[article.difficulty]
 
   return {
-    title: `${article.title} | Crypto Kennisbank | Acrypto.nl`,
+    title: `${article.title} | Crypto Kennisbank`,
     description: article.excerpt || undefined,
     alternates: { canonical: `/kennisbank/${article.slug}` },
     openGraph: {
