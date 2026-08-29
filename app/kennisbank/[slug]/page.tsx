@@ -171,6 +171,23 @@ export default async function KennisbankArticlePage({ params }: Props) {
               dangerouslySetInnerHTML={{ __html: article.content }}
             />
 
+            {/* FAQ - zichtbaar voor de lezer (naast de FAQ-structured-data hierboven) */}
+            {article.faqs && article.faqs.length > 0 && (
+              <div className="mt-10">
+                <h2 className="text-xl font-bold text-slate-900 mb-4">Veelgestelde vragen</h2>
+                <div className="space-y-3">
+                  {article.faqs.map((f, i) => (
+                    <details key={i} className="group border border-slate-200 rounded-xl p-4 open:bg-slate-50">
+                      <summary className="font-semibold text-slate-800 cursor-pointer list-none">
+                        {f.q}
+                      </summary>
+                      <p className="text-slate-600 mt-2 leading-relaxed">{f.a}</p>
+                    </details>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Tags */}
             {article.tags && article.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-8 pt-6 border-t border-slate-100">
