@@ -5,7 +5,7 @@ import { getDb, DB_READY } from '@/lib/db'
 import { MOCK_KENNISBANK } from '@/lib/mock-kennisbank'
 import type { KnowledgeArticle } from '@/lib/types'
 
-export const revalidate = 3600
+export const revalidate = 900
 
 // Database-gedreven met MOCK als fallback/aanvulling. Dedupe op slug: een
 // artikel dat in de database staat wint van de mock-versie.

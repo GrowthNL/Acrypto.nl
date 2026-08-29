@@ -10,7 +10,7 @@ import { formatDate, readingTime } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 import type { KnowledgeArticle } from '@/lib/types'
 
-export const revalidate = 3600
+export const revalidate = 900
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://acrypto.nl'
 const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=1200&q=80'
