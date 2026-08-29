@@ -21,6 +21,14 @@ export async function generateDutchArticle(
 Schrijf een VOLLEDIG ORIGINEEL Nederlands artikel gebaseerd op het onderstaande bronbericht.
 Kopieer NOOIT letterlijk. Schrijf vanuit een eigen invalshoek, voeg context en analyse toe.
 
+RELEVANTIE-EIS (belangrijk): dit is een crypto-nieuwssite. Schrijf ALLEEN als het
+bronbericht een duidelijke, concrete link heeft met cryptovaluta, blockchain, tokens,
+exchanges, stablecoins, DeFi, NFT's of crypto-regelgeving. Puur algemeen beurs-, aandelen-,
+tech- of bedrijfsnieuws (bijvoorbeeld over Nvidia, SpaceX, Tesla-aandelen of chipmakers)
+ZONDER concrete cryptohoek hoort hier NIET thuis. Verzin nooit een geforceerde cryptohoek.
+Als het bronbericht niet duidelijk over crypto gaat, retourneer dan UITSLUITEND deze JSON en niets anders:
+{"skip": true, "reason": "korte reden waarom dit geen crypto-artikel is"}
+
 Eisen:
 - Pakkende Nederlandse titel (max 65 tekens, SEO-geoptimaliseerd).
   VARIEER de titelstructuur sterk. Vermijd terugkerende sjablonen zoals
@@ -83,7 +91,12 @@ ${sourceContent.substring(0, 3000)}`
     const jsonMatch = text.match(/\{[\s\S]*\}/)
     if (!jsonMatch) return null
 
-    const parsed = JSON.parse(jsonMatch[0]) as GeneratedArticle
+    const parsed = JSON.parse(jsonMatch[0]) as GeneratedArticle & { skip?: boolean; reason?: string }
+    // Off-topic bron: geen crypto-artikel forceren, netjes overslaan.
+    if (parsed.skip || !parsed.title || !parsed.content) {
+      if (parsed.skip) console.log(`[claude] overgeslagen (niet crypto): ${parsed.reason || 'geen reden'}`)
+      return null
+    }
     if (!parsed.slug) {
       parsed.slug = slugify(parsed.title)
     }
