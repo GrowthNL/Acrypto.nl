@@ -1,0 +1,34 @@
+name: Update Guides Content
+
+# Handmatig te starten (Actions -> Update Guides Content -> Run workflow).
+# Werkt de kennisbank-gidsen bij met diepere content en unieke afbeeldingen.
+on:
+  workflow_dispatch:
+
+jobs:
+  update:
+    name: Gidsen bijwerken
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Update guides content
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "DATABASE_URL niet ingesteld - update overgeslagen."
+            exit 0
+          fi
+          npm run update:guides
