@@ -40,9 +40,18 @@ async function getArticle(slug: string): Promise<KnowledgeArticle | null> {
 }
 
 async function getRelated(article: KnowledgeArticle): Promise<KnowledgeArticle[]> {
-  return MOCK_KENNISBANK
-    .filter(a => a.id !== article.id && (a.category === article.category || a.difficulty === article.difficulty))
-    .slice(0, 4)
+  const bySlug = new Map<string, KnowledgeArticle>()
+  for (const a of MOCK_KENNISBANK) bySlug.set(a.slug, a)
+  if (DB_READY) {
+    try {
+      const db = getDb()
+      const rows = await db`SELECT * FROM knowledge_articles ORDER BY published_at DESC`
+      for (const r of rows as unknown as KnowledgeArticle[]) bySlug.set(r.slug, r)
+    } catch {}
+  }
+  const pool = Array.from(bySlug.values()).filter(a => a.slug !== article.slug)
+  const related = pool.filter(a => a.category === article.category || a.difficulty === article.difficulty)
+  return (related.length ? related : pool).slice(0, 4)
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

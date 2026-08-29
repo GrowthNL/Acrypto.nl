@@ -1,8 +1,30 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ChevronRight, BookOpen, Zap, Shield, GraduationCap } from 'lucide-react'
+import { getDb, DB_READY } from '@/lib/db'
+import { MOCK_KENNISBANK } from '@/lib/mock-kennisbank'
+import type { KnowledgeArticle } from '@/lib/types'
 
 export const revalidate = 3600
+
+// Database-gedreven met MOCK als fallback/aanvulling. Dedupe op slug: een
+// artikel dat in de database staat wint van de mock-versie.
+async function getArticles(): Promise<KnowledgeArticle[]> {
+  let dbArticles: KnowledgeArticle[] = []
+  if (DB_READY) {
+    try {
+      const db = getDb()
+      const rows = await db`SELECT * FROM knowledge_articles ORDER BY published_at DESC`
+      dbArticles = rows as unknown as KnowledgeArticle[]
+    } catch {}
+  }
+  const bySlug = new Map<string, KnowledgeArticle>()
+  for (const a of MOCK_KENNISBANK) bySlug.set(a.slug, a)
+  for (const a of dbArticles) bySlug.set(a.slug, a)
+  return Array.from(bySlug.values()).sort(
+    (a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
+  )
+}
 
 interface Props {
   searchParams: { niveau?: string }
@@ -35,30 +57,19 @@ const levels = [
   { key: 'advanced',     label: 'Expert',     desc: 'Diepgaande technische kennis.',        icon: Shield,   color: 'text-violet-600',  bg: 'bg-violet-50',  border: 'border-violet-100' },
 ]
 
-const articles = [
-  { title: 'Wat is Bitcoin?',              slug: 'wat-is-bitcoin',                difficulty: 'beginner',     category: 'basics',    excerpt: 'De complete gids over Bitcoin: wat het is, hoe het werkt en waarom het revolutionair is.' },
-  { title: 'Hoe koop je cryptocurrency?',  slug: 'hoe-koop-je-crypto',            difficulty: 'beginner',     category: 'basics',    excerpt: 'Stap voor stap uitgelegd hoe je je eerste crypto koopt via een Nederlandse exchange.' },
-  { title: 'Wat is een crypto wallet?',    slug: 'wat-is-een-crypto-wallet',      difficulty: 'beginner',     category: 'beveiliging', excerpt: 'Alles over hot wallets, cold wallets en hoe je je crypto veilig bewaart.' },
-  { title: 'Wat is Ethereum?',             slug: 'wat-is-ethereum',               difficulty: 'beginner',     category: 'basics',    excerpt: 'Ethereum en smart contracts uitgelegd: het platform achter DeFi, NFTs en Web3.' },
-  { title: 'Crypto veilig bewaren',        slug: 'crypto-veilig-bewaren',         difficulty: 'beginner',     category: 'beveiliging', excerpt: 'De beste praktijken voor het veilig bewaren van cryptocurrency.' },
-  { title: 'Wat is DeFi?',                slug: 'wat-is-defi',                   difficulty: 'intermediate', category: 'defi',      excerpt: 'Gedecentraliseerde financiën: lenen, uitlenen en handelen zonder bank.' },
-  { title: 'Crypto belasting Nederland',   slug: 'crypto-belasting-nederland',    difficulty: 'intermediate', category: 'juridisch', excerpt: 'Hoe geef je cryptocurrency op bij de Belastingdienst in Nederland?' },
-  { title: 'Wat zijn altcoins?',           slug: 'wat-zijn-altcoins',             difficulty: 'beginner',     category: 'basics',    excerpt: 'Een overzicht van de duizenden cryptocurrencies buiten Bitcoin om.' },
-  { title: 'Wat is blockchain?',           slug: 'wat-is-blockchain',             difficulty: 'beginner',     category: 'basics',    excerpt: 'De technologie achter crypto uitgelegd: hoe werkt een blockchain precies?' },
-]
-
 const diffLabel: Record<string, { label: string; color: string; bg: string }> = {
   beginner:     { label: 'Beginners', color: 'text-emerald-700', bg: 'bg-emerald-50' },
   intermediate: { label: 'Gevorderd', color: 'text-amber-700',   bg: 'bg-amber-50'   },
   advanced:     { label: 'Expert',    color: 'text-violet-700',  bg: 'bg-violet-50'  },
 }
 
-export default function KennisbankPage({ searchParams }: Props) {
+export default async function KennisbankPage({ searchParams }: Props) {
   const niveau = searchParams.niveau?.toLowerCase()
   const activeNiveau = niveau && NIVEAU_LABELS[niveau] ? niveau : undefined
+  const allArticles = await getArticles()
   const visibleArticles = activeNiveau
-    ? articles.filter(a => a.difficulty === activeNiveau)
-    : articles
+    ? allArticles.filter(a => a.difficulty === activeNiveau)
+    : allArticles
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">

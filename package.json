@@ -12,7 +12,8 @@
     "scrape:direct": "tsx scripts/scrape-direct.ts",
     "audit:content": "tsx scripts/audit-content.ts",
     "prune:articles": "tsx scripts/prune-articles.ts",
-    "seed:evergreen": "tsx scripts/seed-evergreen.ts"
+    "seed:evergreen": "tsx scripts/seed-evergreen.ts",
+    "migrate:guides": "tsx scripts/migrate-guides-to-kennisbank.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.29.0",

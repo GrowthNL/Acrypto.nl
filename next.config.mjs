@@ -5,6 +5,21 @@ const CATEGORY_SLUGS = [
   'bitcoin', 'ethereum', 'altcoins', 'defi', 'nft', 'regulering', 'marktanalyse', 'nieuws',
 ]
 
+// Evergreen gidsen die van /nieuws naar /kennisbank zijn verhuisd: 301 zodat
+// oude links en indexatie hun waarde doorgeven aan de nieuwe URL.
+const GUIDE_SLUGS = [
+  'crypto-kopen-nederland-stappenplan',
+  'welke-crypto-kopen',
+  'wat-is-bitvavo',
+  'bitcoin-kopen-stappenplan',
+  'wanneer-crypto-kopen',
+  'crypto-kopen-beginner-valkuilen',
+  'beste-crypto-exchange-nederland',
+  'crypto-kopen-met-ideal',
+  'crypto-belasting-nederland',
+  'crypto-wallet-uitleg',
+]
+
 const nextConfig = {
   images: {
     remotePatterns: [
@@ -38,6 +53,12 @@ const nextConfig = {
         destination: '/nieuws/xrp-copy-trading-populair-onder-nederlanders',
         permanent: true,
       },
+      // Evergreen gidsen verhuisd naar de kennisbank.
+      ...GUIDE_SLUGS.map(slug => ({
+        source: `/nieuws/${slug}`,
+        destination: `/kennisbank/${slug}`,
+        permanent: true,
+      })),
     ]
   },
   async headers() {
