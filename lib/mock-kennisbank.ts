@@ -297,7 +297,7 @@ export const MOCK_KENNISBANK: KnowledgeArticle[] = [
     excerpt: 'Een crypto wallet bewaart je toegang tot je cryptocurrency. Leer het verschil tussen hot wallets en cold wallets, en welke wallet het beste bij jou past.',
     category: 'beveiliging',
     difficulty: 'beginner',
-    image_url: 'https://images.unsplash.com/photo-1614680376593-902f74cf0d41?w=1200&q=80',
+    image_url: 'https://images.unsplash.com/photo-1630163219451-13a7cff121d0?w=1200&q=80',
     tags: ['wallet', 'hardware wallet', 'ledger', 'beveiliging', 'seed phrase'],
     published_at: '2026-06-01T10:00:00Z',
     created_at: '2026-06-01T10:00:00Z',
