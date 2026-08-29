@@ -131,7 +131,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const ogImage = article.image_url || getCategoryImage(article.category)
   return {
-    title: `${article.title} | Acrypto.nl`,
+    // Alleen de kale titel; de layout-template voegt " | Acrypto.nl" toe.
+    title: article.title,
     description: article.excerpt || undefined,
     alternates: { canonical: `/nieuws/${article.slug}` },
     openGraph: {

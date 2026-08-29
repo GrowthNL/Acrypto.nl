@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: 'website',
       locale: 'nl_NL',
       url: `${SITE_URL}/koersen/${coin.slug}`,
-      title: `${coin.title} | Acrypto.nl`,
+      title: coin.title,
       description: coin.description,
     },
   }

@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: 'website',
       locale: 'nl_NL',
       url: `${SITE_URL}/categorie/${cat.slug}`,
-      title: `${cat.title} | Acrypto.nl`,
+      title: cat.title,
       description: cat.description,
     },
   }
