@@ -3,17 +3,46 @@ import { NextRequest } from 'next/server'
 
 export const runtime = 'edge'
 
+// Deterministische hash uit een string, zodat dezelfde titel altijd hetzelfde
+// (maar per artikel verschillende) ontwerp krijgt.
+function hashString(s: string): number {
+  let h = 0
+  for (let i = 0; i < s.length; i++) {
+    h = (h << 5) - h + s.charCodeAt(i)
+    h |= 0
+  }
+  return Math.abs(h)
+}
+
+// On-brand accentschema's; elk artikel krijgt er deterministisch een.
+const SCHEMES = [
+  { accent: '#C5FA4A', tint: '#1c2a12' }, // signal lime
+  { accent: '#4ADE9E', tint: '#0e2a22' }, // teal
+  { accent: '#4AB8FA', tint: '#0e2333' }, // sky
+  { accent: '#A78BFA', tint: '#1e1a33' }, // violet
+  { accent: '#FBBF24', tint: '#2c2410' }, // amber
+  { accent: '#FB7185', tint: '#301620' }, // rose
+  { accent: '#38E1C6', tint: '#0e2a2a' }, // aqua
+  { accent: '#F59E7A', tint: '#2e1c14' }, // coral
+]
+
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl
-  const title    = searchParams.get('title') || 'Acrypto.nl'
+  const title = searchParams.get('title') || 'Acrypto.nl'
   const category = searchParams.get('category') || ''
-  const type     = searchParams.get('type') || 'nieuws'
+
+  const h = hashString(title || category || 'acrypto')
+  const scheme = SCHEMES[h % SCHEMES.length]
+  const angle = 115 + (h % 7) * 20
+  // Positie van de decoratieve cirkel varieert per artikel.
+  const blobX = 60 + (h % 5) * 8
+  const blobY = 8 + ((h >> 3) % 5) * 12
 
   return new ImageResponse(
     (
       <div
         style={{
-          background: 'linear-gradient(135deg, #0C100E 0%, #161E1B 60%, #1C2622 100%)',
+          background: `linear-gradient(${angle}deg, #0C100E 0%, ${scheme.tint} 68%, #0C100E 100%)`,
           width: '100%',
           height: '100%',
           display: 'flex',
@@ -23,11 +52,23 @@ export async function GET(req: NextRequest) {
           position: 'relative',
         }}
       >
-        {/* Subtle grid pattern */}
+        {/* Decoratieve accent-cirkel (varieert per artikel) */}
+        <div style={{
+          position: 'absolute',
+          top: `${blobY}%`,
+          left: `${blobX}%`,
+          width: '460px',
+          height: '460px',
+          borderRadius: '50%',
+          background: scheme.accent,
+          opacity: 0.16,
+          filter: 'blur(8px)',
+        }} />
+        {/* Subtiel rasterpatroon */}
         <div style={{
           position: 'absolute',
           inset: 0,
-          backgroundImage: 'radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px)',
+          backgroundImage: 'radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px)',
           backgroundSize: '40px 40px',
         }} />
 
@@ -36,15 +77,15 @@ export async function GET(req: NextRequest) {
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            background: 'rgba(197,250,74,0.14)',
-            color: '#C5FA4A',
+            background: `${scheme.accent}26`,
+            color: scheme.accent,
             padding: '6px 18px',
             borderRadius: '100px',
-            fontSize: '17px',
+            fontSize: '18px',
             fontWeight: 600,
             marginBottom: '28px',
             width: 'fit-content',
-            border: '1px solid rgba(197,250,74,0.35)',
+            border: `1px solid ${scheme.accent}59`,
           }}>
             {category.toUpperCase()}
           </div>
@@ -52,14 +93,15 @@ export async function GET(req: NextRequest) {
 
         {/* Title */}
         <div style={{
-          fontSize: title.length > 70 ? '40px' : title.length > 50 ? '48px' : '56px',
+          fontSize: title.length > 70 ? '44px' : title.length > 48 ? '52px' : '60px',
           fontWeight: 800,
           color: 'white',
-          lineHeight: 1.25,
+          lineHeight: 1.22,
           flex: 1,
           display: 'flex',
           alignItems: category ? 'flex-start' : 'center',
-          maxWidth: '950px',
+          maxWidth: '960px',
+          letterSpacing: '-0.02em',
         }}>
           {title}
         </div>
@@ -78,7 +120,7 @@ export async function GET(req: NextRequest) {
               width: '40px',
               height: '40px',
               borderRadius: '11px',
-              background: '#C5FA4A',
+              background: scheme.accent,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -89,7 +131,7 @@ export async function GET(req: NextRequest) {
               A
             </div>
             <span style={{ fontSize: '24px', fontWeight: 800, color: 'white', letterSpacing: '-0.02em' }}>
-              acrypto<span style={{ color: '#C5FA4A' }}>.nl</span>
+              acrypto<span style={{ color: scheme.accent }}>.nl</span>
             </span>
           </div>
           <span style={{ fontSize: '16px', color: 'rgba(255,255,255,0.45)' }}>
