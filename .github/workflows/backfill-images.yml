@@ -9,7 +9,7 @@ jobs:
   backfill:
     name: Ontbrekende afbeeldingen aanvullen
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
 
     steps:
       - uses: actions/checkout@v4
@@ -25,6 +25,7 @@ jobs:
       - name: Backfill images
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
         run: |
           if [ -z "$DATABASE_URL" ]; then
             echo "DATABASE_URL niet ingesteld - backfill overgeslagen."
