@@ -281,6 +281,7 @@ export default async function ArticlePage({ params }: Props) {
                 alt={article.image_alt || article.title}
                 fill
                 priority
+                unoptimized={imageUrl.includes('/api/og')}
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 720px"
               />

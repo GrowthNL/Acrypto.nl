@@ -24,7 +24,8 @@ export default function ArticleCard({ article, variant = 'default' }: Props) {
         <div className="relative w-20 h-[60px] flex-shrink-0 rounded-lg overflow-hidden bg-slate-100">
           <Image
             src={imgSrc} alt={article.image_alt || article.title}
-            fill className="object-cover group-hover:scale-105 transition-transform duration-300" sizes="80px"
+            fill unoptimized={imgSrc.includes('/api/og')}
+            className="object-cover group-hover:scale-105 transition-transform duration-300" sizes="80px"
             onError={() => setImgSrc(fallback)}
           />
         </div>
@@ -49,7 +50,8 @@ export default function ArticleCard({ article, variant = 'default' }: Props) {
       <div className="relative aspect-[16/9] overflow-hidden bg-slate-100">
         <Image
           src={imgSrc} alt={article.image_alt || article.title}
-          fill className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="(max-width: 768px) 100vw, 400px"
+          fill unoptimized={imgSrc.includes('/api/og')}
+          className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="(max-width: 768px) 100vw, 400px"
           onError={() => setImgSrc(fallback)}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />

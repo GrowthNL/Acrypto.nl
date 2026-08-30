@@ -144,6 +144,7 @@ export default async function HomePage() {
                 src={featured.image_url || FALLBACK}
                 alt={featured.image_alt || featured.title}
                 fill priority
+                unoptimized={(featured.image_url || '').includes('/api/og')}
                 className="object-cover group-hover:scale-105 transition-transform duration-700"
                 sizes="(max-width: 1024px) 100vw, 66vw"
               />
@@ -185,6 +186,7 @@ export default async function HomePage() {
                 src={article.image_url || FALLBACK}
                 alt={article.image_alt || article.title}
                 fill
+                unoptimized={(article.image_url || '').includes('/api/og')}
                 className="object-cover group-hover:scale-105 transition-transform duration-500"
                 sizes="(max-width: 1024px) 100vw, 33vw"
               />
