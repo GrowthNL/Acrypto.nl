@@ -20,24 +20,29 @@ export async function fetchUnsplashImage(category: string, tags: string[] = []):
     .join(' ')
   const query = [tagQuery, categoryQuery].filter(Boolean).join(' ').trim()
 
-  try {
-    const resp = await fetch(
-      `https://api.unsplash.com/photos/random?query=${encodeURIComponent(query)}&orientation=landscape&client_id=${key}`,
-      { signal: AbortSignal.timeout(4000) }
-    )
-    if (!resp.ok) return null
+  // Twee pogingen: een enkele timeout of transient fout mag niet meteen tot een
+  // lege (en daarmee dubbele fallback-)afbeelding leiden.
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const resp = await fetch(
+        `https://api.unsplash.com/photos/random?query=${encodeURIComponent(query)}&orientation=landscape&client_id=${key}`,
+        { signal: AbortSignal.timeout(6000) }
+      )
+      if (!resp.ok) continue
 
-    const data = await resp.json() as { urls?: { regular?: string } }
-    const rawUrl = data.urls?.regular
-    if (!rawUrl) return null
+      const data = await resp.json() as { urls?: { regular?: string } }
+      const rawUrl = data.urls?.regular
+      if (!rawUrl) continue
 
-    const u = new URL(rawUrl)
-    u.searchParams.set('w', '1200')
-    u.searchParams.set('q', '80')
-    u.searchParams.set('fit', 'crop')
-    u.searchParams.set('crop', 'entropy')
-    return u.toString()
-  } catch {
-    return null
+      const u = new URL(rawUrl)
+      u.searchParams.set('w', '1200')
+      u.searchParams.set('q', '80')
+      u.searchParams.set('fit', 'crop')
+      u.searchParams.set('crop', 'entropy')
+      return u.toString()
+    } catch {
+      // volgende poging
+    }
   }
+  return null
 }

@@ -14,7 +14,8 @@
     "prune:articles": "tsx scripts/prune-articles.ts",
     "seed:evergreen": "tsx scripts/seed-evergreen.ts",
     "migrate:guides": "tsx scripts/migrate-guides-to-kennisbank.ts",
-    "update:guides": "tsx scripts/update-guides-content.ts"
+    "update:guides": "tsx scripts/update-guides-content.ts",
+    "backfill:images": "tsx scripts/backfill-images.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.29.0",

@@ -1,0 +1,33 @@
+name: Backfill Article Images
+
+# Handmatig te starten (Actions -> Backfill Article Images -> Run workflow).
+# Geeft artikelen zonder afbeelding een unieke branded /api/og-afbeelding.
+on:
+  workflow_dispatch:
+
+jobs:
+  backfill:
+    name: Ontbrekende afbeeldingen aanvullen
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Backfill images
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "DATABASE_URL niet ingesteld - backfill overgeslagen."
+            exit 0
+          fi
+          npm run backfill:images
