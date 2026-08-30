@@ -19,6 +19,13 @@ import { generateDutchArticle } from '../lib/claude'
 import { fetchUnsplashImage } from '../lib/unsplash'
 import { slugify } from '../lib/utils'
 import { PRIMARY_AUTHOR } from '../lib/authors'
+import { SITE_URL } from '../lib/config'
+
+// Branded fallback-afbeelding met de artikeltitel: uniek per artikel en altijd
+// relevant, zodat een mislukte Unsplash-call nooit tot dubbele/lege beelden leidt.
+function ogFallbackImage(title: string, category: string): string {
+  return `${SITE_URL}/api/og?title=${encodeURIComponent(title)}&category=${encodeURIComponent(category || 'nieuws')}`
+}
 
 const MAX_ARTICLES = Math.max(1, Number(process.env.MAX_ARTICLES || 3))
 // Veiligheidsremmen zodat een trage/mislukkende batch nooit de hele Action-tijd opslokt.
@@ -89,7 +96,9 @@ async function main() {
 
     recentTitles.push(generated.title)
 
-    const imageUrl = await fetchUnsplashImage(generated.category || 'nieuws', generated.tags || [])
+    const imageUrl =
+      (await fetchUnsplashImage(generated.category || 'nieuws', generated.tags || [])) ||
+      ogFallbackImage(generated.title, generated.category || 'nieuws')
 
     let slug = generated.slug || slugify(generated.title)
     const slugExists = await db`SELECT id FROM articles WHERE slug = ${slug} LIMIT 1`
@@ -106,7 +115,7 @@ async function main() {
           ${generated.excerpt},
           ${generated.tldr || null},
           ${generated.content},
-          ${imageUrl || null},
+          ${imageUrl},
           ${item.link},
           ${item.source.name},
           ${PRIMARY_AUTHOR.name},
